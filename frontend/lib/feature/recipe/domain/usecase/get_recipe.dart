@@ -4,11 +4,11 @@ import 'package:cookify/feature/recipe/domain/repository/recipe_repository.dart'
 import 'package:dartz/dartz.dart';
 
 class GetRecipe {
-  GetRecipe({required this.repository});
+  GetRecipe({required RecipeRepository repository}) : _repository = repository;
 
-  final RecipeRepository repository;
+  final RecipeRepository _repository;
 
   Future<Either<Failure, Recipe>> call(int id) {
-    return repository.getRecipe(id);
+    return _repository.getRecipe(id);
   }
 }
