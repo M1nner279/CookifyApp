@@ -1,9 +1,9 @@
 import 'package:cookify/feature/recipe/config/enum/recipe_difficulty.dart';
+import 'package:cookify/feature/recipe/domain/entity/category.dart';
 import 'package:cookify/feature/recipe/domain/entity/cpfc.dart';
 import 'package:cookify/feature/recipe/domain/entity/recipe_ingredient.dart';
 import 'package:cookify/feature/recipe/domain/entity/recipe_step.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 class Recipe extends Equatable {
   const Recipe({
