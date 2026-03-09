@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 
 abstract class AppTheme {
   static ThemeData _data(AppPalette palette) => ThemeData(
-    extensions: [
-      ColorSchemeExtension(primaryLight: palette.primaryLight()),
-    ],
+    extensions: [ColorSchemeExtension(primaryLight: palette.primaryLight())],
     colorScheme: ColorScheme.fromSeed(
       seedColor: palette.primary(),
       brightness: palette.brightness(),
@@ -16,6 +14,7 @@ abstract class AppTheme {
     ),
     scaffoldBackgroundColor: palette.secondary(),
     fontFamily: 'Farabee',
+    iconTheme: IconThemeData(color: palette.primary()),
     textTheme: AppText.textTheme(palette.text()),
     appBarTheme: AppBarTheme(
       backgroundColor: palette.secondary(),

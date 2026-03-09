@@ -9,6 +9,9 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get cookifyCachedNetworkImageError => 'Ошибка загрузки изображения';
+
+  @override
   String recipeDescriptionSectionCookingTime(Object time) {
     return '$time мин. |';
   }

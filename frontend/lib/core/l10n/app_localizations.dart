@@ -94,6 +94,12 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('ru')];
 
+  /// No description provided for @cookifyCachedNetworkImageError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка загрузки изображения'**
+  String get cookifyCachedNetworkImageError;
+
   /// No description provided for @recipeDescriptionSectionCookingTime.
   ///
   /// In ru, this message translates to:
