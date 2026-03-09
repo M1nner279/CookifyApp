@@ -11,12 +11,13 @@ import 'package:dartz/dartz.dart';
 class RecipeRepositoryImpl implements RecipeRepository {
   @override
   Future<Either<Failure, Recipe>> getRecipe(String id) async {
+    await Future.delayed(const Duration(seconds: 5));
     return Right(
       Recipe(
         id: '0',
         creator: null,
         photoUrls: [
-          'https://www.russianfood.com/dycontent/images_upl/173/sm_172938.jpg',
+          'https://s0.rbk.ru/v6_top_pics/resized/600xH/media/img/2/14/347101571204142.webp',
         ],
         name: 'Блины на молоке: традиционный рецепт',
         categories: [Category(id: '0', name: 'Блины')],
