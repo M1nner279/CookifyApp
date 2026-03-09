@@ -1,6 +1,6 @@
 {
-    "name": "cookify",
-    "short_name": "cookify",
+    "name": "Cookify",
+    "short_name": "Cookify",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

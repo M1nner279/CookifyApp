@@ -1,0 +1,16 @@
+flutter_launcher_icons:
+  image_path: "assets/images/cookify_logo.png"
+
+  android: true
+
+  ios: true
+  remove_alpha_ios: true
+
+  web:
+    generate: true
+
+  windows:
+    generate: true
+
+  macos:
+    generate: true
