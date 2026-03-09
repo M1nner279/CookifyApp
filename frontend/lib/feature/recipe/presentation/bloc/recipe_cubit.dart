@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cookify/feature/recipe/presentation/bloc/recipe_state.dart';
 
 class RecipeCubit extends Cubit<RecipeState> {
-  RecipeCubit({required int id, required GetRecipe getRecipe})
+  RecipeCubit({required String id, required GetRecipe getRecipe})
     : _id = id,
       _getRecipe = getRecipe,
       super(RecipeInitial());
 
-  final int _id;
+  final String _id;
   final GetRecipe _getRecipe;
 
   Future<void> getRecipe() async {

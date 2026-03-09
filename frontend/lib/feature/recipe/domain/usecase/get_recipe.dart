@@ -8,7 +8,7 @@ class GetRecipe {
 
   final RecipeRepository _repository;
 
-  Future<Either<Failure, Recipe>> call(int id) {
+  Future<Either<Failure, Recipe>> call(String id) {
     return _repository.getRecipe(id);
   }
 }

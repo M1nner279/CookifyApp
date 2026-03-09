@@ -47,9 +47,11 @@ class _Ingredient extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.0,
       children: [
         Container(
+          margin: const EdgeInsets.only(top: 6.0),
           decoration: BoxDecoration(
             color: T.secondary(context),
             shape: BoxShape.circle,
@@ -58,14 +60,11 @@ class _Ingredient extends StatelessWidget {
           height: 8.0,
         ),
 
-        Text(
-          '${ingredient.name}${ingredient.comment != null ? ' (${ingredient.comment})' : ''} —',
-          style: T.bodyMedium(context),
-        ),
-
-        Text(
-          '${ingredient.quantity} ${int.tryParse(ingredient.quantity) != null ? '${ingredient.unit.name} ' : ''}',
-          style: T.bodyMedium(context),
+        Expanded(
+          child: Text(
+            '${ingredient.name} — ${ingredient.quantity}',
+            style: T.bodyMedium(context),
+          ),
         ),
       ],
     );
