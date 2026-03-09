@@ -36,3 +36,16 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+  fonts:
+    - family: Farabee
+      fonts:
+        - asset: assets/fonts/Farabee_Light.ttf
+          weight: 300
+        - asset: assets/fonts/Farabee_Semibold.ttf
+          weight: 600
+        - asset: assets/fonts/Farabee_Bold.ttf
+          weight: 700

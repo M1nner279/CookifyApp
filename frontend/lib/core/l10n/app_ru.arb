@@ -1,3 +1,14 @@
 {
-  
+    "cookifyCachedNetworkImageError": "Ошибка загрузки изображения",
+
+    "recipeDifficultyEasy": "Легкий",
+    "recipeDifficultyMedium": "Средний",
+    "recipeDifficultyHard": "Сложный",
+
+    "recipeDescriptionSectionCookingTime": "{time} мин. |",
+    "recipeDescriptionSectionCpfc": "БЖУ {proteins}/{fats}/{carbohydrates} г. | {calories} ккал. на 100 г.",
+    
+    "recipeIngredientsSectionTitle": "Ингредиенты",
+    
+    "recipeStepsSectionTitle": "Рецепт"
 }

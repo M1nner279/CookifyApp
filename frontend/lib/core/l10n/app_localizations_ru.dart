@@ -7,4 +7,37 @@ import 'app_localizations.dart';
 /// The translations for Russian (`ru`).
 class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
+
+  @override
+  String get cookifyCachedNetworkImageError => 'Ошибка загрузки изображения';
+
+  @override
+  String get recipeDifficultyEasy => 'Легкий';
+
+  @override
+  String get recipeDifficultyMedium => 'Средний';
+
+  @override
+  String get recipeDifficultyHard => 'Сложный';
+
+  @override
+  String recipeDescriptionSectionCookingTime(Object time) {
+    return '$time мин. |';
+  }
+
+  @override
+  String recipeDescriptionSectionCpfc(
+    Object calories,
+    Object carbohydrates,
+    Object fats,
+    Object proteins,
+  ) {
+    return 'БЖУ $proteins/$fats/$carbohydrates г. | $calories ккал. на 100 г.';
+  }
+
+  @override
+  String get recipeIngredientsSectionTitle => 'Ингредиенты';
+
+  @override
+  String get recipeStepsSectionTitle => 'Рецепт';
 }
