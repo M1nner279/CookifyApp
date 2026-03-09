@@ -93,6 +93,35 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('ru')];
+
+  /// No description provided for @recipeDescriptionSectionCookingTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'{time} мин. |'**
+  String recipeDescriptionSectionCookingTime(Object time);
+
+  /// No description provided for @recipeDescriptionSectionCpfc.
+  ///
+  /// In ru, this message translates to:
+  /// **'БЖУ {proteins}/{fats}/{carbohydrates} г. | {calories} ккал. на 100 г.'**
+  String recipeDescriptionSectionCpfc(
+    Object calories,
+    Object carbohydrates,
+    Object fats,
+    Object proteins,
+  );
+
+  /// No description provided for @recipeIngredientsSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ингредиенты'**
+  String get recipeIngredientsSectionTitle;
+
+  /// No description provided for @recipeStepsSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рецепт'**
+  String get recipeStepsSectionTitle;
 }
 
 class _AppLocalizationsDelegate
