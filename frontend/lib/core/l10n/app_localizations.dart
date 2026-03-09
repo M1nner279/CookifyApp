@@ -100,6 +100,24 @@ abstract class AppLocalizations {
   /// **'Ошибка загрузки изображения'**
   String get cookifyCachedNetworkImageError;
 
+  /// No description provided for @recipeDifficultyEasy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Легкий'**
+  String get recipeDifficultyEasy;
+
+  /// No description provided for @recipeDifficultyMedium.
+  ///
+  /// In ru, this message translates to:
+  /// **'Средний'**
+  String get recipeDifficultyMedium;
+
+  /// No description provided for @recipeDifficultyHard.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сложный'**
+  String get recipeDifficultyHard;
+
   /// No description provided for @recipeDescriptionSectionCookingTime.
   ///
   /// In ru, this message translates to:

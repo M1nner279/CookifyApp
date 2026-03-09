@@ -15,7 +15,7 @@ abstract class AppTheme {
     scaffoldBackgroundColor: palette.secondary(),
     fontFamily: 'Farabee',
     iconTheme: IconThemeData(color: palette.primary()),
-    textTheme: AppText.textTheme(palette.text()),
+    textTheme: AppText.textTheme,
     appBarTheme: AppBarTheme(
       backgroundColor: palette.secondary(),
       foregroundColor: palette.primary(),
