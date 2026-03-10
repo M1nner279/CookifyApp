@@ -2,7 +2,7 @@ flutter_native_splash:
   color: "#2E2005"
   color_dark: "#2E2005"
 
-  image: assets/images/cookify_logo.png 
+  image: assets/images/cookify_splash.png 
 
   fullscreen: true
 
@@ -10,4 +10,4 @@ flutter_native_splash:
     color: "#2E2005"
     color_dark: "#2E2005"
 
-    image: assets/images/cookify_logo.png     
+    image: assets/images/cookify_splash.png     
