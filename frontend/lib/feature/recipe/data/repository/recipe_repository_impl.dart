@@ -11,7 +11,6 @@ import 'package:dartz/dartz.dart';
 class RecipeRepositoryImpl implements RecipeRepository {
   @override
   Future<Either<Failure, Recipe>> getRecipe(String id) async {
-    await Future.delayed(const Duration(seconds: 5));
     return Right(
       Recipe(
         id: '0',
