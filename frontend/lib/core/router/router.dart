@@ -1,3 +1,5 @@
+import 'package:cookify/feature/home/presentation/bloc/home_cubit.dart';
+import 'package:cookify/feature/home/presentation/page/home_page.dart';
 import 'package:cookify/feature/recipe/presentation/bloc/recipe_cubit.dart';
 import 'package:cookify/feature/recipe/presentation/page/recipe_page.dart';
 import 'package:cookify/service/di/di.dart';
@@ -7,16 +9,27 @@ import 'package:go_router/go_router.dart';
 final router = GoRouter(
   routes: [
     GoRoute(
-      path: RecipePage.route,
+      path: HomePage.route,
       builder: (context, state) {
-        final id = state.pathParameters['id'];
-
-        return BlocProvider<RecipeCubit>.value(
-          value: DI.getIt(param1: id),
-          child: const RecipePage(),
+        return BlocProvider<HomeCubit>.value(
+          value: DI.getIt(),
+          child: const HomePage(),
         );
       },
+      routes: [
+        GoRoute(
+          path: RecipePage.route,
+          builder: (context, state) {
+            final id = state.pathParameters['id'];
+
+            return BlocProvider<RecipeCubit>.value(
+              value: DI.getIt(param1: id),
+              child: const RecipePage(),
+            );
+          },
+        ),
+      ],
     ),
   ],
-  initialLocation: RecipePage.fullRoute(id: '0'),
+  initialLocation: HomePage.route,
 );
