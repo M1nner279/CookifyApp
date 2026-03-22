@@ -25,18 +25,21 @@ class _RecipePhotoSectionState extends State<RecipePhotoSection> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: PageView.builder(
-            controller: _controller,
-            onPageChanged: (value) {
-              setState(() {
-                _indicatorIndex = value;
-              });
-            },
-            itemBuilder: (context, index) =>
-                CookifyCachedNetworkImage(widget.photoUrls[index]),
-            itemCount: widget.photoUrls.length,
+        Hero(
+          tag: widget.photoUrls[0],
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: PageView.builder(
+              controller: _controller,
+              onPageChanged: (value) {
+                setState(() {
+                  _indicatorIndex = value;
+                });
+              },
+              itemBuilder: (context, index) =>
+                  CookifyCachedNetworkImage(widget.photoUrls[index]),
+              itemCount: widget.photoUrls.length,
+            ),
           ),
         ),
 

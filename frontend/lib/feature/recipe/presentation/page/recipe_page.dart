@@ -7,13 +7,15 @@ import 'package:cookify/feature/recipe/presentation/widget/recipe_loaded_content
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class RecipePage extends StatefulWidget {
   const RecipePage({super.key});
 
   static const String route = '/recipes/:id';
 
-  static String routeWithId(String id) => route.replaceFirst(':id', id.toString());
+  static String routeWithId(String id) =>
+      route.replaceFirst(':id', id.toString());
 
   static String fullRoute({required String id}) => routeWithId(id);
 
@@ -26,8 +28,16 @@ class _RecipePageState extends State<RecipePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CookifyAppBar(
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
-        action: IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border)),
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.bookmark_border)),
+        ],
       ),
 
       body: BlocBuilder<RecipeCubit, RecipeState>(

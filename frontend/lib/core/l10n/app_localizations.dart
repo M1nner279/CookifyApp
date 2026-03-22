@@ -100,6 +100,12 @@ abstract class AppLocalizations {
   /// **'Ошибка загрузки изображения'**
   String get cookifyCachedNetworkImageError;
 
+  /// No description provided for @homeRecipeCardCookingTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'| {time} мин.'**
+  String homeRecipeCardCookingTime(Object time);
+
   /// No description provided for @recipeDifficultyEasy.
   ///
   /// In ru, this message translates to:

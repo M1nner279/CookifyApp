@@ -1,6 +1,8 @@
 {
     "cookifyCachedNetworkImageError": "Ошибка загрузки изображения",
 
+    "homeRecipeCardCookingTime": "| {time} мин.",
+
     "recipeDifficultyEasy": "Легкий",
     "recipeDifficultyMedium": "Средний",
     "recipeDifficultyHard": "Сложный",

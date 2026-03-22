@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 class Category extends Equatable {
-  const Category({required this.id, required this.name});
+  const Category({this.id, required this.name});
 
-  final String id;
+  final String? id;
   final String name;
 
   @override

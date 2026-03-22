@@ -7,7 +7,7 @@ import 'package:equatable/equatable.dart';
 
 class Recipe extends Equatable {
   const Recipe({
-    required this.id,
+    this.id,
     required this.creator,
     required this.photoUrls,
     required this.name,
@@ -15,12 +15,12 @@ class Recipe extends Equatable {
     required this.cookingTime,
     required this.difficulty,
     required this.cpfc,
-    this.description,
+    required this.description,
     required this.ingredients,
     required this.steps,
   });
 
-  final String id;
+  final String? id;
   final dynamic creator;
   final List<String> photoUrls;
   final String name;
@@ -28,7 +28,7 @@ class Recipe extends Equatable {
   final int cookingTime;
   final RecipeDifficulty difficulty;
   final Cpfc cpfc;
-  final String? description;
+  final String description;
   final List<RecipeIngredient> ingredients;
   final List<RecipeStep> steps;
 

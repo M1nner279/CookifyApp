@@ -69,8 +69,7 @@ class RecipeDescriptionSection extends StatelessWidget {
               style: T.bodyMedium(context),
             ),
 
-            if (recipe.description != null)
-              Text(recipe.description!, style: T.bodyMedium(context)),
+            Text(recipe.description, style: T.bodyMedium(context)),
           ],
         ),
       ),
