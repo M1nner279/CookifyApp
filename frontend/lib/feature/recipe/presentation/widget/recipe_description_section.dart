@@ -1,8 +1,8 @@
 import 'package:cookify/shared/presentation/widget/cookify_card.dart';
 import 'package:cookify/config/l10n/s.dart';
 import 'package:cookify/config/theme/t.dart';
-import 'package:cookify/feature/recipe/domain/entity/category.dart';
-import 'package:cookify/feature/recipe/domain/entity/recipe.dart';
+import 'package:cookify/shared/domain/entity/category.dart';
+import 'package:cookify/shared/domain/entity/recipe.dart';
 import 'package:flutter/material.dart';
 
 class RecipeDescriptionSection extends StatelessWidget {

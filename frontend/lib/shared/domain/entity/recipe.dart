@@ -1,8 +1,8 @@
-import 'package:cookify/feature/recipe/config/enum/recipe_difficulty.dart';
-import 'package:cookify/feature/recipe/domain/entity/category.dart';
-import 'package:cookify/feature/recipe/domain/entity/cpfc.dart';
-import 'package:cookify/feature/recipe/domain/entity/recipe_ingredient.dart';
-import 'package:cookify/feature/recipe/domain/entity/recipe_step.dart';
+import 'package:cookify/shared/config/enum/recipe_difficulty.dart';
+import 'package:cookify/shared/domain/entity/category.dart';
+import 'package:cookify/shared/domain/entity/cpfc.dart';
+import 'package:cookify/shared/domain/entity/recipe_ingredient.dart';
+import 'package:cookify/shared/domain/entity/recipe_step.dart';
 import 'package:equatable/equatable.dart';
 
 class Recipe extends Equatable {

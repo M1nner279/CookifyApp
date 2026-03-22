@@ -1,8 +1,8 @@
 import 'package:cookify/config/error/failure.dart';
 import 'package:cookify/feature/home/domain/entity/recipe_preview.dart';
 import 'package:cookify/feature/home/domain/repository/home_repository.dart';
-import 'package:cookify/feature/recipe/config/enum/recipe_difficulty.dart';
-import 'package:cookify/feature/recipe/domain/entity/category.dart';
+import 'package:cookify/shared/config/enum/recipe_difficulty.dart';
+import 'package:cookify/shared/domain/entity/category.dart';
 import 'package:dartz/dartz.dart';
 
 class HomeRepositoryImpl implements HomeRepository {

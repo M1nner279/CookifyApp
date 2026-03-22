@@ -1,5 +1,5 @@
 import 'package:cookify/config/error/failure.dart';
-import 'package:cookify/feature/recipe/domain/entity/recipe.dart';
+import 'package:cookify/shared/domain/entity/recipe.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class RecipeState extends Equatable {

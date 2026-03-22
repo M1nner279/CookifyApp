@@ -1,5 +1,5 @@
-import 'package:cookify/feature/recipe/config/enum/recipe_difficulty.dart';
-import 'package:cookify/feature/recipe/domain/entity/category.dart';
+import 'package:cookify/shared/config/enum/recipe_difficulty.dart';
+import 'package:cookify/shared/domain/entity/category.dart';
 import 'package:equatable/equatable.dart';
 
 class RecipePreview extends Equatable {

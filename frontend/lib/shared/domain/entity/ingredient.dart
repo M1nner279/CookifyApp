@@ -1,4 +1,4 @@
-import 'package:cookify/feature/recipe/domain/entity/cpfc.dart';
+import 'package:cookify/shared/domain/entity/cpfc.dart';
 import 'package:equatable/equatable.dart';
 
 class Ingredient extends Equatable {

@@ -1,4 +1,4 @@
-import 'package:cookify/feature/recipe/domain/entity/ingredient.dart';
+import 'package:cookify/shared/domain/entity/ingredient.dart';
 
 class RecipeIngredient extends Ingredient {
   const RecipeIngredient({

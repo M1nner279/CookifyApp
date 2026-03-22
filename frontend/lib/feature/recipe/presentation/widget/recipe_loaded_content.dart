@@ -1,4 +1,4 @@
-import 'package:cookify/feature/recipe/domain/entity/recipe.dart';
+import 'package:cookify/shared/domain/entity/recipe.dart';
 import 'package:cookify/feature/recipe/presentation/widget/recipe_description_section.dart';
 import 'package:cookify/feature/recipe/presentation/widget/recipe_ingredients_section.dart';
 import 'package:cookify/feature/recipe/presentation/widget/recipe_photo_section.dart';
