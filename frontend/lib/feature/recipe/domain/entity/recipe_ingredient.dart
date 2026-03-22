@@ -2,7 +2,7 @@ import 'package:cookify/feature/recipe/domain/entity/ingredient.dart';
 
 class RecipeIngredient extends Ingredient {
   const RecipeIngredient({
-    required super.id,
+    super.id,
     required super.name,
     required super.cpfc,
     required this.quantity,
