@@ -3,10 +3,10 @@ import 'package:cookify/core/theme/t.dart';
 import 'package:flutter/material.dart';
 
 class CookifyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CookifyAppBar({super.key, this.leading, this.action});
+  const CookifyAppBar({super.key, this.leading, this.actions});
 
   final Widget? leading;
-  final Widget? action;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class CookifyAppBar extends StatelessWidget implements PreferredSizeWidget {
           leading: leading,
           automaticallyImplyLeading: false,
           title: CookifyImage('cookify_title', height: kToolbarHeight * 0.6),
-          actions: [?action],
+          actions: actions,
           automaticallyImplyActions: false,
           centerTitle: true,
         ),

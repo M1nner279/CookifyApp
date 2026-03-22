@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CookifyAppBar(
-        action: IconButton(onPressed: () {}, icon: Icon(Icons.update)),
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.update))],
       ),
 
       body: BlocBuilder<HomeCubit, HomeState>(

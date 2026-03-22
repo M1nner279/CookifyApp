@@ -34,7 +34,10 @@ class _RecipePageState extends State<RecipePage> {
           },
           icon: Icon(Icons.arrow_back),
         ),
-        action: IconButton(onPressed: () {}, icon: Icon(Icons.bookmark_border)),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.bookmark_border)),
+        ],
       ),
 
       body: BlocBuilder<RecipeCubit, RecipeState>(
