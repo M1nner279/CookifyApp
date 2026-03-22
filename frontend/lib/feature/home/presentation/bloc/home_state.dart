@@ -1,4 +1,4 @@
-import 'package:cookify/core/error/failure.dart';
+import 'package:cookify/config/error/failure.dart';
 import 'package:cookify/feature/home/domain/entity/recipe_preview.dart';
 import 'package:equatable/equatable.dart';
 

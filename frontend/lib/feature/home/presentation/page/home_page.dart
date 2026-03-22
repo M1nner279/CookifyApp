@@ -1,6 +1,6 @@
-import 'package:cookify/common/presentation/widget/cookify_app_bar.dart';
-import 'package:cookify/common/presentation/widget/cookify_error_content.dart';
-import 'package:cookify/common/presentation/widget/cookify_loading_content.dart';
+import 'package:cookify/shared/presentation/widget/cookify_app_bar.dart';
+import 'package:cookify/shared/presentation/widget/cookify_error_content.dart';
+import 'package:cookify/shared/presentation/widget/cookify_loading_content.dart';
 import 'package:cookify/feature/home/presentation/bloc/home_cubit.dart';
 import 'package:cookify/feature/home/presentation/bloc/home_state.dart';
 import 'package:cookify/feature/home/presentation/widget/home_loaded_content.dart';

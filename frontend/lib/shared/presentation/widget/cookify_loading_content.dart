@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:cookify/common/presentation/widget/cookify_image.dart';
+import 'package:cookify/shared/presentation/widget/cookify_image.dart';
 import 'package:flutter/material.dart';
 
 class CookifyLoadingContent extends StatefulWidget {

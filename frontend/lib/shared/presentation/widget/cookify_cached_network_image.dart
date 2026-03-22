@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cookify/core/l10n/s.dart';
-import 'package:cookify/core/theme/t.dart';
+import 'package:cookify/config/l10n/s.dart';
+import 'package:cookify/config/theme/t.dart';
 import 'package:flutter/material.dart';
 
 class CookifyCachedNetworkImage extends StatelessWidget {

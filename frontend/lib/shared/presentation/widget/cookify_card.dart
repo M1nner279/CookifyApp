@@ -1,4 +1,4 @@
-import 'package:cookify/core/theme/t.dart';
+import 'package:cookify/config/theme/t.dart';
 import 'package:flutter/material.dart';
 
 class CookifyCard extends StatelessWidget {

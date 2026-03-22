@@ -1,5 +1,5 @@
-import 'package:cookify/common/presentation/widget/cookify_image.dart';
-import 'package:cookify/core/theme/t.dart';
+import 'package:cookify/shared/presentation/widget/cookify_image.dart';
+import 'package:cookify/config/theme/t.dart';
 import 'package:flutter/material.dart';
 
 class CookifyAppBar extends StatelessWidget implements PreferredSizeWidget {

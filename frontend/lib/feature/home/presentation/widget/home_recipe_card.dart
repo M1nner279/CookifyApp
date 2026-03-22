@@ -1,6 +1,6 @@
-import 'package:cookify/common/presentation/widget/cookify_cached_network_image.dart';
-import 'package:cookify/core/l10n/s.dart';
-import 'package:cookify/core/theme/t.dart';
+import 'package:cookify/shared/presentation/widget/cookify_cached_network_image.dart';
+import 'package:cookify/config/l10n/s.dart';
+import 'package:cookify/config/theme/t.dart';
 import 'package:cookify/feature/home/domain/entity/recipe_preview.dart';
 import 'package:cookify/feature/recipe/domain/entity/category.dart';
 import 'package:cookify/feature/recipe/presentation/page/recipe_page.dart';

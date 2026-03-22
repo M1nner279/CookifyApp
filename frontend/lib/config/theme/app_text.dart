@@ -1,4 +1,4 @@
-import 'package:cookify/core/theme/app_palette.dart';
+import 'package:cookify/config/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 abstract class AppText {

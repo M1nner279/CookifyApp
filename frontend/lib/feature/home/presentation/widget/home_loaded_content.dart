@@ -1,4 +1,4 @@
-import 'package:cookify/core/theme/t.dart';
+import 'package:cookify/config/theme/t.dart';
 import 'package:cookify/feature/home/domain/entity/recipe_preview.dart';
 import 'package:cookify/feature/home/presentation/widget/home_recipe_card.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
-import 'package:cookify/core/l10n/s.dart';
-import 'package:cookify/core/theme/app_palette.dart';
+import 'package:cookify/config/l10n/s.dart';
+import 'package:cookify/config/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 enum RecipeDifficulty {

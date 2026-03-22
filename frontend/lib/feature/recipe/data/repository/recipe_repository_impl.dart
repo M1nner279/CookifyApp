@@ -1,4 +1,4 @@
-import 'package:cookify/core/error/failure.dart';
+import 'package:cookify/config/error/failure.dart';
 import 'package:cookify/feature/recipe/config/enum/recipe_difficulty.dart';
 import 'package:cookify/feature/recipe/domain/entity/category.dart';
 import 'package:cookify/feature/recipe/domain/entity/cpfc.dart';

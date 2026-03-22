@@ -1,6 +1,6 @@
-import 'package:cookify/core/theme/app_palette.dart';
-import 'package:cookify/core/theme/app_text.dart';
-import 'package:cookify/core/theme/color_scheme_extension.dart';
+import 'package:cookify/config/theme/app_palette.dart';
+import 'package:cookify/config/theme/app_text.dart';
+import 'package:cookify/config/theme/color_scheme_extension.dart';
 import 'package:flutter/material.dart';
 
 abstract class AppTheme {
