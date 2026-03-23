@@ -1,10 +1,13 @@
 import 'package:cookify/config/l10n/s.dart';
+import 'package:cookify/feature/recipe/presentation/page/recipe_page.dart';
 import 'package:cookify/shared/config/enum/recipe_difficulty.dart';
 import 'package:cookify/feature/home/domain/entity/recipe_preview.dart';
 import 'package:cookify/shared/domain/entity/category.dart';
 import 'package:cookify/shared/presentation/widget/cookify_card.dart';
 import 'package:cookify/shared/presentation/widget/cookify_carousel.dart';
+import 'package:cookify/shared/presentation/widget/cookify_hero.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeRecipeCard extends StatelessWidget {
   const HomeRecipeCard({super.key, required this.recipe});
@@ -14,20 +17,25 @@ class HomeRecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        context.push(RecipePage.fullRoute(id: recipe.id));
+      },
       child: CookifyCard(
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return SizedBox(
-                    width: constraints.maxWidth,
-                    height: constraints.maxWidth,
-                    child: CookifyCarousel(photoUrls: recipe.photoUrls),
-                  );
-                },
+            CookifyHero(
+              tag: 'recipe-${recipe.id}',
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SizedBox(
+                      width: constraints.maxWidth,
+                      height: constraints.maxWidth,
+                      child: CookifyCarousel(photoUrls: recipe.photoUrls),
+                    );
+                  },
+                ),
               ),
             ),
 

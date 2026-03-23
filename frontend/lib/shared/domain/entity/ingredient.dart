@@ -1,13 +1,13 @@
 import 'package:cookify/shared/domain/entity/cpfc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Ingredient extends Equatable {
-  const Ingredient({this.id, required this.name, required this.cpfc});
+part 'ingredient.freezed.dart';
 
-  final String? id;
-  final String name;
-  final Cpfc cpfc;
-
-  @override
-  List<Object?> get props => [id, name, cpfc];
+@freezed
+abstract class Ingredient with _$Ingredient {
+  const factory Ingredient({
+    String? id,
+    required String name,
+    required Cpfc cpfc,
+  }) = _Ingredient;
 }

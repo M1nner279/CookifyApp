@@ -12,6 +12,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cookifyCachedNetworkImageError => 'Ошибка загрузки изображения';
 
   @override
+  String get recipeDifficultyEasy => 'ЛЕГКИЙ';
+
+  @override
+  String get recipeDifficultyMedium => 'СРЕДНИЙ';
+
+  @override
+  String get recipeDifficultyHard => 'СЛОЖНЫЙ';
+
+  @override
   String homeRecipeCardCookingTime(Object time) {
     return '$time мин';
   }
@@ -29,17 +38,42 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get recipeDifficultyEasy => 'Легкий';
-
-  @override
-  String get recipeDifficultyMedium => 'Средний';
-
-  @override
-  String get recipeDifficultyHard => 'Сложный';
+  String get recipeDescriptionSectionTime => 'Время';
 
   @override
   String recipeDescriptionSectionCookingTime(Object time) {
-    return '$time мин. |';
+    return '$time мин';
+  }
+
+  @override
+  String get recipeDescriptionSectionCarbs => 'У';
+
+  @override
+  String get recipeDescriptionSectionProteins => 'Б';
+
+  @override
+  String get recipeDescriptionSectionFats => 'Ж';
+
+  @override
+  String get recipeDescriptionSectionGrams => 'г';
+
+  @override
+  String get recipeDescriptionSectionCalories => 'ккал';
+
+  @override
+  String get recipeIngredientsSectionTitle => 'Ингредиенты';
+
+  @override
+  String recipeIngredientsSectionServingCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count порции',
+      many: '$count порций',
+      few: '$count порции',
+      one: '$count порция',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -51,9 +85,6 @@ class AppLocalizationsRu extends AppLocalizations {
   ) {
     return 'БЖУ $proteins/$fats/$carbohydrates г. | $calories ккал. на 100 г.';
   }
-
-  @override
-  String get recipeIngredientsSectionTitle => 'Ингредиенты';
 
   @override
   String get recipeStepsSectionTitle => 'Рецепт';

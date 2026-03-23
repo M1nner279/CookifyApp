@@ -1,18 +1,13 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Cpfc extends Equatable {
-  const Cpfc({
-    required this.calories,
-    required this.proteins,
-    required this.fats,
-    required this.carbohydrates,
-  });
+part 'cpfc.freezed.dart';
 
-  final int calories;
-  final int proteins;
-  final int fats;
-  final int carbohydrates;
-
-  @override
-  List<Object?> get props => [calories, proteins, fats, carbohydrates];
+@freezed
+abstract class Cpfc with _$Cpfc {
+  const factory Cpfc({
+    required int carbohydrates,
+    required int proteins,
+    required int fats,
+    required int calories,
+  }) = _Cpfc;
 }

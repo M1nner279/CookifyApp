@@ -1,39 +1,155 @@
+import 'dart:math';
+
 import 'package:cookify/shared/presentation/widget/cookify_card.dart';
 import 'package:cookify/config/l10n/s.dart';
-import 'package:cookify/config/theme/t.dart';
 import 'package:cookify/shared/domain/entity/recipe_ingredient.dart';
-import 'package:cookify/feature/recipe/presentation/widget/recipe_section_title.dart';
 import 'package:flutter/material.dart';
 
-class RecipeIngredientsSection extends StatelessWidget {
-  const RecipeIngredientsSection({super.key, required this.ingredients});
+class RecipeIngredientsSection extends StatefulWidget {
+  const RecipeIngredientsSection({
+    super.key,
+    required this.servingCount,
+    required this.ingredients,
+  });
 
+  final double servingCount;
   final List<RecipeIngredient> ingredients;
 
   @override
+  State<RecipeIngredientsSection> createState() =>
+      _RecipeIngredientsSectionState();
+}
+
+class _RecipeIngredientsSectionState extends State<RecipeIngredientsSection> {
+  late double _servingCount = widget.servingCount;
+  late List<RecipeIngredient> _ingredients = [...widget.ingredients];
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: CookifyCard(
+    return CookifyCard(
+      child: Padding(
+        padding: const .all(24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 8.0,
+          spacing: 24.0,
           children: [
-            RecipeSectionTitle(S.of(context).recipeIngredientsSectionTitle),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  S.of(context).recipeIngredientsSectionTitle,
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.5,
+                    height: 28.0 / 20.0,
+                  ),
+                ),
+
+                _ServingCount(
+                  onServingCountChanged: (newServingCount, newIngredients) {
+                    setState(() {
+                      _servingCount = newServingCount;
+                      _ingredients = newIngredients;
+                    });
+                  },
+                  servingCount: _servingCount,
+                  ingredients: _ingredients,
+                ),
+              ],
+            ),
 
             Flexible(
               child: ListView.separated(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (_, index) =>
-                    _Ingredient(ingredient: ingredients[index]),
-                separatorBuilder: (_, _) => const SizedBox(height: 4.0),
-                itemCount: ingredients.length,
+                    _Ingredient(ingredient: _ingredients[index]),
+                separatorBuilder: (_, _) => Container(
+                  color: const Color(0x0F000000),
+                  width: double.infinity,
+                  height: 1.0,
+                  margin: .symmetric(vertical: 16.0),
+                ),
+                itemCount: _ingredients.length,
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ServingCount extends StatelessWidget {
+  const _ServingCount({
+    required this.onServingCountChanged,
+    required this.servingCount,
+    required this.ingredients,
+  });
+
+  final void Function(
+    double newServingCount,
+    List<RecipeIngredient> newIngredients,
+  )
+  onServingCountChanged;
+  final double servingCount;
+  final List<RecipeIngredient> ingredients;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const .all(2.0),
+      decoration: BoxDecoration(
+        color: const Color(0x19000000),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Row(
+        spacing: 8.0,
+        children: [
+          IconButton(
+            onPressed: () {
+              final newServingCount = max(0.5, servingCount - 0.5);
+              final newIngredients = ingredients
+                  .map(
+                    (ingredient) => ingredient.copyWith(
+                      quantity:
+                          ingredient.quantity / servingCount * newServingCount,
+                    ),
+                  )
+                  .toList();
+              onServingCountChanged(newServingCount, newIngredients);
+            },
+            icon: Icon(Icons.remove, size: 20.0),
+          ),
+
+          Text(
+            S.of(context).recipeIngredientsSectionServingCount(servingCount),
+            style: const TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.0,
+              height: 20.0 / 14.0,
+            ),
+          ),
+
+          IconButton(
+            onPressed: () {
+              final newServingCount = min(20.0, servingCount + 0.5);
+              final newIngredients = ingredients
+                  .map(
+                    (ingredient) => ingredient.copyWith(
+                      quantity:
+                          ingredient.quantity / servingCount * newServingCount,
+                    ),
+                  )
+                  .toList();
+              onServingCountChanged(newServingCount, newIngredients);
+            },
+            icon: Icon(Icons.add, size: 20.0),
+          ),
+        ],
       ),
     );
   }
@@ -47,23 +163,26 @@ class _Ingredient extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       spacing: 8.0,
       children: [
-        Container(
-          margin: const EdgeInsets.only(top: 6.0),
-          decoration: BoxDecoration(
-            color: T.secondary(context),
-            shape: BoxShape.circle,
+        Text(
+          ingredient.name,
+          style: const TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.0,
+            height: 24.0 / 16.0,
           ),
-          width: 8.0,
-          height: 8.0,
         ),
 
-        Expanded(
-          child: Text(
-            '${ingredient.name} — ${ingredient.quantity}',
-            style: T.bodyMedium(context),
+        Text(
+          '${ingredient.quantity.toString().replaceAll(RegExp(r'\.?0+$'), '').substring(0, min(5, ingredient.quantity.toString().length - 2))}${ingredient.unit}',
+          style: const TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.0,
+            height: 24.0 / 16.0,
           ),
         ),
       ],

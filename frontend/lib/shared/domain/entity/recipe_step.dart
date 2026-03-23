@@ -1,16 +1,13 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class RecipeStep extends Equatable {
-  const RecipeStep({
-    this.id,
-    required this.imageUrl,
-    required this.description,
-  });
+part 'recipe_step.freezed.dart';
 
-  final String? id;
-  final String? imageUrl;
-  final String description;
-
-  @override
-  List<Object?> get props => [imageUrl, description];
+@freezed
+abstract class RecipeStep with _$RecipeStep {
+  const factory RecipeStep({
+    String? id,
+    required String name,
+    String? imageUrl,
+    required String description,
+  }) = _RecipeStep;
 }

@@ -1,4 +1,4 @@
-import 'package:cookify/shared/presentation/widget/cookify_app_bar.dart';
+import 'package:cookify/feature/recipe/presentation/widget/recipe_app_bar.dart';
 import 'package:cookify/shared/presentation/widget/cookify_error_content.dart';
 import 'package:cookify/shared/presentation/widget/cookify_loading_content.dart';
 import 'package:cookify/feature/recipe/presentation/bloc/recipe_cubit.dart';
@@ -7,7 +7,6 @@ import 'package:cookify/feature/recipe/presentation/widget/recipe_loaded_content
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class RecipePage extends StatefulWidget {
   const RecipePage({super.key});
@@ -27,18 +26,7 @@ class _RecipePageState extends State<RecipePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CookifyAppBar(
-        leading: IconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: Icon(Icons.arrow_back),
-        ),
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.bookmark_border)),
-        ],
-      ),
+      appBar: const RecipeAppBar(),
 
       body: BlocBuilder<RecipeCubit, RecipeState>(
         builder: (context, state) {

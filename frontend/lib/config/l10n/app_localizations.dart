@@ -100,6 +100,24 @@ abstract class AppLocalizations {
   /// **'Ошибка загрузки изображения'**
   String get cookifyCachedNetworkImageError;
 
+  /// No description provided for @recipeDifficultyEasy.
+  ///
+  /// In ru, this message translates to:
+  /// **'ЛЕГКИЙ'**
+  String get recipeDifficultyEasy;
+
+  /// No description provided for @recipeDifficultyMedium.
+  ///
+  /// In ru, this message translates to:
+  /// **'СРЕДНИЙ'**
+  String get recipeDifficultyMedium;
+
+  /// No description provided for @recipeDifficultyHard.
+  ///
+  /// In ru, this message translates to:
+  /// **'СЛОЖНЫЙ'**
+  String get recipeDifficultyHard;
+
   /// No description provided for @homeRecipeCardCookingTime.
   ///
   /// In ru, this message translates to:
@@ -112,29 +130,59 @@ abstract class AppLocalizations {
   /// **'{count, plural, one {{count} порция} few {{count} порции} other {{count} порций}}'**
   String homeRecipeCardServingCount(num count);
 
-  /// No description provided for @recipeDifficultyEasy.
+  /// No description provided for @recipeDescriptionSectionTime.
   ///
   /// In ru, this message translates to:
-  /// **'Легкий'**
-  String get recipeDifficultyEasy;
-
-  /// No description provided for @recipeDifficultyMedium.
-  ///
-  /// In ru, this message translates to:
-  /// **'Средний'**
-  String get recipeDifficultyMedium;
-
-  /// No description provided for @recipeDifficultyHard.
-  ///
-  /// In ru, this message translates to:
-  /// **'Сложный'**
-  String get recipeDifficultyHard;
+  /// **'Время'**
+  String get recipeDescriptionSectionTime;
 
   /// No description provided for @recipeDescriptionSectionCookingTime.
   ///
   /// In ru, this message translates to:
-  /// **'{time} мин. |'**
+  /// **'{time} мин'**
   String recipeDescriptionSectionCookingTime(Object time);
+
+  /// No description provided for @recipeDescriptionSectionCarbs.
+  ///
+  /// In ru, this message translates to:
+  /// **'У'**
+  String get recipeDescriptionSectionCarbs;
+
+  /// No description provided for @recipeDescriptionSectionProteins.
+  ///
+  /// In ru, this message translates to:
+  /// **'Б'**
+  String get recipeDescriptionSectionProteins;
+
+  /// No description provided for @recipeDescriptionSectionFats.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ж'**
+  String get recipeDescriptionSectionFats;
+
+  /// No description provided for @recipeDescriptionSectionGrams.
+  ///
+  /// In ru, this message translates to:
+  /// **'г'**
+  String get recipeDescriptionSectionGrams;
+
+  /// No description provided for @recipeDescriptionSectionCalories.
+  ///
+  /// In ru, this message translates to:
+  /// **'ккал'**
+  String get recipeDescriptionSectionCalories;
+
+  /// No description provided for @recipeIngredientsSectionTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ингредиенты'**
+  String get recipeIngredientsSectionTitle;
+
+  /// No description provided for @recipeIngredientsSectionServingCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one {{count} порция} few {{count} порции} many {{count} порций} other {{count} порции}}'**
+  String recipeIngredientsSectionServingCount(num count);
 
   /// No description provided for @recipeDescriptionSectionCpfc.
   ///
@@ -146,12 +194,6 @@ abstract class AppLocalizations {
     Object fats,
     Object proteins,
   );
-
-  /// No description provided for @recipeIngredientsSectionTitle.
-  ///
-  /// In ru, this message translates to:
-  /// **'Ингредиенты'**
-  String get recipeIngredientsSectionTitle;
 
   /// No description provided for @recipeStepsSectionTitle.
   ///
