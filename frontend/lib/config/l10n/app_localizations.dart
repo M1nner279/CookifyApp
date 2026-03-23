@@ -103,8 +103,14 @@ abstract class AppLocalizations {
   /// No description provided for @homeRecipeCardCookingTime.
   ///
   /// In ru, this message translates to:
-  /// **'| {time} мин.'**
+  /// **'{time} мин'**
   String homeRecipeCardCookingTime(Object time);
+
+  /// No description provided for @homeRecipeCardServingCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count, plural, one {{count} порция} few {{count} порции} other {{count} порций}}'**
+  String homeRecipeCardServingCount(num count);
 
   /// No description provided for @recipeDifficultyEasy.
   ///

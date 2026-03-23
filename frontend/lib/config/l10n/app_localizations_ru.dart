@@ -13,7 +13,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String homeRecipeCardCookingTime(Object time) {
-    return '| $time мин.';
+    return '$time мин';
+  }
+
+  @override
+  String homeRecipeCardServingCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count порций',
+      few: '$count порции',
+      one: '$count порция',
+    );
+    return '$_temp0';
   }
 
   @override

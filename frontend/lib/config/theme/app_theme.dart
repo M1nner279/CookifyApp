@@ -1,11 +1,9 @@
 import 'package:cookify/config/theme/app_palette.dart';
 import 'package:cookify/config/theme/app_text.dart';
-import 'package:cookify/config/theme/color_scheme_extension.dart';
 import 'package:flutter/material.dart';
 
 abstract class AppTheme {
   static ThemeData _data(AppPalette palette) => ThemeData(
-    extensions: [ColorSchemeExtension(primaryLight: palette.primaryLight())],
     colorScheme: ColorScheme.fromSeed(
       seedColor: palette.primary(),
       brightness: palette.brightness(),
@@ -13,8 +11,8 @@ abstract class AppTheme {
       secondary: palette.secondary(),
     ),
     scaffoldBackgroundColor: palette.secondary(),
-    fontFamily: 'Farabee',
-    iconTheme: IconThemeData(color: palette.primary()),
+    fontFamily: 'PlusJakartaSans',
+    iconTheme: IconThemeData(color: palette.secondary()),
     textTheme: AppText.textTheme,
     appBarTheme: AppBarTheme(
       backgroundColor: palette.secondary(),

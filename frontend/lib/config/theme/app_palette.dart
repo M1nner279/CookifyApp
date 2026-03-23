@@ -7,13 +7,11 @@ sealed class AppPalette {
 
   Color secondary();
 
-  Color primaryLight();
+  static final Color text = Color(0xFF120A08);
 
-  static final Color text = Color(0xFF000000);
-
-  static final Color recipeDifficultyEasy = Colors.green.shade300;
-  static final Color recipeDifficultyMedium = Colors.orange.shade300;
-  static final Color recipeDifficultyHard = Colors.red.shade300;
+  static final Color recipeDifficultyEasy = Color(0xFF7FB069);
+  static final Color recipeDifficultyMedium = Color(0xFFE8B86D);
+  static final Color recipeDifficultyHard = Color(0xFFE76F51);
 }
 
 class AppPaletteLight extends AppPalette {
@@ -21,13 +19,10 @@ class AppPaletteLight extends AppPalette {
   Brightness brightness() => Brightness.light;
   
   @override
-  Color primary() => Color(0xFFD9AD74);
+  Color primary() => Color(0xFFF5E6D3);
   
   @override
-  Color secondary() => Color(0xFF2E2005);
-
-  @override
-  Color primaryLight() => Color(0xFFD4B896);
+  Color secondary() => Color(0xFF120A08);
 }
 
 class AppPaletteDark extends AppPalette {
@@ -35,11 +30,8 @@ class AppPaletteDark extends AppPalette {
   Brightness brightness() => Brightness.dark;
   
   @override
-  Color primary() => Color(0xFFD9AD74);
+  Color primary() => Color(0xFFF5E6D3);
   
   @override
-  Color secondary() => Color(0xFF2E2005);
-
-  @override
-  Color primaryLight() => Color(0xFFD4B896);
+  Color secondary() => Color(0xFF120A08);
 }

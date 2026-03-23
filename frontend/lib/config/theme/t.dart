@@ -1,21 +1,11 @@
-import 'package:cookify/config/theme/color_scheme_extension.dart';
 import 'package:flutter/material.dart';
 
 abstract class T {
   static Color primary(BuildContext context) =>
       Theme.of(context).colorScheme.primary;
 
-  static Color primaryLight(BuildContext context) =>
-      Theme.of(context).extension<ColorSchemeExtension>()!.primaryLight;
-
   static Color secondary(BuildContext context) =>
       Theme.of(context).colorScheme.secondary;
-
-  static Gradient primaryGradient(BuildContext context) => LinearGradient(
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
-    colors: [T.primary(context), T.primaryLight(context)],
-  );
 
   static TextStyle headlineLarge(BuildContext context) =>
       Theme.of(context).textTheme.headlineLarge!;
