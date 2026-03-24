@@ -162,6 +162,11 @@ class _Ingredient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final quantity = ingredient.quantity.toStringAsFixed(2).replaceAll(
+      RegExp(r'\.?0+$'),
+      '',
+    );
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       spacing: 8.0,
@@ -177,7 +182,7 @@ class _Ingredient extends StatelessWidget {
         ),
 
         Text(
-          '${ingredient.quantity.toString().replaceAll(RegExp(r'\.?0+$'), '').substring(0, min(5, ingredient.quantity.toString().length - 2))}${ingredient.unit}',
+          '$quantity${ingredient.unit}',
           style: const TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.w700,
