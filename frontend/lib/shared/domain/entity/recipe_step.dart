@@ -7,7 +7,7 @@ abstract class RecipeStep with _$RecipeStep {
   const factory RecipeStep({
     String? id,
     required String name,
-    String? imageUrl,
+    String? photoUrl,
     required String description,
   }) = _RecipeStep;
 }

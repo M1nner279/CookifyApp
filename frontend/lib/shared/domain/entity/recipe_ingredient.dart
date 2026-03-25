@@ -8,7 +8,7 @@ abstract class RecipeIngredient with _$RecipeIngredient {
   const factory RecipeIngredient({
     required String name,
     required Cpfc cpfc,
-    required double quantity,
+    required double amount,
     required String unit,
   }) = _RecipeIngredient;
 }

@@ -10,9 +10,9 @@ abstract class RecipePreview with _$RecipePreview {
     required String id,
     required List<String> photoUrls,
     required String name,
-    required int cookingTime,
-    required int servingCount,
     required RecipeDifficulty difficulty,
     required List<Category> categories,
+    required int cookingTime,
+    required int servingCount,
   }) = _RecipePreview;
 }
