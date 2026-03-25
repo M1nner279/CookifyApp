@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit({required GetRecipeList getRecipeList})
-    : 
-      _getRecipeList = getRecipeList,
+    : _getRecipeList = getRecipeList,
       super(HomeInitial());
 
   final GetRecipeList _getRecipeList;

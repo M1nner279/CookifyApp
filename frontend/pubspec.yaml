@@ -19,19 +19,25 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.7
+  freezed_annotation: ^3.1.0
   get_it: ^9.2.1
   go_router: ^17.1.0
   image_picker: ^1.2.1
   internet_connection_checker_plus: ^2.9.1+2
   intl: ^0.20.2
+  json_annotation: ^4.11.0
   pretty_dio_logger: ^1.4.0
   sqflite: ^2.4.2
+  visibility_detector: ^0.4.0+2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  build_runner: ^2.13.1
+  freezed: ^3.2.5
+  json_serializable: ^6.13.1
 
 flutter:
   generate: true
@@ -41,11 +47,17 @@ flutter:
     - assets/images/
     - assets/icons/
   fonts:
-    - family: Farabee
+    - family: PlusJakartaSans
       fonts:
-        - asset: assets/fonts/Farabee_Light.ttf
+        - asset: assets/fonts/PlusJakartaSans-Light.ttf
           weight: 300
-        - asset: assets/fonts/Farabee_Semibold.ttf
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Farabee_Bold.ttf
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
           weight: 700
+        - asset: assets/fonts/PlusJakartaSans-ExtraBold.ttf
+          weight: 800
