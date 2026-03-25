@@ -19,10 +19,10 @@ class AppPaletteLight extends AppPalette {
   Brightness brightness() => Brightness.light;
   
   @override
-  Color primary() => Color(0xFFF5E6D3);
+  Color primary() => Color(0xFF120A08);
   
   @override
-  Color secondary() => Color(0xFF120A08);
+  Color secondary() => Color(0xFFF5E6D3);
 }
 
 class AppPaletteDark extends AppPalette {
@@ -30,8 +30,8 @@ class AppPaletteDark extends AppPalette {
   Brightness brightness() => Brightness.dark;
   
   @override
-  Color primary() => Color(0xFFF5E6D3);
+  Color primary() => Color(0xFF120A08);
   
   @override
-  Color secondary() => Color(0xFF120A08);
+  Color secondary() => Color(0xFFF5E6D3);
 }

@@ -184,17 +184,6 @@ abstract class AppLocalizations {
   /// **'{count, plural, one {{count} порция} few {{count} порции} many {{count} порций} other {{count} порции}}'**
   String recipeIngredientsSectionServingCount(num count);
 
-  /// No description provided for @recipeDescriptionSectionCpfc.
-  ///
-  /// In ru, this message translates to:
-  /// **'БЖУ {proteins}/{fats}/{carbohydrates} г. | {calories} ккал. на 100 г.'**
-  String recipeDescriptionSectionCpfc(
-    Object calories,
-    Object carbohydrates,
-    Object fats,
-    Object proteins,
-  );
-
   /// No description provided for @recipeStepsSectionTitle.
   ///
   /// In ru, this message translates to:

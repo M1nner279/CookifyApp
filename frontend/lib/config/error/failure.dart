@@ -1,5 +1,1 @@
-sealed class Failure {
-  Failure(this.message);
-
-  final String? message;
-}
+sealed class Failure {}

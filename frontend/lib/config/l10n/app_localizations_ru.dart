@@ -77,15 +77,5 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String recipeDescriptionSectionCpfc(
-    Object calories,
-    Object carbohydrates,
-    Object fats,
-    Object proteins,
-  ) {
-    return 'БЖУ $proteins/$fats/$carbohydrates г. | $calories ккал. на 100 г.';
-  }
-
-  @override
   String get recipeStepsSectionTitle => 'Рецепт';
 }

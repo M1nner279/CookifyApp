@@ -20,11 +20,7 @@
     "recipeDescriptionSectionCalories": "ккал",
 
     "recipeIngredientsSectionTitle": "Ингредиенты",
-    "recipeIngredientsSectionServingCount": "{count, plural, one {{count} порция} few {{count} порции} many {{count} порций} other {{count} порции}}",
-
-    "recipeDescriptionSectionCpfc": "БЖУ {proteins}/{fats}/{carbohydrates} г. | {calories} ккал. на 100 г.",
-    
-    
+    "recipeIngredientsSectionServingCount": "{count, plural, one {{count} порция} few {{count} порции} many {{count} порций} other {{count} порции}}",    
     
     "recipeStepsSectionTitle": "Рецепт"
 }
