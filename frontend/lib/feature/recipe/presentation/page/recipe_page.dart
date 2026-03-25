@@ -35,7 +35,7 @@ class _RecipePageState extends State<RecipePage> {
               context.read<RecipeCubit>().getRecipe();
             });
 
-            return const SizedBox.shrink();
+            return const CookifyLoadingContent();
           } else if (state is RecipeLoading) {
             return const CookifyLoadingContent();
           } else if (state is RecipeLoaded) {

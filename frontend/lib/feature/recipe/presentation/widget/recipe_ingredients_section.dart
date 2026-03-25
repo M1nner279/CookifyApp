@@ -32,32 +32,29 @@ class _RecipeIngredientsSectionState extends State<RecipeIngredientsSection> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 24.0,
+          spacing: 12.0,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  S.of(context).recipeIngredientsSectionTitle,
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.5,
-                    height: 28.0 / 20.0,
-                  ),
-                ),
+            Text(
+              S.of(context).recipeIngredientsSectionTitle,
+              style: const TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.5,
+                height: 28.0 / 20.0,
+              ),
+            ),
 
-                _ServingCount(
-                  onServingCountChanged: (newServingCount, newIngredients) {
-                    setState(() {
-                      _servingCount = newServingCount;
-                      _ingredients = newIngredients;
-                    });
-                  },
-                  servingCount: _servingCount,
-                  ingredients: _ingredients,
-                ),
-              ],
+            Center(
+              child: _ServingCount(
+                onServingCountChanged: (newServingCount, newIngredients) {
+                  setState(() {
+                    _servingCount = newServingCount;
+                    _ingredients = newIngredients;
+                  });
+                },
+                servingCount: _servingCount,
+                ingredients: _ingredients,
+              ),
             ),
 
             Flexible(
@@ -106,6 +103,8 @@ class _ServingCount extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         spacing: 8.0,
         children: [
           IconButton(
@@ -114,8 +113,8 @@ class _ServingCount extends StatelessWidget {
               final newIngredients = ingredients
                   .map(
                     (ingredient) => ingredient.copyWith(
-                      quantity:
-                          ingredient.quantity / servingCount * newServingCount,
+                      amount:
+                          ingredient.amount / servingCount * newServingCount,
                     ),
                   )
                   .toList();
@@ -132,6 +131,7 @@ class _ServingCount extends StatelessWidget {
               letterSpacing: 0.0,
               height: 20.0 / 14.0,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
 
           IconButton(
@@ -140,8 +140,8 @@ class _ServingCount extends StatelessWidget {
               final newIngredients = ingredients
                   .map(
                     (ingredient) => ingredient.copyWith(
-                      quantity:
-                          ingredient.quantity / servingCount * newServingCount,
+                      amount:
+                          ingredient.amount / servingCount * newServingCount,
                     ),
                   )
                   .toList();
@@ -162,10 +162,9 @@ class _Ingredient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final quantity = ingredient.quantity.toStringAsFixed(2).replaceAll(
-      RegExp(r'\.?0+$'),
-      '',
-    );
+    final quantity = ingredient.amount
+        .toStringAsFixed(2)
+        .replaceAll(RegExp(r'\.?0+$'), '');
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

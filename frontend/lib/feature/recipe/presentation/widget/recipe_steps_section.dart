@@ -60,12 +60,13 @@ class _Step extends StatelessWidget {
       spacing: 18.0,
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 12.0,
           children: [
             Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: T.secondary(context),
+                color: T.of(context).colorScheme.secondary,
                 shape: BoxShape.circle,
               ),
               width: 32.0,
@@ -73,7 +74,7 @@ class _Step extends StatelessWidget {
               child: Text(
                 '${index + 1}',
                 style: TextStyle(
-                  color: T.primary(context),
+                  color: T.of(context).colorScheme.primary,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.0,
@@ -82,13 +83,15 @@ class _Step extends StatelessWidget {
               ),
             ),
 
-            Text(
-              step.name,
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.0,
-                height: 28.0 / 18.0,
+            Expanded(
+              child: Text(
+                step.name,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.0,
+                  height: 28.0 / 18.0,
+                ),
               ),
             ),
           ],
@@ -99,7 +102,7 @@ class _Step extends StatelessWidget {
             return ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: CookifyCachedNetworkImage(
-                step.imageUrl,
+                step.photoUrl,
                 width: constraints.maxWidth,
                 height: constraints.maxWidth * 2 / 3,
               ),
@@ -107,7 +110,7 @@ class _Step extends StatelessWidget {
           },
         ),
 
-        Text(step.description, style: T.bodyMedium(context)),
+        Text(step.description),
       ],
     );
   }

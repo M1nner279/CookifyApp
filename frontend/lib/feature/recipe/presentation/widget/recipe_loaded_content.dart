@@ -31,7 +31,7 @@ class RecipeLoadedContent extends StatelessWidget {
                       return SizedBox(
                         width: constraints.maxWidth,
                         height: constraints.maxWidth,
-                        child: CookifyCarousel(photoUrls: recipe.photoUrls),
+                        child: CookifyCarousel(imageUrls: recipe.photoUrls),
                       );
                     },
                   ),

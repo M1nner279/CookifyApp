@@ -20,7 +20,7 @@ class _CookifyHeroState extends State<CookifyHero> {
       key: Key(widget.tag),
       onVisibilityChanged: (info) {
         if (mounted) {
-          setState(() => _visible = info.visibleFraction > 0.5);
+          setState(() => _visible = info.visibleFraction > 0.3);
         }
       },
       child: _visible

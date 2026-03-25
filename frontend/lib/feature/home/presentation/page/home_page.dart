@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
                   context.read<HomeCubit>().getRecipeList();
                 });
 
-                return const SizedBox.shrink();
+                return const CookifyLoadingContent();
               } else if (state is HomeLoading) {
                 return const CookifyLoadingContent();
               } else if (state is HomeLoaded) {

@@ -220,7 +220,7 @@ class _Cpf extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: T.secondary(context),
+              color: T.of(context).colorScheme.secondary,
               borderRadius: BorderRadius.circular(4.0),
             ),
             width: 21.0,
@@ -228,7 +228,7 @@ class _Cpf extends StatelessWidget {
             child: Text(
               sign,
               style: TextStyle(
-                color: T.primary(context),
+                color: T.of(context).colorScheme.primary,
                 fontSize: 11.0,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.0,
@@ -241,7 +241,7 @@ class _Cpf extends StatelessWidget {
             text: TextSpan(
               text: '$grams',
               style: TextStyle(
-                color: T.secondary(context),
+                color: T.of(context).colorScheme.secondary,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.0,
@@ -289,7 +289,7 @@ class _Calories extends StatelessWidget {
             text: TextSpan(
               text: '$calories',
               style: TextStyle(
-                color: T.secondary(context),
+                color: T.of(context).colorScheme.secondary,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.0,

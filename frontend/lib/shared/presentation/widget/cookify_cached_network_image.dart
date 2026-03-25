@@ -20,11 +20,8 @@ class CookifyCachedNetworkImage extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: imageUrl ?? '',
       errorWidget: (context, url, error) => Container(
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          color: T.secondary(context),
-          border: Border.all(color: T.primary(context)),
-        ),
+        padding: const .all(8.0),
+        color: T.of(context).colorScheme.secondary,
         width: width,
         height: height,
         child: Column(
@@ -34,7 +31,6 @@ class CookifyCachedNetworkImage extends StatelessWidget {
 
             Text(
               S.of(context).cookifyCachedNetworkImageError,
-              style: T.bodyLarge(context).copyWith(color: T.primary(context)),
               textAlign: TextAlign.center,
             ),
           ],

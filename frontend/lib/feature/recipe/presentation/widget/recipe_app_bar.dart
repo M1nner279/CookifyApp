@@ -18,7 +18,7 @@ class RecipeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         appName,
         style: TextStyle(
-          color: T.primary(context),
+          color: T.of(context).colorScheme.secondary,
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.0,

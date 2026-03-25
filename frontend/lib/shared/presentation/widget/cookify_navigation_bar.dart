@@ -1,3 +1,4 @@
+import 'package:cookify/config/theme/t.dart';
 import 'package:flutter/material.dart';
 
 enum _ActiveItem { home, search, constructor, favorite, profile }
@@ -23,7 +24,7 @@ class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
         horizontal: 16.0,
         vertical: CookifyNavigationBar._paddingVertical,
       ),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
@@ -110,7 +111,9 @@ class _Item extends StatelessWidget {
       child: AnimatedContainer(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isActive ? Color(0xFFF5E6D3) : Colors.transparent,
+          color: isActive
+              ? T.of(context).colorScheme.secondary
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12.0),
         ),
         width: 48.0,
@@ -119,7 +122,9 @@ class _Item extends StatelessWidget {
         child: Icon(
           iconData,
           size: iconSize,
-          color: isActive ? Color(0xFF120A08) : Color(0x88FFFFFF),
+          color: isActive
+              ? T.of(context).colorScheme.primary
+              : const Color(0x88FFFFFF),
         ),
       ),
     );

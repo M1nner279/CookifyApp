@@ -1,3 +1,4 @@
+import 'package:cookify/config/theme/t.dart';
 import 'package:flutter/material.dart';
 
 class CookifyCard extends StatelessWidget {
@@ -7,9 +8,9 @@ class CookifyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: Color(0xFFF5E6D3),
+        color: T.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: child,

@@ -5,7 +5,6 @@ import 'package:cookify/feature/home/domain/entity/recipe_preview.dart';
 import 'package:cookify/shared/domain/entity/category.dart';
 import 'package:cookify/shared/presentation/widget/cookify_card.dart';
 import 'package:cookify/shared/presentation/widget/cookify_carousel.dart';
-import 'package:cookify/shared/presentation/widget/cookify_hero.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,19 +22,16 @@ class HomeRecipeCard extends StatelessWidget {
       child: CookifyCard(
         child: Column(
           children: [
-            CookifyHero(
-              tag: 'recipe-${recipe.id}',
-              child: ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return SizedBox(
-                      width: constraints.maxWidth,
-                      height: constraints.maxWidth,
-                      child: CookifyCarousel(photoUrls: recipe.photoUrls),
-                    );
-                  },
-                ),
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SizedBox(
+                    width: constraints.maxWidth,
+                    height: constraints.maxWidth,
+                    child: CookifyCarousel(imageUrls: recipe.photoUrls),
+                  );
+                },
               ),
             ),
 
