@@ -12,5 +12,20 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
 
+  cookifyapi:
+    build:
+      context: ../backend/CookifyAPI/CookifyAPI
+      dockerfile: Dockerfile
+    container_name: cookify_api
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "http://+:80"
+      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=CookifyDb;User Id=sa;Password=YourStrong!Pass123;TrustServerCertificate=True"
+    ports:
+      - "5022:80"
+#      - "5022:443"
+
 volumes:
   mssql_data:
