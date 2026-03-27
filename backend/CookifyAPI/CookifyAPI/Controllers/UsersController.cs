@@ -16,17 +16,17 @@ public class UsersController : ControllerBase
         _db = db;
     }
 
-    [HttpGet]
-    public async Task<IEnumerable<User>> Get()
-    {
-        return await _db.Users.ToListAsync();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create(User user)
-    {
-        _db.Users.Add(user);
-        await _db.SaveChangesAsync();
-        return Ok(user);
-    }
+    // [HttpGet]
+    // public async Task<IEnumerable<User>> Get()
+    // {
+    //     return await _db.Users.ToListAsync();
+    // }
+    //
+    // [HttpPost]
+    // public async Task<IActionResult> Create(User user)
+    // {
+    //     _db.Users.Add(user);
+    //     await _db.SaveChangesAsync();
+    //     return Ok(user);
+    // }
 }
