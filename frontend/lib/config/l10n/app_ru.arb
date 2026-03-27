@@ -7,6 +7,9 @@
     "recipeDifficultyHard": "СЛОЖНЫЙ",
 
 
+    "authSlogan": "ИСКУССТВО ДОМАШНЕЙ КУХНИ",
+
+
     "homeRecipeCardCookingTime": "{time} мин",
     "homeRecipeCardServingCount": "{count, plural, one {{count} порция} few {{count} порции} other {{count} порций}}",
 
