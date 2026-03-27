@@ -66,7 +66,7 @@ class _Step extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: T.of(context).colorScheme.secondary,
+                color: T.of(context).colorScheme.primary,
                 shape: BoxShape.circle,
               ),
               width: 32.0,
@@ -74,7 +74,7 @@ class _Step extends StatelessWidget {
               child: Text(
                 '${index + 1}',
                 style: TextStyle(
-                  color: T.of(context).colorScheme.primary,
+                  color: T.of(context).colorScheme.secondary,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.0,
