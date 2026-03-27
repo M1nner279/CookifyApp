@@ -30,20 +30,20 @@ namespace CookifyAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Calories100g")
+                    b.Property<float?>("Calories100g")
                         .HasColumnType("real");
 
-                    b.Property<float>("Carb100g")
+                    b.Property<float?>("Carb100g")
                         .HasColumnType("real");
 
-                    b.Property<float>("Fat100g")
+                    b.Property<float?>("Fat100g")
                         .HasColumnType("real");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Protein100g")
+                    b.Property<float?>("Protein100g")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -170,6 +170,9 @@ namespace CookifyAPI.Migrations
 
                     b.Property<int>("StepNumber")
                         .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

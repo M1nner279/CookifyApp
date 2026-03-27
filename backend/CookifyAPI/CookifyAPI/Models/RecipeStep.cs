@@ -3,7 +3,7 @@
 public class RecipeStep
 {
     public int Id { get; set; } // rs_id
-
+    public string? Title { get; set; }
     public int RecipeId { get; set; }
     public Recipe Recipe { get; set; } = null!;
 

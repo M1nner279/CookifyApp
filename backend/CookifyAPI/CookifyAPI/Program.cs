@@ -1,4 +1,6 @@
+using System.Text.Json;
 using CookifyAPI.Data;
+using CookifyAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,9 +9,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddControllers();
+// add services
+//
 
-// Добавляем Swagger/OpenAPI
+builder.Services.AddScoped<IRecipeService, RecipeService>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+    });
+// Добавляем контроллеры и Swagger/OpenAPI
+//builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
