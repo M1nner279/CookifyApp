@@ -1,11 +1,14 @@
+import 'package:cookify/feature/home/data/datasource/home_remote_data_source.dart';
 import 'package:cookify/feature/home/data/repository/home_repository_impl.dart';
 import 'package:cookify/feature/home/domain/repository/home_repository.dart';
 import 'package:cookify/feature/home/domain/usecase/get_recipe_list.dart';
 import 'package:cookify/feature/home/presentation/bloc/home_cubit.dart';
+import 'package:cookify/feature/recipe/data/datasource/recipe_remote_data_source.dart';
 import 'package:cookify/feature/recipe/data/repository/recipe_repository_impl.dart';
 import 'package:cookify/feature/recipe/domain/repository/recipe_repository.dart';
 import 'package:cookify/feature/recipe/domain/usecase/get_recipe.dart';
 import 'package:cookify/feature/recipe/presentation/bloc/recipe_cubit.dart';
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
 class DI {
@@ -13,12 +16,14 @@ class DI {
 
   static Future<void> init() async {
     // Utils
+    getIt.registerLazySingleton(() => Dio());
 
     // Home
     // Data sources
+    getIt.registerLazySingleton<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(getIt()));
 
     // Repositories
-    getIt.registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl());
+    getIt.registerLazySingleton<HomeRepository>(() => HomeRepositoryImpl(remoteDataSource: getIt()));
 
     // Use cases
     getIt.registerLazySingleton(() => GetRecipeList(repository: getIt()));
@@ -30,9 +35,10 @@ class DI {
 
     // Recipe
     // Data sources
+    getIt.registerLazySingleton<RecipeRemoteDataSource>(() => RecipeRemoteDataSourceImpl(getIt()));
 
     // Repositories
-    getIt.registerLazySingleton<RecipeRepository>(() => RecipeRepositoryImpl());
+    getIt.registerLazySingleton<RecipeRepository>(() => RecipeRepositoryImpl(remoteDataSource: getIt()));
 
     // Use cases
     getIt.registerLazySingleton(() => GetRecipe(repository: getIt()));
