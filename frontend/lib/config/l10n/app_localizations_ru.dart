@@ -21,6 +21,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get recipeDifficultyHard => 'СЛОЖНЫЙ';
 
   @override
+  String get authSlogan => 'ИСКУССТВО ДОМАШНЕЙ КУХНИ';
+
+  @override
   String homeRecipeCardCookingTime(Object time) {
     return '$time мин';
   }

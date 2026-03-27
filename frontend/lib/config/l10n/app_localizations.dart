@@ -118,6 +118,12 @@ abstract class AppLocalizations {
   /// **'СЛОЖНЫЙ'**
   String get recipeDifficultyHard;
 
+  /// No description provided for @authSlogan.
+  ///
+  /// In ru, this message translates to:
+  /// **'ИСКУССТВО ДОМАШНЕЙ КУХНИ'**
+  String get authSlogan;
+
   /// No description provided for @homeRecipeCardCookingTime.
   ///
   /// In ru, this message translates to:
