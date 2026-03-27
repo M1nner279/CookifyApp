@@ -76,6 +76,7 @@ public class RecipeService : IRecipeService
                     .Select(s => new RecipeStepDto
                     {
                         Id = s.Id,
+                        Title = s.Title,
                         StepNumber = s.StepNumber,
                         Description = s.Description,
                         ImageUrl = s.ImageUrl
