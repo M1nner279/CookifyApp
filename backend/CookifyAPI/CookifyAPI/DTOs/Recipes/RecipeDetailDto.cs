@@ -19,4 +19,5 @@ public class RecipeDetailDto
     // Связанные данные
     public List<RecipeImageDto> Images { get; set; } = new();
     public List<RecipeStepDto> Steps { get; set; } = new();
+    public List<string> Tags { get; set; } = new();
 }

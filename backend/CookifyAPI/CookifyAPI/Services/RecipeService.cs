@@ -81,6 +81,9 @@ public class RecipeService : IRecipeService
                         Description = s.Description,
                         ImageUrl = s.ImageUrl
                     })
+                    .ToList(),
+                Tags = r.Tags
+                    .Select(rt => rt.Tag.Name)
                     .ToList()
             })
             .FirstOrDefaultAsync();
