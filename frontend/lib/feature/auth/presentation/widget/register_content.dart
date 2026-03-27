@@ -49,7 +49,6 @@ class RegisterContent extends StatelessWidget {
             label: 'ПАРОЛЬ',
             hint: 'Ваш пароль',
             isPassword: true,
-            failureMessage: 'Стив Хуйс',
           ),
 
           const SizedBox(height: 24.0),
@@ -59,7 +58,6 @@ class RegisterContent extends StatelessWidget {
             label: 'ПОВТОРИТЕ ПАРОЛЬ',
             hint: 'Повторите ваш пароль',
             isPassword: true,
-            failureMessage: 'Стив Хуйс',
           ),
 
           const SizedBox(height: 24.0),

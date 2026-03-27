@@ -46,7 +46,6 @@ class _LoginUnauthorizedContentState extends State<LoginUnauthorizedContent> {
             label: 'ПАРОЛЬ',
             hint: 'Ваш пароль',
             isPassword: true,
-            failureMessage: 'Стив Хуйс',
           ),
 
           const SizedBox(height: 24.0),
