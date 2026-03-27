@@ -1,4 +1,5 @@
 ﻿using CookifyAPI.Data;
+using CookifyAPI.DTOs;
 using CookifyAPI.DTOs.Recipes;
 using Microsoft.EntityFrameworkCore;
 
@@ -84,6 +85,19 @@ public class RecipeService : IRecipeService
                     .ToList(),
                 Tags = r.Tags
                     .Select(rt => rt.Tag.Name)
+                    .ToList(),
+                Ingredients = r.Ingredients
+                    .Select(ri => new IngredientDto
+                    {
+                        Id = ri.Ingredient.Id,
+                        Name = ri.Ingredient.Name,
+                        Calories100g = r.Calories100g,
+                        Protein100g = r.Protein100g,
+                        Fat100g = r.Fat100g,
+                        Carb100g = r.Carb100g,
+                        Amount = ri.Amount,
+                        Unit = ri.Unit
+                    })
                     .ToList()
             })
             .FirstOrDefaultAsync();
