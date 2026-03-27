@@ -7,6 +7,7 @@ namespace CookifyAPI.Services;
 public interface IRecipeService
 {
     Task<IEnumerable<RecipeListDto>> GetRecipesListAsync();
+    Task<RecipeDetailDto?> GetRecipeByIdAsync(int id);
 }
 
 public class RecipeService : IRecipeService
@@ -30,10 +31,57 @@ public class RecipeService : IRecipeService
                 Difficulty = r.Difficulty,
                 Tags = r.Tags
                     .Select(rt => rt.Tag.Name)
-                    .ToList()
+                    .ToList(),
+                PreviewImageUrl = r.Images
+                    .OrderBy(i => i.Order)
+                    .Select(i => i.Url)
+                    .FirstOrDefault()
             })
             .ToListAsync();
         
         
+    }
+    
+    public async Task<RecipeDetailDto?> GetRecipeByIdAsync(int id)
+    {
+        return await _context.Recipes
+            .Where(r => r.Id == id)
+            .Select(r => new RecipeDetailDto
+            {
+                Id = r.Id,
+                Title = r.Title,
+                CookingTimeMinutes = r.CookingTimeMin,
+                Servings = r.Servings,
+                AuthorId = r.AuthorId,
+                Calories100g = r.Calories100g,
+                Protein100g = r.Protein100g,
+                Fat100g = r.Fat100g,
+                Carb100g = r.Carb100g,
+                CreatedAt = r.CreatedAt,
+                Description = r.Description,
+                Difficulty = r.Difficulty,
+
+                Images = r.Images
+                    .OrderBy(i => i.Order)
+                    .Select(i => new RecipeImageDto
+                    {
+                        Id = i.Id,
+                        Url = i.Url,
+                        Order = i.Order
+                    })
+                    .ToList(),
+
+                Steps = r.Steps
+                    .OrderBy(s => s.StepNumber)
+                    .Select(s => new RecipeStepDto
+                    {
+                        Id = s.Id,
+                        StepNumber = s.StepNumber,
+                        Description = s.Description,
+                        ImageUrl = s.ImageUrl
+                    })
+                    .ToList()
+            })
+            .FirstOrDefaultAsync();
     }
 }

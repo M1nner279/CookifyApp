@@ -1,4 +1,5 @@
 using CookifyAPI.Data;
+using CookifyAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // add services
 //
+
+builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 
 // Добавляем контроллеры и Swagger/OpenAPI

@@ -34,16 +34,17 @@ public class RecipesController : ControllerBase
     }
     
     // GET: api/recipes/{id}
-    // [HttpGet("{id}")]
-    // public async Task<ActionResult<Recipe>> GetRecipe(int id)
-    // {
-    //     var recipe = await _db.Recipes.FindAsync(id);
-    //     if (recipe == null)
-    //         return NotFound();
-    //
-    //     return Ok(recipe);
-    // }
-    //
+    [HttpGet("{id}")]
+    public async Task<ActionResult<RecipeDetailDto>> GetRecipe(int id)
+    {
+        var recipe = await _service.GetRecipeByIdAsync(id);
+        if (recipe == null)
+            return NotFound();
+
+        return Ok(recipe);
+    }
+    
+    
     // [HttpPost]
     // public async Task<IActionResult> Create(Recipe recipe)
     // {
