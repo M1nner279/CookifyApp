@@ -17,7 +17,16 @@ public static class DbSeeder
             Username = "hi_there",
             PasswordHash = "0"
         };
+        
+        var tags = new List<Tag>
+        {
+            new Tag { Name = "Суп" },
+            new Tag { Name = "Быстро" },
+            new Tag { Name = "Завтрак" },
+            new Tag { Name = "Выпечка" }
+        };
 
+        context.Tags.AddRange(tags);
         context.Users.Add(user);
         await context.SaveChangesAsync(); // Сохраняем пользователя, чтобы EF сгенерировал ID
         
@@ -66,6 +75,7 @@ public static class DbSeeder
             {
                 RecipeId = recipe.Id,
                 StepNumber = 1,
+                Title = "1 шак",
                 Description = "Картофель натереть на крупной тёрке, отжать, добавить муку, сметану, соль, перемешать.",
                 ImageUrl = "https://www.russianfood.com/dycontent/images_upl/4/big_3619.jpg"
             },
@@ -73,6 +83,7 @@ public static class DbSeeder
             {
                 RecipeId = recipe.Id,
                 StepNumber = 2,
+                Title = "title нужен?",
                 Description = "Выкладывать столовой ложкой на очень хорошо разогретую сковороду в растопленное масло.",
                 ImageUrl = "https://www.russianfood.com/dycontent/images_upl/4/big_3620.jpg"
             },
@@ -119,6 +130,26 @@ public static class DbSeeder
             new RecipeStep { RecipeId = recipe.Id, StepNumber = 5, Description = "Добавить овощи.", ImageUrl = "https://www.russianfood.com/dycontent/images_upl/31/big_30823.jpg" }
         );
 
+        var recipeTags = new List<RecipeTag>
+        {
+            new RecipeTag
+            {
+                RecipeId = recipe.Id,
+                TagId = tags.First(t => t.Name == "Быстро").Id
+            },
+            new RecipeTag
+            {
+                RecipeId = recipe.Id,
+                TagId = tags.First(t => t.Name == "Суп").Id
+            },
+            new RecipeTag
+            {
+                RecipeId = recipe.Id,
+                TagId = tags.First(t => t.Name == "Завтрак").Id
+            }
+        };
+        context.AddRange(recipeTags);
+        
         await context.SaveChangesAsync();
 
     }
