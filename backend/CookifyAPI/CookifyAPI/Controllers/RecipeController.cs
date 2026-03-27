@@ -7,26 +7,26 @@ namespace CookifyAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : ControllerBase
+public class RecipeController : ControllerBase
 {
     private readonly AppDbContext _db;
 
-    public UsersController(AppDbContext db)
+    public RecipeController(AppDbContext db)
     {
         _db = db;
     }
 
     [HttpGet]
-    public async Task<IEnumerable<User>> Get()
+    public async Task<IEnumerable<Recipe>> Get()
     {
-        return await _db.Users.ToListAsync();
+        return await _db.Recipes.ToListAsync();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(User user)
+    public async Task<IActionResult> Create(Recipe recipe)
     {
-        _db.Users.Add(user);
+        _db.Recipes.Add(recipe);
         await _db.SaveChangesAsync();
-        return Ok(user);
+        return Ok(recipe);
     }
 }
