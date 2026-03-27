@@ -20,15 +20,106 @@ public static class DbSeeder
 
         context.Users.Add(user);
         await context.SaveChangesAsync(); // Сохраняем пользователя, чтобы EF сгенерировал ID
-
-        var recipes = new List<Recipe>
+        
+        var recipe = new Recipe
         {
-            new Recipe { Title = "Pasta Carbonara", Description = "Classic Italian pasta", AuthorId = user.Id },
-            new Recipe { Title = "Tomato Soup", Description = "Simple soup", AuthorId = user.Id },
-            new Recipe { Title = "Pancakes", Description = "Breakfast classic", AuthorId = user.Id }
+            Title = "Картофельные драники",
+            Description = "Картофельные драники - очень быстро, очень просто, очень вкусно!",
+            AuthorId = user.Id,
+            CookingTimeMin = 30,
+            Servings = 4,
+            Difficulty = 1
         };
 
-        context.Recipes.AddRange(recipes);
+        context.Recipes.Add(recipe);
         await context.SaveChangesAsync();
+        
+        context.RecipeImages.AddRange(
+            new RecipeImage
+            {
+                RecipeId = recipe.Id,
+                Url = "https://www.russianfood.com/dycontent/images_upl/4/big_3618.jpg",
+                Order = 0 // превью
+            },
+            new RecipeImage
+            {
+                RecipeId = recipe.Id,
+                Url = "https://www.russianfood.com/dycontent/images_upl/4/big_3619.jpg",
+                Order = 1
+            },
+            new RecipeImage
+            {
+                RecipeId = recipe.Id,
+                Url = "https://www.russianfood.com/dycontent/images_upl/4/big_3620.jpg",
+                Order = 2
+            },
+            new RecipeImage
+            {
+                RecipeId = recipe.Id,
+                Url = "https://www.russianfood.com/dycontent/images_upl/4/big_3621.jpg",
+                Order = 3
+            }
+        );
+
+        context.RecipeSteps.AddRange(
+            new RecipeStep
+            {
+                RecipeId = recipe.Id,
+                StepNumber = 1,
+                Description = "Картофель натереть на крупной тёрке, отжать, добавить муку, сметану, соль, перемешать.",
+                ImageUrl = "https://www.russianfood.com/dycontent/images_upl/4/big_3619.jpg"
+            },
+            new RecipeStep
+            {
+                RecipeId = recipe.Id,
+                StepNumber = 2,
+                Description = "Выкладывать столовой ложкой на очень хорошо разогретую сковороду в растопленное масло.",
+                ImageUrl = "https://www.russianfood.com/dycontent/images_upl/4/big_3620.jpg"
+            },
+            new RecipeStep
+            {
+                RecipeId = recipe.Id,
+                StepNumber = 3,
+                Description = "Обжаривать драники с обеих сторон до золотистой корочки. Подавать горячими со сметаной.",
+                ImageUrl = "https://www.russianfood.com/dycontent/images_upl/4/big_3621.jpg"
+            }
+        );
+
+        await context.SaveChangesAsync();
+        
+        recipe = new Recipe
+        {
+            Title = "Суп «Харчо»",
+            Description = "Суп харчо - вкусный, ароматный, острый. Традиционно харчо варят из говядины, но по этому рецепту готовится суп с курицей.",
+            AuthorId = user.Id,
+            CookingTimeMin = 60,
+            Servings = 6,
+            Difficulty = 2
+        };
+
+        context.Recipes.Add(recipe);
+        await context.SaveChangesAsync();
+
+        // Images
+        context.RecipeImages.AddRange(
+            new RecipeImage { RecipeId = recipe.Id, Url = "https://www.russianfood.com/dycontent/images_upl/31/big_30806.jpg", Order = 0 },
+            new RecipeImage { RecipeId = recipe.Id, Url = "https://www.russianfood.com/dycontent/images_upl/31/big_30807.jpg", Order = 1 },
+            new RecipeImage { RecipeId = recipe.Id, Url = "https://www.russianfood.com/dycontent/images_upl/31/big_30822.jpg", Order = 2 },
+            new RecipeImage { RecipeId = recipe.Id, Url = "https://www.russianfood.com/dycontent/images_upl/31/big_30808.jpg", Order = 3 },
+            new RecipeImage { RecipeId = recipe.Id, Url = "https://www.russianfood.com/dycontent/images_upl/31/big_30809.jpg", Order = 4 },
+            new RecipeImage { RecipeId = recipe.Id, Url = "https://www.russianfood.com/dycontent/images_upl/31/big_30823.jpg", Order = 5 }
+        );
+
+        // Steps
+        context.RecipeSteps.AddRange(
+            new RecipeStep { RecipeId = recipe.Id, StepNumber = 1, Description = "Все ингредиенты подготовить.", ImageUrl = "https://www.russianfood.com/dycontent/images_upl/31/big_30807.jpg" },
+            new RecipeStep { RecipeId = recipe.Id, StepNumber = 2, Description = "Курицу нарезать.", ImageUrl = "https://www.russianfood.com/dycontent/images_upl/31/big_30822.jpg" },
+            new RecipeStep { RecipeId = recipe.Id, StepNumber = 3, Description = "Варить курицу.", ImageUrl = "https://www.russianfood.com/dycontent/images_upl/31/big_30808.jpg" },
+            new RecipeStep { RecipeId = recipe.Id, StepNumber = 4, Description = "Добавить рис.", ImageUrl = "https://www.russianfood.com/dycontent/images_upl/31/big_30809.jpg" },
+            new RecipeStep { RecipeId = recipe.Id, StepNumber = 5, Description = "Добавить овощи.", ImageUrl = "https://www.russianfood.com/dycontent/images_upl/31/big_30823.jpg" }
+        );
+
+        await context.SaveChangesAsync();
+
     }
 }
