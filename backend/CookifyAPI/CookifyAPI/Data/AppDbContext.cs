@@ -26,8 +26,8 @@ public class AppDbContext : DbContext
     public DbSet<Ingredient> Ingredients => Set<Ingredient>();
     public DbSet<Tag> Tags => Set<Tag>();
     //public DbSet<Favorite> Favorites => Set<Favorite>();
-    public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
-    public DbSet<RecipeTag> RecipeTags => Set<RecipeTag>();
+    public DbSet<M2MRecipeIngredient> RecipeIngredients => Set<M2MRecipeIngredient>();
+    public DbSet<M2MRecipeTag> RecipeTags => Set<M2MRecipeTag>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
@@ -38,10 +38,10 @@ public class AppDbContext : DbContext
         //modelBuilder.Entity<Favorite>()
         //    .HasKey(f => new { f.UserId, f.RecipeId });
 
-        modelBuilder.Entity<RecipeIngredient>()
+        modelBuilder.Entity<M2MRecipeIngredient>()
             .HasKey(x => new { x.RecipeId, x.IngredientId });
 
-        modelBuilder.Entity<RecipeTag>()
+        modelBuilder.Entity<M2MRecipeTag>()
             .HasKey(x => new { x.RecipeId, x.TagId });
 
         // Default values (SQL side)

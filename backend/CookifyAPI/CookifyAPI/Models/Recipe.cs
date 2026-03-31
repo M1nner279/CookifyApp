@@ -27,8 +27,8 @@ public class Recipe
     public List<RecipeStep> Steps { get; set; } = new();
     public List<RecipeImage> Images { get; set; } = new();
 
-    public List<RecipeIngredient> Ingredients { get; set; } = new();
-    public List<RecipeTag> Tags { get; set; } = new();
+    public List<M2MRecipeIngredient> Ingredients { get; set; } = new();
+    public List<M2MRecipeTag> Tags { get; set; } = new();
 
     //public List<Favorite> Favorites { get; set; } = new();
 }

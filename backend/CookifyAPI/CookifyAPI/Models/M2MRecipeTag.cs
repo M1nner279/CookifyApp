@@ -1,6 +1,6 @@
 ﻿namespace CookifyAPI.Models;
 
-public class RecipeTag
+public class M2MRecipeTag
 {
     public int RecipeId { get; set; }
     public Recipe Recipe { get; set; } = null!;
