@@ -109,25 +109,25 @@ public static class DbSeeder
             new RecipeStep { RecipeId = recipe.Id, StepNumber = 5, Description = "Добавить овощи.", ImageUrl = "https://www.russianfood.com/dycontent/images_upl/31/big_30823.jpg" }
         );
 
-        var recipeTags = new List<RecipeTag>
+        var recipeTags = new List<M2MRecipeTag>
         {
-            new RecipeTag { RecipeId = recipe.Id, TagId = tags.First(t => t.Name == "Быстро").Id },
-            new RecipeTag { RecipeId = recipe.Id, TagId = tags.First(t => t.Name == "Суп").Id },
-            new RecipeTag { RecipeId = recipe.Id, TagId = tags.First(t => t.Name == "Завтрак").Id }
+            new M2MRecipeTag { RecipeId = recipe.Id, TagId = tags.First(t => t.Name == "Быстро").Id },
+            new M2MRecipeTag { RecipeId = recipe.Id, TagId = tags.First(t => t.Name == "Суп").Id },
+            new M2MRecipeTag { RecipeId = recipe.Id, TagId = tags.First(t => t.Name == "Завтрак").Id }
         };
         context.AddRange(recipeTags);
-        var recipeIngredients = new List<RecipeIngredient>
+        var recipeIngredients = new List<M2MRecipeIngredient>
         {
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Курица бройлерная").Id, Amount = 1, Unit = "шт."},
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Рис").Id, Amount = 0.5f, Unit = "стакана"},
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Чеснок").Id, Amount = 1, Unit = "головка"},
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Масло сливочное").Id, Amount = 50, Unit = "г"},
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Лук репчатый").Id, Amount = 1, Unit = "шт."},
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Морковь").Id, Amount = 1, Unit = "шт."},
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Томатная паста").Id, Amount = 2, Unit = "ст. ложки"},
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Зелень").Id, Amount = 55, Unit = "г"}, // Среднее значение от 50-60
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Соль").Id, Amount = 1, Unit = "ст. ложка"},
-            new RecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Вода").Id, Amount = 2.5f, Unit = "л"}
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Курица бройлерная").Id, Amount = 1, Unit = "шт."},
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Рис").Id, Amount = 0.5f, Unit = "стакана"},
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Чеснок").Id, Amount = 1, Unit = "головка"},
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Масло сливочное").Id, Amount = 50, Unit = "г"},
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Лук репчатый").Id, Amount = 1, Unit = "шт."},
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Морковь").Id, Amount = 1, Unit = "шт."},
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Томатная паста").Id, Amount = 2, Unit = "ст. ложки"},
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Зелень").Id, Amount = 55, Unit = "г"}, // Среднее значение от 50-60
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Соль").Id, Amount = 1, Unit = "ст. ложка"},
+            new M2MRecipeIngredient { RecipeId = recipe.Id, IngredientId = ingredients.First(t => t.Name == "Вода").Id, Amount = 2.5f, Unit = "л"}
 
         };
         context.AddRange(recipeIngredients);

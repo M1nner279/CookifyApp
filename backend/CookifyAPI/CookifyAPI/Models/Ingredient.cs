@@ -13,5 +13,5 @@ public class Ingredient
 
     // Navigation
 
-    public List<RecipeIngredient> Recipes { get; set; } = new();
+    public List<M2MRecipeIngredient> Recipes { get; set; } = new();
 }
