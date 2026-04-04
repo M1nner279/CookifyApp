@@ -11,13 +11,6 @@ namespace CookifyAPI.Controllers;
 [Route("api/[controller]")]
 public class RecipesController : ControllerBase
 {
-    // private readonly AppDbContext _db;
-    //
-    // public RecipesController(AppDbContext db)
-    // {
-    //     _db = db;
-    // }
-    
     private readonly IRecipeService _service;
 
     public RecipesController(IRecipeService service)
@@ -31,6 +24,24 @@ public class RecipesController : ControllerBase
     {
         var recipes = await _service.GetRecipesListAsync();
         return Ok(recipes);
+    }
+    
+    // GET: api/recipes/keyset
+    [HttpGet("keyset")]
+    public async Task<ActionResult> GetRecipesKeyset(
+        int? lastId = null,
+        int pageSize = 10)
+    {
+        return Ok(await _service.GetRecipesKeysetAsync(lastId, pageSize));
+    }
+    
+    // GET: api/recipes/offset
+    [HttpGet("offset")]
+    public async Task<ActionResult> GetRecipesOffset(
+        int page = 1,
+        int pageSize = 10)
+    {
+        return Ok(await _service.GetRecipesOffsetAsync(page, pageSize));
     }
     
     // GET: api/recipes/{id}

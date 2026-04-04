@@ -1,6 +1,7 @@
 ﻿using CookifyAPI.Data;
 using CookifyAPI.DTOs;
 using CookifyAPI.DTOs.Recipes;
+using CookifyAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookifyAPI.Services;
@@ -9,6 +10,8 @@ public interface IRecipeService
 {
     Task<IEnumerable<RecipeListDto>> GetRecipesListAsync();
     Task<RecipeDetailDto?> GetRecipeByIdAsync(int id);
+    Task<PagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page, int pageSize);
+    Task<PagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId, int pageSize);
 }
 
 public class RecipeService : IRecipeService
@@ -101,5 +104,85 @@ public class RecipeService : IRecipeService
                     .ToList()
             })
             .FirstOrDefaultAsync();
+    }
+    
+    public async Task<PagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page, int pageSize)
+    {
+        page = Math.Max(page, 1);
+        pageSize = Math.Clamp(pageSize, 1, 50);
+
+        var query = _context.Recipes
+            .AsNoTracking()
+            .AsSplitQuery();
+
+        var total = await query.CountAsync();
+
+        var items = await query
+            .OrderBy(r => r.Id) // обязательно
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(r => new RecipeListDto
+            {
+                Id = r.Id,
+                Title = r.Title,
+                CookingTimeMin = r.CookingTimeMin,
+                Servings = r.Servings,
+                Difficulty = r.Difficulty,
+                Tags = r.Tags.Select(t => t.Tag.Name).ToList(),
+                PreviewImageUrl = r.Images
+                    .OrderBy(i => i.Order)
+                    .Select(i => i.Url)
+                    .FirstOrDefault()
+            })
+            .ToListAsync();
+
+        return new PagedResult<RecipeListDto>
+        {
+            Items = items,
+            TotalCount = total,
+            Page = page,
+            PageSize = pageSize
+        };
+    }
+    
+    public async Task<PagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId, int pageSize)
+    {
+        pageSize = Math.Clamp(pageSize, 1, 50);
+
+        IQueryable<Recipe> query = _context.Recipes
+            .AsNoTracking()
+            .AsSplitQuery()
+            .OrderBy(r => r.Id);
+
+        if (lastId.HasValue)
+        {
+            query = query.Where(r => r.Id > lastId.Value);
+        }
+
+        var items = await query
+            .Take(pageSize)
+            .Select(r => new RecipeListDto
+            {
+                Id = r.Id,
+                Title = r.Title,
+                CookingTimeMin = r.CookingTimeMin,
+                Servings = r.Servings,
+                Difficulty = r.Difficulty,
+                Tags = r.Tags.Select(t => t.Tag.Name).ToList(),
+                PreviewImageUrl = r.Images
+                    .OrderBy(i => i.Order)
+                    .Select(i => i.Url)
+                    .FirstOrDefault()
+            })
+            .ToListAsync();
+
+        var newLastId = items.LastOrDefault()?.Id;
+
+        return new PagedResult<RecipeListDto>
+        {
+            Items = items,
+            PageSize = pageSize,
+            LastId = newLastId
+        };
     }
 }
