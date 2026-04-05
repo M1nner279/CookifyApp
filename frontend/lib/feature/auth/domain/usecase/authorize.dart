@@ -3,9 +3,9 @@ import 'package:cookify/feature/auth/domain/repository/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class Authorize {
-  Authorize({required this._repository});
+  Authorize({required this.repository});
 
-  final AuthRepository _repository;
+  final AuthRepository repository;
 
-  Future<Either<Failure, bool>> call() { return _repository.authorize(); }
+  Future<Either<Failure, bool>> call() { return repository.authorize(); }
 }

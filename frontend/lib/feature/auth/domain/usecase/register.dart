@@ -3,11 +3,11 @@ import 'package:cookify/feature/auth/domain/repository/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class Register {
-  Register({required this._repository});
+  Register({required this.repository});
 
-  final AuthRepository _repository;
+  final AuthRepository repository;
 
   Future<Either<Failure, void>> call(String name, String email, String password) {
-    return _repository.register(name, email, password);
+    return repository.register(name, email, password);
   }
 }

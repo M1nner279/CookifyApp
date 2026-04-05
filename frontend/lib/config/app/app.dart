@@ -1,6 +1,6 @@
 import 'package:cookify/config/constant/app_constant.dart';
 import 'package:cookify/config/l10n/s.dart';
-import 'package:cookify/config/router/router.dart';
+import 'package:cookify/config/router/app_router.dart';
 import 'package:cookify/config/theme/t.dart';
 import 'package:flutter/material.dart';
 
