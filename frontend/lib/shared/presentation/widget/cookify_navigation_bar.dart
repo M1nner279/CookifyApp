@@ -1,21 +1,24 @@
 import 'package:cookify/config/theme/t.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-enum _ActiveItem { home, search, constructor, favorite, profile }
+enum ActiveItem { home, search, constructor, favorite, profile }
 
 class CookifyNavigationBar extends StatefulWidget {
-  const CookifyNavigationBar({super.key});
+  const CookifyNavigationBar({super.key, required this.currentIndex});
 
   static const double _paddingVertical = 12.0;
   static const double _itemHeight = 48.0;
   static const double barHeight = _paddingVertical * 2 + _itemHeight;
+
+  final ActiveItem currentIndex;
 
   @override
   State<CookifyNavigationBar> createState() => _CookifyNavigationBarState();
 }
 
 class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
-  var _activeItem = _ActiveItem.home;
+  late var _activeItem = widget.currentIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -37,29 +40,30 @@ class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
         children: [
           _Item(
             onTap: () {
-              setState(() => _activeItem = _ActiveItem.home);
+              setState(() => _activeItem = ActiveItem.home);
+              context.go('/');
             },
-            isActive: _activeItem == _ActiveItem.home,
-            iconData: _activeItem == _ActiveItem.home
+            isActive: _activeItem == ActiveItem.home,
+            iconData: _activeItem == ActiveItem.home
                 ? Icons.home
                 : Icons.home_outlined,
           ),
 
           _Item(
             onTap: () {
-              setState(() => _activeItem = _ActiveItem.search);
+              setState(() => _activeItem = ActiveItem.search);
             },
-            isActive: _activeItem == _ActiveItem.search,
+            isActive: _activeItem == ActiveItem.search,
             iconData: Icons.search,
-            iconSize: _activeItem == _ActiveItem.search ? 20.0 : 18.0,
+            iconSize: _activeItem == ActiveItem.search ? 20.0 : 18.0,
           ),
 
           _Item(
             onTap: () {
-              setState(() => _activeItem = _ActiveItem.constructor);
+              setState(() => _activeItem = ActiveItem.constructor);
             },
-            isActive: _activeItem == _ActiveItem.constructor,
-            iconData: _activeItem == _ActiveItem.constructor
+            isActive: _activeItem == ActiveItem.constructor,
+            iconData: _activeItem == ActiveItem.constructor
                 ? Icons.add_circle
                 : Icons.add_circle_outline,
             iconSize: 26.0,
@@ -67,20 +71,21 @@ class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
 
           _Item(
             onTap: () {
-              setState(() => _activeItem = _ActiveItem.favorite);
+              setState(() => _activeItem = ActiveItem.favorite);
             },
-            isActive: _activeItem == _ActiveItem.favorite,
-            iconData: _activeItem == _ActiveItem.favorite
+            isActive: _activeItem == ActiveItem.favorite,
+            iconData: _activeItem == ActiveItem.favorite
                 ? Icons.bookmark
                 : Icons.bookmark_outline,
           ),
 
           _Item(
             onTap: () {
-              setState(() => _activeItem = _ActiveItem.profile);
+              setState(() => _activeItem = ActiveItem.profile);
+              context.go('/profile');
             },
-            isActive: _activeItem == _ActiveItem.profile,
-            iconData: _activeItem == _ActiveItem.profile
+            isActive: _activeItem == ActiveItem.profile,
+            iconData: _activeItem == ActiveItem.profile
                 ? Icons.person
                 : Icons.person_outline,
           ),

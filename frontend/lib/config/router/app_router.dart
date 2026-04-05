@@ -4,6 +4,7 @@ import 'package:cookify/feature/auth/presentation/page/recover_password_page.dar
 import 'package:cookify/feature/auth/presentation/page/register_page.dart';
 import 'package:cookify/feature/home/presentation/bloc/home_cubit.dart';
 import 'package:cookify/feature/home/presentation/page/home_page.dart';
+import 'package:cookify/feature/profile/presentation/page/profile_page.dart';
 import 'package:cookify/feature/recipe/presentation/bloc/recipe_cubit.dart';
 import 'package:cookify/feature/recipe/presentation/page/recipe_page.dart';
 import 'package:cookify/service/di/auth_di.dart';
@@ -76,6 +77,13 @@ final router = GoRouter(
               },
             ),
           ],
+        ),
+
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) {
+            return const ProfilePage();
+          },
         ),
       ],
     ),
