@@ -4,8 +4,10 @@ import 'package:cookify/feature/auth/presentation/bloc/login_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit({required this._authorize, required this._login})
-    : super(const LoginInitial());
+  LoginCubit({required Authorize authorize, required Login login})
+    : _authorize = authorize,
+      _login = login,
+      super(const LoginInitial());
 
   final Authorize _authorize;
   final Login _login;

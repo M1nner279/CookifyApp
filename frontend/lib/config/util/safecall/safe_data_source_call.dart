@@ -1,4 +1,3 @@
-import 'package:cookify/config/error/exception.dart';
 import 'package:cookify/config/error/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';

@@ -7,14 +7,14 @@ import 'package:cookify/feature/recipe/domain/repository/recipe_repository.dart'
 import 'package:dartz/dartz.dart';
 
 class RecipeRepositoryImpl implements RecipeRepository {
-  RecipeRepositoryImpl({required this._remoteDataSource});
+  RecipeRepositoryImpl({required this.remoteDataSource});
 
-  final RecipeRemoteDataSource _remoteDataSource;
+  final RecipeRemoteDataSource remoteDataSource;
 
   @override
   Future<Either<Failure, Recipe>> getRecipe(String id) async {
     return safeRemoteDataSourceCall(() async {
-      final recipeDto = await _remoteDataSource.getRecipe(int.parse(id));
+      final recipeDto = await remoteDataSource.getRecipe(int.parse(id));
 
       final recipe = RecipeMapper.fromDto(recipeDto);
 

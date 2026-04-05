@@ -3,11 +3,11 @@ import 'package:cookify/feature/auth/domain/repository/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class Login {
-  Login({required this._repository});
+  Login({required this.repository});
 
-  final AuthRepository _repository;
+  final AuthRepository repository;
 
   Future<Either<Failure, void>> call(String name, String password) {
-    return _repository.login(name, password);
+    return repository.login(name, password);
   }
 }
