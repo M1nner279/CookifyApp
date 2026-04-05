@@ -17,31 +17,13 @@ public class RecipesController : ControllerBase
     {
         _service = service;
     }
-
+    
     // GET: api/recipes
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<RecipeListDto>>> GetRecipes()
-    {
-        var recipes = await _service.GetRecipesListAsync();
-        return Ok(recipes);
-    }
-    
-    // GET: api/recipes/keyset
-    [HttpGet("keyset")]
     public async Task<ActionResult> GetRecipesKeyset(
-        int? lastId = null,
-        int pageSize = 10)
+        int? lastId = null)
     {
-        return Ok(await _service.GetRecipesKeysetAsync(lastId, pageSize));
-    }
-    
-    // GET: api/recipes/offset
-    [HttpGet("offset")]
-    public async Task<ActionResult> GetRecipesOffset(
-        int page = 1,
-        int pageSize = 10)
-    {
-        return Ok(await _service.GetRecipesOffsetAsync(page, pageSize));
+        return Ok(await _service.GetRecipesKeysetAsync(lastId));
     }
     
     // GET: api/recipes/{id}

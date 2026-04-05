@@ -1,5 +1,6 @@
 ﻿using CookifyAPI.Data;
 using CookifyAPI.DTOs;
+using CookifyAPI.DTOs.Pagination;
 using CookifyAPI.DTOs.Recipes;
 using CookifyAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +11,8 @@ public interface IRecipeService
 {
     Task<IEnumerable<RecipeListDto>> GetRecipesListAsync();
     Task<RecipeDetailDto?> GetRecipeByIdAsync(int id);
-    Task<PagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page, int pageSize);
-    Task<PagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId, int pageSize);
+    Task<OffsetPagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page);
+    Task<KeysetPagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId);
 }
 
 public class RecipeService : IRecipeService
@@ -106,17 +107,24 @@ public class RecipeService : IRecipeService
             .FirstOrDefaultAsync();
     }
     
-    public async Task<PagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page, int pageSize)
+    public async Task<OffsetPagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page)
     {
-        page = Math.Max(page, 1);
-        pageSize = Math.Clamp(pageSize, 1, 50);
-
+        //page = Math.Max(page, 1);
+        //pageSize = Math.Clamp(pageSize, 1, 50);
         var query = _context.Recipes
             .AsNoTracking()
             .AsSplitQuery();
 
         var total = await query.CountAsync();
+        
+        var result = new OffsetPagedResult<RecipeListDto>
+        {
+            TotalCount = total,
+            Page = page
+        };
 
+        int pageSize = result.PageSize;
+        
         var items = await query
             .OrderBy(r => r.Id) // обязательно
             .Skip((page - 1) * pageSize)
@@ -136,18 +144,14 @@ public class RecipeService : IRecipeService
             })
             .ToListAsync();
 
-        return new PagedResult<RecipeListDto>
-        {
-            Items = items,
-            TotalCount = total,
-            Page = page,
-            PageSize = pageSize
-        };
+        result.Items = items;
+        return result;
     }
-    
-    public async Task<PagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId, int pageSize)
+
+    private int _pageSize = 15; 
+    public async Task<KeysetPagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId)
     {
-        pageSize = Math.Clamp(pageSize, 1, 50);
+        //_pageSize = Math.Clamp(_pageSize, 1, 50);
 
         IQueryable<Recipe> query = _context.Recipes
             .AsNoTracking()
@@ -160,7 +164,7 @@ public class RecipeService : IRecipeService
         }
 
         var items = await query
-            .Take(pageSize)
+            .Take(_pageSize)
             .Select(r => new RecipeListDto
             {
                 Id = r.Id,
@@ -178,10 +182,9 @@ public class RecipeService : IRecipeService
 
         var newLastId = items.LastOrDefault()?.Id;
 
-        return new PagedResult<RecipeListDto>
+        return new KeysetPagedResult<RecipeListDto>
         {
             Items = items,
-            PageSize = pageSize,
             LastId = newLastId
         };
     }
