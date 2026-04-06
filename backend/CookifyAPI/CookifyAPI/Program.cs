@@ -18,7 +18,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                 maxRetryCount: 10,
                 maxRetryDelay: TimeSpan.FromSeconds(5),
                 errorNumbersToAdd: null);
-        }));
+        })
+        .UseSnakeCaseNamingConvention()
+    );
 
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 
@@ -28,6 +30,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
     });
 // Добавляем контроллеры и Swagger/OpenAPI
+
 //builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
