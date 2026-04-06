@@ -1,6 +1,6 @@
-import 'package:cookify/shared/data/model/recipe_ingredient_dto.dart';
-import 'package:cookify/shared/domain/entity/cpfc.dart';
-import 'package:cookify/shared/domain/entity/recipe_ingredient.dart';
+import 'package:cookify/feature/recipe/recipe_common/data/models/recipe_ingredient_dto.dart';
+import 'package:cookify/feature/recipe/recipe_common/domain/entities/cpfc.dart';
+import 'package:cookify/feature/recipe/recipe_common/domain/entities/recipe_ingredient.dart';
 
 abstract class RecipeIngredientMapper {
   static RecipeIngredient fromDto(RecipeIngredientDto dto) => RecipeIngredient(

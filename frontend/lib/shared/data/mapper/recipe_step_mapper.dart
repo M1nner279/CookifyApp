@@ -1,5 +1,5 @@
-import 'package:cookify/shared/data/model/recipe_step_dto.dart';
-import 'package:cookify/shared/domain/entity/recipe_step.dart';
+import 'package:cookify/feature/recipe/recipe_common/data/models/recipe_step_dto.dart';
+import 'package:cookify/feature/recipe/recipe_common/domain/entities/recipe_step.dart';
 
 abstract class RecipeStepMapper {
   static RecipeStep fromDto(RecipeStepDto dto) => RecipeStep(
