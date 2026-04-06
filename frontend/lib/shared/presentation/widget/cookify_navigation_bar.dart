@@ -28,12 +28,8 @@ class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
         vertical: CookifyNavigationBar._paddingVertical,
       ),
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.bottomCenter,
-          end: Alignment.topCenter,
-          colors: [Color(0xFF120A08), Colors.transparent],
-          stops: [0.8, 1.0],
-        ),
+        color: Color(0xCD2C1C16),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -72,6 +68,7 @@ class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
           _Item(
             onTap: () {
               setState(() => _activeItem = ActiveItem.favorite);
+              context.go('/saved');
             },
             isActive: _activeItem == ActiveItem.favorite,
             iconData: _activeItem == ActiveItem.favorite
@@ -100,7 +97,7 @@ class _Item extends StatelessWidget {
     required this.onTap,
     required this.isActive,
     required this.iconData,
-    this.iconSize = 18.0,
+    this.iconSize = 26.0,
   });
 
   final VoidCallback onTap;
@@ -117,7 +114,7 @@ class _Item extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: isActive
-              ? T.of(context).colorScheme.secondary
+              ? Color(0xFFE5C9A8)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12.0),
         ),
@@ -128,8 +125,8 @@ class _Item extends StatelessWidget {
           iconData,
           size: iconSize,
           color: isActive
-              ? T.of(context).colorScheme.primary
-              : const Color(0x88FFFFFF),
+              ? Color(0xFF3E2D16)
+              : const Color(0xFFFADCD2),
         ),
       ),
     );

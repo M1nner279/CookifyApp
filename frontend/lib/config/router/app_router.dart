@@ -2,11 +2,12 @@ import 'package:cookify/feature/auth/presentation/bloc/login_cubit.dart';
 import 'package:cookify/feature/auth/presentation/page/login_page.dart';
 import 'package:cookify/feature/auth/presentation/page/recover_password_page.dart';
 import 'package:cookify/feature/auth/presentation/page/register_page.dart';
-import 'package:cookify/feature/home/presentation/bloc/home_cubit.dart';
-import 'package:cookify/feature/home/presentation/page/home_page.dart';
+import 'package:cookify/feature/recipe/recipe_feed/presentation/bloc/home_cubit.dart';
+import 'package:cookify/feature/recipe/recipe_feed/presentation/page/home_page.dart';
 import 'package:cookify/feature/profile/presentation/page/profile_page.dart';
-import 'package:cookify/feature/recipe/presentation/bloc/recipe_cubit.dart';
-import 'package:cookify/feature/recipe/presentation/page/recipe_page.dart';
+import 'package:cookify/feature/recipe/recipe_detail/presentation/bloc/recipe_cubit.dart';
+import 'package:cookify/feature/recipe/recipe_detail/presentation/page/recipe_page.dart';
+import 'package:cookify/feature/recipe/recipe_saved_list/presentation/pages/recipe_saved_list_page.dart';
 import 'package:cookify/service/di/auth_di.dart';
 import 'package:cookify/service/di/di.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,8 @@ final router = GoRouter(
           ],
         ),
 
+        GoRoute(path: '/saved', builder: (context, state) => RecipeSavedListPage(),),
+
         GoRoute(
           path: '/profile',
           builder: (context, state) {
@@ -88,5 +91,5 @@ final router = GoRouter(
       ],
     ),
   ],
-  initialLocation: LoginPage.route,
+  initialLocation: '/saved',
 );

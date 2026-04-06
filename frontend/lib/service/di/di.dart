@@ -1,13 +1,13 @@
-import 'package:cookify/feature/home/data/datasource/home_remote_data_source.dart';
+import 'package:cookify/feature/recipe/recipe_feed/datasource/home_remote_data_source.dart';
 import 'package:cookify/feature/home/data/repository/home_repository_impl.dart';
-import 'package:cookify/feature/home/domain/repository/home_repository.dart';
-import 'package:cookify/feature/home/domain/usecase/get_recipe_list.dart';
-import 'package:cookify/feature/home/presentation/bloc/home_cubit.dart';
-import 'package:cookify/feature/recipe/data/datasource/recipe_remote_data_source.dart';
-import 'package:cookify/feature/recipe/data/repository/recipe_repository_impl.dart';
-import 'package:cookify/feature/recipe/domain/repository/recipe_repository.dart';
-import 'package:cookify/feature/recipe/domain/usecase/get_recipe.dart';
-import 'package:cookify/feature/recipe/presentation/bloc/recipe_cubit.dart';
+import 'package:cookify/feature/recipe/recipe_feed/domain/repository/home_repository.dart';
+import 'package:cookify/feature/recipe/recipe_feed/domain/usecase/get_recipe_list.dart';
+import 'package:cookify/feature/recipe/recipe_feed/presentation/bloc/home_cubit.dart';
+import 'package:cookify/feature/recipe/recipe_detail/data/datasource/recipe_remote_data_source.dart';
+import 'package:cookify/feature/recipe/recipe_detail/data/repository/recipe_repository_impl.dart';
+import 'package:cookify/feature/recipe/recipe_detail/domain/repository/recipe_repository.dart';
+import 'package:cookify/feature/recipe/recipe_detail/domain/usecase/get_recipe.dart';
+import 'package:cookify/feature/recipe/recipe_detail/presentation/bloc/recipe_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 

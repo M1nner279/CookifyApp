@@ -2,7 +2,7 @@ import 'package:cookify/config/theme/t.dart';
 import 'package:cookify/feature/auth/presentation/widget/auth_button.dart';
 import 'package:cookify/feature/auth/presentation/widget/auth_tab_bar.dart';
 import 'package:cookify/feature/auth/presentation/widget/auth_text_field.dart';
-import 'package:cookify/feature/home/presentation/page/home_page.dart';
+import 'package:cookify/feature/recipe/recipe_feed/presentation/page/home_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
