@@ -23,6 +23,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     );
 
 builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

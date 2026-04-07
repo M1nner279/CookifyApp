@@ -15,18 +15,11 @@ public interface IRecipeService
     Task<KeysetPagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId);
 }
 
-public class RecipeService : IRecipeService
+public class RecipeService(AppDbContext context) : IRecipeService
 {
-    private readonly AppDbContext _context;
-
-    public RecipeService(AppDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<IEnumerable<RecipeListDto>> GetRecipesListAsync()
     {
-        return await _context.Recipes
+        return await context.Recipes
             .Select(r => new RecipeListDto
             {
                 Id = r.Id,
@@ -49,7 +42,7 @@ public class RecipeService : IRecipeService
     
     public async Task<RecipeDetailDto?> GetRecipeByIdAsync(int id)
     {
-        return await _context.Recipes
+        return await context.Recipes
             .Where(r => r.Id == id)
             .Select(r => new RecipeDetailDto
             {
@@ -111,7 +104,7 @@ public class RecipeService : IRecipeService
     {
         //page = Math.Max(page, 1);
         //pageSize = Math.Clamp(pageSize, 1, 50);
-        var query = _context.Recipes
+        var query = context.Recipes
             .AsNoTracking()
             .AsSplitQuery();
 
@@ -153,7 +146,7 @@ public class RecipeService : IRecipeService
     {
         //_pageSize = Math.Clamp(_pageSize, 1, 50);
 
-        IQueryable<Recipe> query = _context.Recipes
+        IQueryable<Recipe> query = context.Recipes
             .AsNoTracking()
             .AsSplitQuery()
             .OrderBy(r => r.Id);
