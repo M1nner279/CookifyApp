@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using CookifyAPI.Data;
 using CookifyAPI.Services;
@@ -9,6 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 //     options.UseSqlServer(
 //         builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -18,9 +28,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                 maxRetryCount: 10,
                 maxRetryDelay: TimeSpan.FromSeconds(5),
                 errorNumbersToAdd: null);
-        }));
+        })
+        .UseSnakeCaseNamingConvention()
+    );
 
 builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -28,6 +41,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
     });
 // Добавляем контроллеры и Swagger/OpenAPI
+
 //builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

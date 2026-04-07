@@ -4,6 +4,7 @@ using CookifyAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookifyAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260406111805_FixCascade")]
+    partial class FixCascade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,310 +28,249 @@ namespace CookifyAPI.Migrations
             modelBuilder.Entity("CookifyAPI.Models.Favorite", b =>
                 {
                     b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("user_id");
+                        .HasColumnType("int");
 
                     b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnName("recipe_id");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("AddedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("added_at")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.HasKey("UserId", "RecipeId")
-                        .HasName("pk_favorites");
+                    b.HasKey("UserId", "RecipeId");
 
-                    b.HasIndex("RecipeId")
-                        .HasDatabaseName("ix_favorites_recipe_id");
+                    b.HasIndex("RecipeId");
 
-                    b.ToTable("favorites", (string)null);
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("CookifyAPI.Models.Ingredient", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<float?>("Calories100g")
-                        .HasColumnType("real")
-                        .HasColumnName("calories100g");
+                        .HasColumnType("real");
 
                     b.Property<float?>("Carb100g")
-                        .HasColumnType("real")
-                        .HasColumnName("carb100g");
+                        .HasColumnType("real");
 
                     b.Property<float?>("Fat100g")
-                        .HasColumnType("real")
-                        .HasColumnName("fat100g");
+                        .HasColumnType("real");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float?>("Protein100g")
-                        .HasColumnType("real")
-                        .HasColumnName("protein100g");
+                        .HasColumnType("real");
 
-                    b.HasKey("Id")
-                        .HasName("pk_ingredients");
+                    b.HasKey("Id");
 
-                    b.ToTable("ingredients", (string)null);
+                    b.ToTable("Ingredients");
                 });
 
             modelBuilder.Entity("CookifyAPI.Models.M2MRecipeIngredient", b =>
                 {
                     b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnName("recipe_id");
+                        .HasColumnType("int");
 
                     b.Property<int>("IngredientId")
-                        .HasColumnType("int")
-                        .HasColumnName("ingredient_id");
+                        .HasColumnType("int");
 
                     b.Property<float>("Amount")
-                        .HasColumnType("real")
-                        .HasColumnName("amount");
+                        .HasColumnType("real");
 
                     b.Property<string>("Unit")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("unit");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("RecipeId", "IngredientId")
-                        .HasName("pk_recipe_ingredients");
+                    b.HasKey("RecipeId", "IngredientId");
 
-                    b.HasIndex("IngredientId")
-                        .HasDatabaseName("ix_recipe_ingredients_ingredient_id");
+                    b.HasIndex("IngredientId");
 
-                    b.ToTable("recipe_ingredients", (string)null);
+                    b.ToTable("RecipeIngredients");
                 });
 
             modelBuilder.Entity("CookifyAPI.Models.M2MRecipeTag", b =>
                 {
                     b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnName("recipe_id");
+                        .HasColumnType("int");
 
                     b.Property<int>("TagId")
-                        .HasColumnType("int")
-                        .HasColumnName("tag_id");
+                        .HasColumnType("int");
 
-                    b.HasKey("RecipeId", "TagId")
-                        .HasName("pk_recipe_tags");
+                    b.HasKey("RecipeId", "TagId");
 
-                    b.HasIndex("TagId")
-                        .HasDatabaseName("ix_recipe_tags_tag_id");
+                    b.HasIndex("TagId");
 
-                    b.ToTable("recipe_tags", (string)null);
+                    b.ToTable("RecipeTags");
                 });
 
             modelBuilder.Entity("CookifyAPI.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AuthorId")
-                        .HasColumnType("int")
-                        .HasColumnName("author_id");
+                        .HasColumnType("int");
 
                     b.Property<float>("Calories100g")
-                        .HasColumnType("real")
-                        .HasColumnName("calories100g");
+                        .HasColumnType("real");
 
                     b.Property<float>("Carb100g")
-                        .HasColumnType("real")
-                        .HasColumnName("carb100g");
+                        .HasColumnType("real");
 
                     b.Property<int>("CookingTimeMin")
-                        .HasColumnType("int")
-                        .HasColumnName("cooking_time_min");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("created_at")
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("description");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Difficulty")
-                        .HasColumnType("int")
-                        .HasColumnName("difficulty");
+                        .HasColumnType("int");
 
                     b.Property<float>("Fat100g")
-                        .HasColumnType("real")
-                        .HasColumnName("fat100g");
+                        .HasColumnType("real");
 
                     b.Property<float>("Protein100g")
-                        .HasColumnType("real")
-                        .HasColumnName("protein100g");
+                        .HasColumnType("real");
 
                     b.Property<int>("Servings")
-                        .HasColumnType("int")
-                        .HasColumnName("servings");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("title");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_recipes");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AuthorId")
-                        .HasDatabaseName("ix_recipes_author_id");
+                    b.HasIndex("AuthorId");
 
-                    b.ToTable("recipes", (string)null);
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("CookifyAPI.Models.RecipeImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Order")
-                        .HasColumnType("int")
-                        .HasColumnName("order");
+                        .HasColumnType("int");
 
                     b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnName("recipe_id");
+                        .HasColumnType("int");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("url");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_recipe_images");
+                    b.HasKey("Id");
 
-                    b.HasIndex("RecipeId")
-                        .HasDatabaseName("ix_recipe_images_recipe_id");
+                    b.HasIndex("RecipeId");
 
-                    b.ToTable("recipe_images", (string)null);
+                    b.ToTable("RecipeImages");
                 });
 
             modelBuilder.Entity("CookifyAPI.Models.RecipeStep", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("description");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("image_url");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnName("recipe_id");
+                        .HasColumnType("int");
 
                     b.Property<int>("StepNumber")
-                        .HasColumnType("int")
-                        .HasColumnName("step_number");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("title");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_recipe_steps");
+                    b.HasKey("Id");
 
-                    b.HasIndex("RecipeId")
-                        .HasDatabaseName("ix_recipe_steps_recipe_id");
+                    b.HasIndex("RecipeId");
 
-                    b.ToTable("recipe_steps", (string)null);
+                    b.ToTable("RecipeSteps");
                 });
 
             modelBuilder.Entity("CookifyAPI.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("name");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_tags");
+                    b.HasKey("Id");
 
-                    b.ToTable("tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("CookifyAPI.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AvatarUrl")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("avatar_url");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("created_at")
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("email");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("password_hash");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("username");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_users");
+                    b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasDatabaseName("ix_users_email");
+                        .IsUnique();
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CookifyAPI.Models.Favorite", b =>
@@ -337,15 +279,13 @@ namespace CookifyAPI.Migrations
                         .WithMany()
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_favorites_recipes_recipe_id");
+                        .IsRequired();
 
                     b.HasOne("CookifyAPI.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_favorites_users_user_id");
+                        .IsRequired();
 
                     b.Navigation("Recipe");
 
@@ -358,15 +298,13 @@ namespace CookifyAPI.Migrations
                         .WithMany("Recipes")
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_recipe_ingredients_ingredients_ingredient_id");
+                        .IsRequired();
 
                     b.HasOne("CookifyAPI.Models.Recipe", "Recipe")
                         .WithMany("Ingredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_recipe_ingredients_recipes_recipe_id");
+                        .IsRequired();
 
                     b.Navigation("Ingredient");
 
@@ -379,15 +317,13 @@ namespace CookifyAPI.Migrations
                         .WithMany("Tags")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_recipe_tags_recipes_recipe_id");
+                        .IsRequired();
 
                     b.HasOne("CookifyAPI.Models.Tag", "Tag")
                         .WithMany("Recipes")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_recipe_tags_tags_tag_id");
+                        .IsRequired();
 
                     b.Navigation("Recipe");
 
@@ -400,8 +336,7 @@ namespace CookifyAPI.Migrations
                         .WithMany("Recipes")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_recipes_users_author_id");
+                        .IsRequired();
 
                     b.Navigation("Author");
                 });
@@ -412,8 +347,7 @@ namespace CookifyAPI.Migrations
                         .WithMany("Images")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_recipe_images_recipes_recipe_id");
+                        .IsRequired();
 
                     b.Navigation("Recipe");
                 });
@@ -424,8 +358,7 @@ namespace CookifyAPI.Migrations
                         .WithMany("Steps")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_recipe_steps_recipes_recipe_id");
+                        .IsRequired();
 
                     b.Navigation("Recipe");
                 });
