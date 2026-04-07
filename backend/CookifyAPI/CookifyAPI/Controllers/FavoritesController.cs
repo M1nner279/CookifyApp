@@ -23,4 +23,31 @@ public class FavoritesController : ControllerBase
         return Ok(await _service.GetFavoritesAsync(userId));
     }
     
+    // POST: api/favorites/{recipeId}
+    [HttpPost("{recipeId}")]
+    public async Task<IActionResult> AddToFavorites(int recipeId, int userId)
+    {
+        //int userId =  // из JWT TODO авторизованный пользователь по jwt токену
+
+        var created = await _service.AddFavoriteAsync(userId, recipeId);
+        
+        if (created)
+        {
+            return Created(
+                $"/api/favorites/{recipeId}",
+                null
+            );
+        }
+        
+        return NoContent(); // идемпотентно
+    }
+    
+    // DELETE: api/favorites/{recipeId}
+    [HttpDelete("{recipeId}")]
+    public async Task<IActionResult> RemoveFromFavorites(int recipeId, int userId)
+    {
+        await _service.RemoveFavoriteAsync(userId, recipeId);
+        
+        return NoContent();
+    }
 }
