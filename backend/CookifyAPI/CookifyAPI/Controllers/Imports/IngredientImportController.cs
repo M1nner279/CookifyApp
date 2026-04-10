@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using CookifyAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CookifyAPI.Controllers;
+namespace CookifyAPI.Controllers.Imports;
 
 [ApiController]
 [Route("api/[controller]")]

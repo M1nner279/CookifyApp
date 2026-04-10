@@ -37,6 +37,7 @@ builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddScoped<IImageService, CloudinaryImageService>();
 
 builder.Services.AddScoped<IngredientImportService>();
+builder.Services.AddScoped<TagImportService>();
 
 builder.Services.AddHttpClient<ImageMigrationService>();
 builder.Services.AddScoped<ImageMigrationService>();
