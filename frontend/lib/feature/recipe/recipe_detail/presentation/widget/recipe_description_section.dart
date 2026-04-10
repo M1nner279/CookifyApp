@@ -45,6 +45,7 @@ class RecipeDescriptionSection extends StatelessWidget {
             Text(
               recipe.name,
               style: const TextStyle(
+                color: const Color(0xFFF5E6D3),
                 fontSize: 30.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: -1.2,
@@ -61,6 +62,7 @@ class RecipeDescriptionSection extends StatelessWidget {
             Text(
               recipe.description,
               style: const TextStyle(
+                color: const Color(0xFFF5E6D3),
                 fontSize: 14.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.0,
@@ -111,12 +113,13 @@ class _Category extends StatelessWidget {
     return Container(
       padding: const .fromLTRB(12.0, 4.0, 12.0, 6.0),
       decoration: BoxDecoration(
-        color: const Color(0x19000000),
+        color: const Color(0x19E5C9A8),
         borderRadius: BorderRadius.circular(9999.0),
       ),
       child: Text(
         category.name,
         style: const TextStyle(
+          color: const Color(0xFFF5E6D3),
           fontSize: 10.0,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.0,
@@ -137,7 +140,7 @@ class _CookingTime extends StatelessWidget {
     return Row(
       spacing: 12.0,
       children: [
-        Icon(Icons.access_time, size: 20.0),
+        Icon(Icons.access_time, size: 20.0,color: const Color(0xFFF5E6D3),),
 
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,6 +148,7 @@ class _CookingTime extends StatelessWidget {
             Text(
               S.of(context).recipeDescriptionSectionTime,
               style: const TextStyle(
+                color: const Color(0xFFF5E6D3),
                 fontSize: 15.0,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.0,
@@ -155,6 +159,7 @@ class _CookingTime extends StatelessWidget {
             Text(
               S.of(context).recipeDescriptionSectionCookingTime(cookingTime),
               style: const TextStyle(
+                color: const Color(0xFFF5E6D3),
                 fontSize: 16.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.0,
@@ -210,7 +215,7 @@ class _Cpf extends StatelessWidget {
     return Container(
       padding: const .symmetric(horizontal: 10.0, vertical: 6.0),
       decoration: BoxDecoration(
-        color: const Color(0x19000000),
+        color: const Color(0x19E5C9A8),
         border: Border.all(color: const Color(0x08000000)),
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -228,7 +233,7 @@ class _Cpf extends StatelessWidget {
             child: Text(
               sign,
               style: TextStyle(
-                color: T.of(context).colorScheme.primary,
+                color: const Color(0xFFF5E6D3),
                 fontSize: 11.0,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.0,
@@ -241,7 +246,7 @@ class _Cpf extends StatelessWidget {
             text: TextSpan(
               text: '$grams',
               style: TextStyle(
-                color: T.of(context).colorScheme.secondary,
+                color: const Color(0xFFF5E6D3),
                 fontSize: 12.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.0,
@@ -283,13 +288,13 @@ class _Calories extends StatelessWidget {
       child: Row(
         spacing: 6.0,
         children: [
-          Icon(Icons.local_fire_department, size: 16.0),
+          Icon(Icons.local_fire_department, size: 16.0, color: const Color(0xFFF5E6D3),),
 
           RichText(
             text: TextSpan(
               text: '$calories',
               style: TextStyle(
-                color: T.of(context).colorScheme.secondary,
+                color: const Color(0xFFF5E6D3),
                 fontSize: 12.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.0,

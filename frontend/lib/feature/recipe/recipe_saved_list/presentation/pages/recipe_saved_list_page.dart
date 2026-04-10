@@ -18,7 +18,7 @@ class RecipeSavedListPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(
-              bottom: CookifyNavigationBar.barHeight + 10.0,
+              bottom: CookifyNavigationBar.barHeight,
             ),
             child: BlocProvider<RecipeSavedListCubit>.value(
               value: GetIt.instance(),

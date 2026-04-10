@@ -42,18 +42,21 @@ class RecipeSavedListPageContent extends StatelessWidget {
                       child: SingleChildScrollView(
                         child: Wrap(
                           spacing: 16.0,
-                          runSpacing: 20.0,
+                          runSpacing: 12.0,
                           children: state.filteredRecipes
                               .map(
-                                (e) => LayoutBuilder(
-                                  builder: (context, constraints) {
-                                    return ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        maxWidth: constraints.maxWidth / 2 - 16.0,
-                                      ),
-                                      child: SavedRecipePreviewCard(recipe: e),
-                                    );
-                                  },
+                                (e) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      return ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                          maxWidth: constraints.maxWidth / 2 - 16.0,
+                                        ),
+                                        child: SavedRecipePreviewCard(recipe: e),
+                                      );
+                                    },
+                                  ),
                                 ),
                               )
                               .toList(),

@@ -23,6 +23,7 @@ class RecipeStepsSection extends StatelessWidget {
             Text(
               S.of(context).recipeStepsSectionTitle,
               style: const TextStyle(
+                color: const Color(0xFFF5E6D3),
                 fontSize: 20.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.5,
@@ -66,7 +67,7 @@ class _Step extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: T.of(context).colorScheme.primary,
+                color: const Color(0x19E5C9A8),
                 shape: BoxShape.circle,
               ),
               width: 32.0,
@@ -74,7 +75,7 @@ class _Step extends StatelessWidget {
               child: Text(
                 '${index + 1}',
                 style: TextStyle(
-                  color: T.of(context).colorScheme.secondary,
+                  color: const Color(0xFFF5E6D3),
                   fontSize: 16.0,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.0,
@@ -87,6 +88,7 @@ class _Step extends StatelessWidget {
               child: Text(
                 step.name,
                 style: TextStyle(
+                  color: const Color(0xFFF5E6D3),
                   fontSize: 18.0,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.0,
@@ -110,7 +112,7 @@ class _Step extends StatelessWidget {
           },
         ),
 
-        Text(step.description),
+        Text(step.description, style: TextStyle(color: const Color(0xFFF5E6D3),),),
       ],
     );
   }

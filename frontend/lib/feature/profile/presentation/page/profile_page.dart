@@ -35,6 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
+      backgroundColor: Color(0xFF1A0F0A),
     );
   }
 }

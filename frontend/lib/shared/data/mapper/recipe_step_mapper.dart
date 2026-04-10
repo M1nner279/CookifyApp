@@ -7,4 +7,11 @@ abstract class RecipeStepMapper {
     name: dto.title ?? '',
     description: dto.description,
   );
+
+  static RecipeStepDto toDto(RecipeStep step) => RecipeStepDto(
+    imageUrl: step.photoUrl!,
+    title: step.name,
+    description: step.description,
+    id: 0,
+  );
 }

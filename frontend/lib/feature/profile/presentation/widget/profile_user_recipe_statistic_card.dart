@@ -22,7 +22,7 @@ class ProfileUserRecipeStatisticCard extends StatelessWidget {
         child: Column(
           spacing: 0.0,
           children: [
-            Icon(iconData),
+            Icon(iconData, color: const Color(0xFFF5E6D3)),
 
             Text(
               '$count',
@@ -30,13 +30,14 @@ class ProfileUserRecipeStatisticCard extends StatelessWidget {
                   .of(context)
                   .textTheme
                   .titleLarge!
-                  .copyWith(fontWeight: FontWeight.w900),
+                  .copyWith(fontWeight: FontWeight.w900, color: const Color(0xFFF5E6D3)),
             ),
 
             Text(
               title,
-              style: T.of(context).textTheme.labelSmall,
+              style: T.of(context).textTheme.labelSmall!.copyWith(color: const Color(0xFFF5E6D3)),
               overflow: TextOverflow.ellipsis,
+              
             ),
           ],
         ),

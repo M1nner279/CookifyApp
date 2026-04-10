@@ -37,6 +37,7 @@ class _RecipeIngredientsSectionState extends State<RecipeIngredientsSection> {
             Text(
               S.of(context).recipeIngredientsSectionTitle,
               style: const TextStyle(
+                color: const Color(0xFFF5E6D3),
                 fontSize: 20.0,
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.5,
@@ -99,7 +100,7 @@ class _ServingCount extends StatelessWidget {
     return Container(
       padding: const .all(2.0),
       decoration: BoxDecoration(
-        color: const Color(0x19000000),
+        color: const Color(0x19E5C9A8),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
@@ -120,12 +121,13 @@ class _ServingCount extends StatelessWidget {
                   .toList();
               onServingCountChanged(newServingCount, newIngredients);
             },
-            icon: Icon(Icons.remove, size: 20.0),
+            icon: Icon(Icons.remove, size: 20.0, color: const Color(0xFFF5E6D3),),
           ),
 
           Text(
             S.of(context).recipeIngredientsSectionServingCount(servingCount),
             style: const TextStyle(
+              color: const Color(0xFFF5E6D3),
               fontSize: 14.0,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.0,
@@ -147,7 +149,7 @@ class _ServingCount extends StatelessWidget {
                   .toList();
               onServingCountChanged(newServingCount, newIngredients);
             },
-            icon: Icon(Icons.add, size: 20.0),
+            icon: Icon(Icons.add, size: 20.0, color: const Color(0xFFF5E6D3),),
           ),
         ],
       ),
@@ -173,6 +175,7 @@ class _Ingredient extends StatelessWidget {
         Text(
           ingredient.name,
           style: const TextStyle(
+            color: const Color(0xFFF5E6D3),
             fontSize: 16.0,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.0,
@@ -183,6 +186,7 @@ class _Ingredient extends StatelessWidget {
         Text(
           '$quantity${ingredient.unit}',
           style: const TextStyle(
+            color: const Color(0xFFF5E6D3),
             fontSize: 16.0,
             fontWeight: FontWeight.w700,
             letterSpacing: 0.0,
