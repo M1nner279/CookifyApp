@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using CookifyAPI.DTOs.Ingredients;
 
 namespace CookifyAPI.Services;
 
@@ -60,17 +61,17 @@ public class JsonStepDto
     public string ImageUrl { get; set; }
 }
 
-public class JsonIngredientDto
-{
-    [JsonPropertyName("name")]
-    public string Name { get; set; }
-
-    [JsonPropertyName("amount")]
-    public double Amount { get; set; }
-
-    [JsonPropertyName("unit")]
-    public string Unit { get; set; }
-}
+// public class JsonIngredientDto
+// {
+//     [JsonPropertyName("name")]
+//     public string Name { get; set; }
+//
+//     [JsonPropertyName("amount")]
+//     public double Amount { get; set; }
+//
+//     [JsonPropertyName("unit")]
+//     public string Unit { get; set; }
+// }
 
 public class ImageMigrationService
 {

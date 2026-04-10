@@ -1,5 +1,5 @@
 ﻿using CookifyAPI.Data;
-using CookifyAPI.DTOs;
+using CookifyAPI.DTOs.Ingredients;
 using CookifyAPI.DTOs.Pagination;
 using CookifyAPI.DTOs.Recipes;
 using CookifyAPI.Models;

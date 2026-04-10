@@ -35,6 +35,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddScoped<IImageService, CloudinaryImageService>();
+
+builder.Services.AddScoped<IngredientImportService>();
+
 builder.Services.AddHttpClient<ImageMigrationService>();
 builder.Services.AddScoped<ImageMigrationService>();
 
