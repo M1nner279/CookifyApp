@@ -24,7 +24,7 @@ class AppPaletteLight extends AppPalette {
   Color primary() => Color(0xFF120A08);
   
   @override
-  Color secondary() => Color(0xFFF5E6D3);
+  Color secondary() => Color(0xFF2C1C16);
 }
 
 class AppPaletteDark extends AppPalette {
@@ -35,5 +35,5 @@ class AppPaletteDark extends AppPalette {
   Color primary() => Color(0xFF120A08);
   
   @override
-  Color secondary() => Color(0xFFF5E6D3);
+  Color secondary() => Color(0xFF2C1C16);
 }

@@ -1,14 +1,14 @@
-import 'package:cookify/feature/auth/presentation/bloc/login_cubit.dart';
-import 'package:cookify/feature/auth/presentation/page/login_page.dart';
-import 'package:cookify/feature/auth/presentation/page/recover_password_page.dart';
-import 'package:cookify/feature/auth/presentation/page/register_page.dart';
+import 'package:cookify/feature/auth/auth_common/presentation/pages/auth_page.dart';
+import 'package:cookify/feature/auth/change_password/di/change_password_di.dart';
+import 'package:cookify/feature/auth/change_password/presentation/bloc/change_password_cubit.dart';
+import 'package:cookify/feature/auth/change_password/presentation/page/change_password_page_content.dart';
+import 'package:cookify/feature/auth/otp/presentation/page/otp_page.dart';
 import 'package:cookify/feature/recipe/recipe_feed/presentation/bloc/home_cubit.dart';
 import 'package:cookify/feature/recipe/recipe_feed/presentation/page/home_page.dart';
 import 'package:cookify/feature/profile/presentation/page/profile_page.dart';
 import 'package:cookify/feature/recipe/recipe_detail/presentation/bloc/recipe_cubit.dart';
 import 'package:cookify/feature/recipe/recipe_detail/presentation/page/recipe_page.dart';
 import 'package:cookify/feature/recipe/recipe_saved_list/presentation/pages/recipe_saved_list_page.dart';
-import 'package:cookify/service/di/auth_di.dart';
 import 'package:cookify/service/di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,74 +22,123 @@ final router = GoRouter(
       },
       routes: [
         GoRoute(
-          path: LoginPage.route,
+          path: RecipePage.route,
           pageBuilder: (context, state) {
+            final id = state.pathParameters['id'];
+
             return NoTransitionPage(
-              child: BlocProvider<LoginCubit>.value(
-                value: AuthDI.getIt(),
-                child: const LoginPage(),
+              child: BlocProvider<RecipeCubit>.value(
+                value: DI.getIt(param1: id),
+                child: const RecipePage(),
               ),
             );
           },
         ),
 
         GoRoute(
-          path: RegisterPage.route,
+          path: RecipePage.route,
           pageBuilder: (context, state) {
+            final id = state.pathParameters['id'];
+
             return NoTransitionPage(
-              child: BlocProvider<LoginCubit>.value(
-                value: AuthDI.getIt(),
-                child: const RegisterPage(),
+              child: BlocProvider<RecipeCubit>.value(
+                value: DI.getIt(param1: id),
+                child: const RecipePage(),
               ),
             );
           },
         ),
 
         GoRoute(
-          path: RecoverPasswordPage.route,
-          pageBuilder: (context, state) {
-            return NoTransitionPage(
-              child: BlocProvider<LoginCubit>.value(
-                value: AuthDI.getIt(),
-                child: const RecoverPasswordPage(),
+          path: '/auth',
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: AuthPage()),
+          routes: [
+            GoRoute(
+              path: '/otp',
+              pageBuilder: (context, state) {
+                final Future<bool> Function(String) verifyCode =
+                    (state.extra as Map<String, dynamic>)['verifyCode'];
+                final Future<void> Function() resendCode =
+                    (state.extra as Map<String, dynamic>)['resendCode'];
+                final bool isPasswordRestore =
+                    (state.extra
+                        as Map<String, dynamic>)['isPasswordRestore'] ??
+                    false;
+                return NoTransitionPage(
+                  child: OtpPage(
+                    verifyCode: verifyCode,
+                    resendCode: resendCode,
+                    isPasswordRestore: isPasswordRestore,
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              path: '/change-password',
+              pageBuilder: (context, state) => NoTransitionPage(
+                child: BlocProvider<ChangePasswordCubit>.value(
+                  value: ChangePasswordDi.getIt<ChangePasswordCubit>(),
+                  child: const ChangePasswordPageContent(),
+                ),
               ),
-            );
-          },
+            ),
+          ],
         ),
 
         GoRoute(
           path: HomePage.route,
-          builder: (context, state) {
-            return BlocProvider<HomeCubit>.value(
+          pageBuilder: (context, state) => NoTransitionPage(
+            child: BlocProvider<HomeCubit>.value(
               value: DI.getIt(),
               child: const HomePage(),
-            );
-          },
+            ),
+          ),
           routes: [
             GoRoute(
               path: RecipePage.route,
-              builder: (context, state) {
+              pageBuilder: (context, state) {
                 final id = state.pathParameters['id'];
 
-                return BlocProvider<RecipeCubit>.value(
-                  value: DI.getIt(param1: id),
-                  child: const RecipePage(),
+                return NoTransitionPage(
+                  child: BlocProvider<RecipeCubit>.value(
+                    value: DI.getIt(param1: id),
+                    child: const RecipePage(),
+                  ),
                 );
               },
             ),
           ],
         ),
 
-        GoRoute(path: '/saved', builder: (context, state) => RecipeSavedListPage(),),
+        GoRoute(
+          path: '/saved',
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: RecipeSavedListPage()),
+          routes: [
+            GoRoute(
+              path: RecipePage.route,
+              pageBuilder: (context, state) {
+                final id = state.pathParameters['id'];
+
+                return NoTransitionPage(
+                  child: BlocProvider<RecipeCubit>.value(
+                    value: DI.getIt(param1: id),
+                    child: const RecipePage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
 
         GoRoute(
           path: '/profile',
-          builder: (context, state) {
-            return const ProfilePage();
-          },
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: ProfilePage()),
         ),
       ],
     ),
   ],
-  initialLocation: '/saved',
+  initialLocation: '/auth',
 );

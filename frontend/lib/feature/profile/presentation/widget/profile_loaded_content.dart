@@ -1,9 +1,11 @@
+import 'package:cookify/config/router/context_route_extension.dart';
 import 'package:cookify/feature/profile/domain/entity/locale_entity.dart';
 import 'package:cookify/feature/profile/domain/entity/user_info_entity.dart';
 import 'package:cookify/feature/profile/presentation/widget/profile_button.dart';
 import 'package:cookify/feature/profile/presentation/widget/profile_user_card.dart';
 import 'package:cookify/feature/profile/presentation/widget/profile_user_recipe_statistic_card.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileLoadedContent extends StatelessWidget {
   const ProfileLoadedContent({
@@ -38,7 +40,7 @@ class ProfileLoadedContent extends StatelessWidget {
                 Text(
                   'Достижения',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: const Color(0xFFF5E6D3)
                   ),
                 ),
 
@@ -86,7 +88,7 @@ class ProfileLoadedContent extends StatelessWidget {
                 Text(
                   'Настройки',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: const Color(0xFFF5E6D3)
                   ),
                 ),
 
@@ -97,7 +99,15 @@ class ProfileLoadedContent extends StatelessWidget {
                 ),
 
                 ProfileButton(
-                  onTap: () {},
+                  onTap: () => context.go('/auth/change-password'),
+                  iconData: Icons.lock,
+                  title: 'Изменить пароль',
+                ),
+
+                ProfileButton(
+                  onTap: () {
+                    context.go('/auth');
+                  },
                   iconData: Icons.logout,
                   title: 'Выйти',
                 ),

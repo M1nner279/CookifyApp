@@ -13,7 +13,7 @@ class SavedRecipePreviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go('/recipes/${recipe.id}');
+        context.push('/recipes/${recipe.serverId}');
       },
       child: Container(
         decoration: BoxDecoration(

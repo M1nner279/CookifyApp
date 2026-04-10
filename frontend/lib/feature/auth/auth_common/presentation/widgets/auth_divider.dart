@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+
+class AuthDivider extends StatelessWidget {
+  const AuthDivider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 16.0,
+      children: [
+        Expanded(child: _Line()),
+
+        Text(
+          'ИЛИ ЧЕРЕЗ',
+          style: TextStyle(
+            color: Color(0xFFFFE6C9),
+            fontSize: 10.0,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 2,
+            height: 15.0 / 10.0,
+          ),
+        ),
+
+        Expanded(child: _Line()),
+      ],
+    );
+  }
+}
+
+class _Line extends StatelessWidget {
+  const _Line();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color(0xFFFFE6C9),
+      width: double.infinity,
+      height: 1.0,
+    );
+  }
+}

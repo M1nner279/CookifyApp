@@ -46,6 +46,7 @@ class HomeRecipeCard extends StatelessWidget {
                         child: Text(
                           recipe.name,
                           style: const TextStyle(
+                            color: const Color(0xFFF5E6D3),
                             fontSize: 20.0,
                             fontWeight: FontWeight.w700,
                             letterSpacing: -0.5,
@@ -56,12 +57,12 @@ class HomeRecipeCard extends StatelessWidget {
 
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.favorite_border),
+                        icon: const Icon(Icons.favorite_border, color: const Color(0xFFF5E6D3),),
                       ),
 
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.bookmark_border),
+                        icon: const Icon(Icons.bookmark_border, color: const Color(0xFFF5E6D3),),
                       ),
                     ],
                   ),
@@ -130,13 +131,14 @@ class _Info extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(iconData, size: 16.0),
+        Icon(iconData, size: 16.0, color: const Color(0xFFF5E6D3),),
 
         const SizedBox(width: 4.0),
 
         Text(
           text,
           style: const TextStyle(
+            color: const Color(0xFFF5E6D3),
             fontSize: 12.0,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.0,
@@ -185,12 +187,13 @@ class _Category extends StatelessWidget {
     return Container(
       padding: const .symmetric(horizontal: 8.0, vertical: 2.0),
       decoration: BoxDecoration(
-        color: const Color(0x19000000),
+        color: const Color(0x19E5C9A8),
         borderRadius: BorderRadius.circular(9999.0),
       ),
       child: Text(
         category.name,
         style: const TextStyle(
+          color: const Color(0xFFF5E6D3),
           fontSize: 10.0,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.0,

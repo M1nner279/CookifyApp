@@ -46,7 +46,7 @@ class ProfileUserCard extends StatelessWidget {
                               .of(context)
                               .textTheme
                               .headlineLarge!
-                              .copyWith(fontWeight: FontWeight.w900),
+                              .copyWith(fontWeight: FontWeight.w900, color: const Color(0xFFF5E6D3)),
                         ),
                       ),
                     ),
@@ -66,7 +66,7 @@ class ProfileUserCard extends StatelessWidget {
                     height: 30.0,
                     child: Icon(
                       Icons.camera_alt,
-                      color: T.of(context).colorScheme.secondary,
+                      color: const Color(0xFFF5E6D3),
                       size: 16.0,
                     ),
                   ),
@@ -84,7 +84,7 @@ class ProfileUserCard extends StatelessWidget {
                         .of(context)
                         .textTheme
                         .headlineMedium!
-                        .copyWith(fontWeight: FontWeight.w900),
+                        .copyWith(fontWeight: FontWeight.w900,color: const Color(0xFFF5E6D3)),
                   ),
               
                   Text(
@@ -93,7 +93,7 @@ class ProfileUserCard extends StatelessWidget {
                         .of(context)
                         .textTheme
                         .titleMedium!
-                        .copyWith(fontWeight: FontWeight.w600),
+                        .copyWith(fontWeight: FontWeight.w600,color: const Color(0xFFF5E6D3)),
                   ),
               
                   Text(
@@ -102,7 +102,7 @@ class ProfileUserCard extends StatelessWidget {
                         .of(context)
                         .textTheme
                         .titleMedium!
-                        .copyWith(fontWeight: FontWeight.w600),
+                        .copyWith(fontWeight: FontWeight.w600,color: const Color(0xFFF5E6D3)),
                   ),
                 ],
               ),

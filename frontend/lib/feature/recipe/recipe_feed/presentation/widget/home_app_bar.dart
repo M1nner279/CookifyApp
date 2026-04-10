@@ -1,5 +1,4 @@
 import 'package:cookify/config/constant/app_constant.dart';
-import 'package:cookify/config/theme/t.dart';
 import 'package:flutter/material.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -11,7 +10,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         appName,
         style: TextStyle(
-          color: T.of(context).colorScheme.secondary,
+          color: const Color(0xFFF5E6D3),
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.0,
@@ -21,7 +20,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.notifications_none, size: 28.0),
+          icon: Icon(Icons.notifications_none, size: 28.0, color: const Color(0xFFF5E6D3),),
         ),
       ],
     );

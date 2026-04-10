@@ -30,7 +30,7 @@ class ProfileButton extends StatelessWidget {
                   color: T.of(context).colorScheme.primary.withAlpha(19),
                   borderRadius: BorderRadius.circular(16.0),
                 ),
-                child: Icon(iconData),
+                child: Icon(iconData,color: const Color(0xFFF5E6D3)),
               ),
 
               Text(
@@ -39,7 +39,7 @@ class ProfileButton extends StatelessWidget {
                     .of(context)
                     .textTheme
                     .titleLarge!
-                    .copyWith(fontWeight: FontWeight.w700),
+                    .copyWith(fontWeight: FontWeight.w700, color: const Color(0xFFF5E6D3)),
               ),
             ],
           ),
