@@ -1,4 +1,4 @@
-﻿namespace CookifyAPI.DTOs;
+﻿namespace CookifyAPI.DTOs.Ingredients;
 
 public class IngredientDto
 {

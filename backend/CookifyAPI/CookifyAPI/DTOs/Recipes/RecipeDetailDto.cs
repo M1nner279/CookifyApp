@@ -1,4 +1,6 @@
-﻿using CookifyAPI.DTOs;
+﻿using CookifyAPI.DTOs.Ingredients;
+using CookifyAPI.DTOs.Steps;
+
 namespace CookifyAPI.DTOs.Recipes;
 
 public class RecipeDetailDto
@@ -19,7 +21,7 @@ public class RecipeDetailDto
 
     // Связанные данные
     public List<RecipeImageDto> Images { get; set; } = new();
-    public List<RecipeStepDto> Steps { get; set; } = new();
+    public List<StepDto> Steps { get; set; } = new();
     public List<string> Tags { get; set; } = new();
     public List<IngredientDto> Ingredients { get; set; }
 }

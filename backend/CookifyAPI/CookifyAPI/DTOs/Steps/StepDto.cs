@@ -1,6 +1,6 @@
-﻿namespace CookifyAPI.DTOs.Recipes;
+﻿namespace CookifyAPI.DTOs.Steps;
 
-public class RecipeStepDto
+public class StepDto
 {
     public int Id { get; set; }
     public string Title {get; set;}
