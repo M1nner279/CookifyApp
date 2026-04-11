@@ -2,6 +2,7 @@
 using CookifyAPI.DTOs.Ingredients;
 using CookifyAPI.DTOs.Pagination;
 using CookifyAPI.DTOs.Recipes;
+using CookifyAPI.DTOs.Steps;
 using CookifyAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -71,7 +72,7 @@ public class RecipeService(AppDbContext context) : IRecipeService
 
                 Steps = r.Steps
                     .OrderBy(s => s.StepNumber)
-                    .Select(s => new RecipeStepDto
+                    .Select(s => new StepDto
                     {
                         Id = s.Id,
                         Title = s.Title,

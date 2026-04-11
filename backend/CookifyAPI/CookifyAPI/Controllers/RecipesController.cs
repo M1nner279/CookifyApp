@@ -12,10 +12,12 @@ namespace CookifyAPI.Controllers;
 public class RecipesController : ControllerBase
 {
     private readonly IRecipeService _service;
+    private readonly RecipeImportService _importService;
 
-    public RecipesController(IRecipeService service)
+    public RecipesController(IRecipeService service,  RecipeImportService importService)
     {
         _service = service;
+        _importService = importService;
     }
     
     // GET: api/recipes
@@ -35,6 +37,20 @@ public class RecipesController : ControllerBase
             return NotFound();
 
         return Ok(recipe);
+    }
+    
+    [HttpPost("import")]
+    [RequestSizeLimit(50_000_000)]
+    public async Task<IActionResult> Import(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("Файл пуст");
+
+        using var stream = file.OpenReadStream();
+
+        await _importService.ImportAsync(stream);
+
+        return Ok();
     }
     
     

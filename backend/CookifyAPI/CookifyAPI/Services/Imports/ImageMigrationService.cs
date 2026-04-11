@@ -1,77 +1,7 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using CookifyAPI.DTOs.Ingredients;
+using CookifyAPI.DTOs.Recipes;
 
 namespace CookifyAPI.Services;
-
-public class JsonRecipeDto
-{
-    [JsonPropertyName("title")]
-    public string Title { get; set; }
-
-    [JsonPropertyName("cooking_time_min")]
-    public int CookingTimeMin { get; set; }
-
-    [JsonPropertyName("servings")]
-    public int Servings { get; set; }
-
-    [JsonPropertyName("difficulty_text")]
-    public string DifficultyText { get; set; }
-
-    [JsonPropertyName("description")]
-    public string Description { get; set; }
-
-    [JsonPropertyName("calories")]
-    public double Calories { get; set; }
-
-    [JsonPropertyName("protein")]
-    public double Protein { get; set; }
-
-    [JsonPropertyName("fat")]
-    public double Fat { get; set; }
-
-    [JsonPropertyName("carb")]
-    public double Carb { get; set; }
-
-    [JsonPropertyName("ingredients")]
-    public List<JsonIngredientDto> Ingredients { get; set; }
-
-    [JsonPropertyName("tags")]
-    public List<string> Tags { get; set; }
-
-    [JsonPropertyName("steps")]
-    public List<JsonStepDto> Steps { get; set; }
-
-    [JsonPropertyName("images")]
-    public List<string> Images { get; set; }
-}
-
-public class JsonStepDto
-{
-    [JsonPropertyName("title")]
-    public string Title { get; set; }
-
-    [JsonPropertyName("step_number")]
-    public int StepNumber { get; set; }
-
-    [JsonPropertyName("description")]
-    public string Description { get; set; }
-
-    [JsonPropertyName("image_url")]
-    public string ImageUrl { get; set; }
-}
-
-// public class JsonIngredientDto
-// {
-//     [JsonPropertyName("name")]
-//     public string Name { get; set; }
-//
-//     [JsonPropertyName("amount")]
-//     public double Amount { get; set; }
-//
-//     [JsonPropertyName("unit")]
-//     public string Unit { get; set; }
-// }
 
 public class ImageMigrationService
 {
