@@ -59,7 +59,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     
     // Попытка применить миграции несколько раз (защита от медленного старта БД)
-    int retries = 5;
+    int retries = 20;
     while (retries > 0)
     {
         try
@@ -77,7 +77,7 @@ using (var scope = app.Services.CreateScope())
                 throw; // Приложение упадет, и Docker его перезапустит
             }
             Console.WriteLine($"Database is starting up... waiting. ({retries} attempts left)");
-            Thread.Sleep(5000);
+            Thread.Sleep(15000);
         }
     }
 }
