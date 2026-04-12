@@ -1,9 +1,6 @@
-﻿using CookifyAPI.Data;
-using CookifyAPI.DTOs.Recipes;
-using CookifyAPI.Models;
+﻿using CookifyAPI.DTOs.Recipes;
 using CookifyAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CookifyAPI.Controllers;
 
@@ -17,15 +14,20 @@ public class RecipesController : ControllerBase
     {
         _service = service;
     }
-    
+
     // GET: api/recipes
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="lastId"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult> GetRecipesKeyset(
         int? lastId = null)
     {
         return Ok(await _service.GetRecipesKeysetAsync(lastId));
     }
-    
+
     // GET: api/recipes/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<RecipeDetailDto>> GetRecipe(int id)
@@ -36,8 +38,8 @@ public class RecipesController : ControllerBase
 
         return Ok(recipe);
     }
-    
-    
+
+
     // [HttpPost]
     // public async Task<IActionResult> Create(Recipe recipe)
     // {

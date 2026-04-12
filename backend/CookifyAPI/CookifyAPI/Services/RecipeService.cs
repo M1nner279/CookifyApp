@@ -44,6 +44,7 @@ public class RecipeService(AppDbContext context) : IRecipeService
     {
         return await context.Recipes
             .Where(r => r.Id == id)
+            .AsSplitQuery()
             .Select(r => new RecipeDetailDto
             {
                 Id = r.Id,
