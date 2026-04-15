@@ -1,6 +1,7 @@
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_bar.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_bottom.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_top.dart';
+import 'package:cookify/features/auth/sign_in/presentation/pages/sign_in_page.dart';
 import 'package:cookify/features/auth/sign_up/presentation/pages/sign_up_page.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ class AuthPageContent extends StatefulWidget {
 }
 
 class _AuthPageContentState extends State<AuthPageContent> {
-  var type = AuthPageContentType.signUp;
+  var type = AuthPageContentType.signIn;
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +50,56 @@ class _AuthPageContentState extends State<AuthPageContent> {
                               AuthBar(
                                 type: type,
                                 onTypeChanged: (value) {
-                                  setState(() => type = type);
+                                  setState(() => type = value);
                                 },
                               ),
       
-                              _buildAuthContent(),
+                              AnimatedSize(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                              alignment: Alignment.topCenter,
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                layoutBuilder:
+                                    (
+                                      Widget? currentChild,
+                                      List<Widget> previousChildren,
+                                    ) {
+                                      return Stack(
+                                        alignment: Alignment.topCenter,
+                                        children: <Widget>[?currentChild],
+                                      );
+                                    },
+                                transitionBuilder:
+                                    (
+                                      Widget child,
+                                      Animation<double> animation,
+                                    ) {
+                                      final isInAnimation =
+                                          child.key == ValueKey(type);
+
+                                      return SlideTransition(
+                                        position:
+                                            Tween<Offset>(
+                                              begin: isInAnimation
+                                                  ? const Offset(-1.0, 0.0)
+                                                  : const Offset(1.0, 0.0),
+                                              end: Offset.zero,
+                                            ).animate(
+                                              CurvedAnimation(
+                                                parent: animation,
+                                                curve: Curves.easeInOut,
+                                              ),
+                                            ),
+                                        child: FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        ),
+                                      );
+                                    },
+                                child: _buildAuthContent(),
+                              ),
+                            ),
                             ],
                           ),
                         ),
@@ -73,7 +119,7 @@ class _AuthPageContentState extends State<AuthPageContent> {
 
   Widget _buildAuthContent() {
     return switch (type) {
-      AuthPageContentType.signIn => Placeholder(),//const SignInPage(),
+      AuthPageContentType.signIn => const SignInPage(),
       AuthPageContentType.signUp => const SignUpPage(),
       AuthPageContentType.restore => Placeholder(),//const RestorePage(),
     };

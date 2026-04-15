@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AuthTextField extends StatefulWidget {
   const AuthTextField({
@@ -95,6 +96,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
               keyboardType: widget.inputType,
               maxLength: 40,
               onChanged: widget.onChanged,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9@$!%*?&_.]')),
+              ],
               style: const TextStyle(color: Color(0xFFFFE6C9)),
               cursorColor: Color(0xFFFFE6C9),
             ),
