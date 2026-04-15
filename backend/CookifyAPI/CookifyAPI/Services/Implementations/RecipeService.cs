@@ -3,17 +3,10 @@ using CookifyAPI.DTOs;
 using CookifyAPI.DTOs.Pagination;
 using CookifyAPI.DTOs.Recipes;
 using CookifyAPI.Models;
+using CookifyAPI.Services.Implementations.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace CookifyAPI.Services;
-
-public interface IRecipeService
-{
-    Task<IEnumerable<RecipeListDto>> GetRecipesListAsync();
-    Task<RecipeDetailDto?> GetRecipeByIdAsync(int id);
-    Task<OffsetPagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page);
-    Task<KeysetPagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId);
-}
+namespace CookifyAPI.Services.Implementations;
 
 public class RecipeService(AppDbContext context) : IRecipeService
 {
