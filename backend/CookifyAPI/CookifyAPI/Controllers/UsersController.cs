@@ -1,5 +1,5 @@
 ﻿using CookifyAPI.Data;
-using CookifyAPI.Models;
+using CookifyAPI.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

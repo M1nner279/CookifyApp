@@ -1,4 +1,4 @@
-﻿namespace CookifyAPI.Models;
+﻿namespace CookifyAPI.Models.Entities;
 
 public class M2MRecipeTag
 {

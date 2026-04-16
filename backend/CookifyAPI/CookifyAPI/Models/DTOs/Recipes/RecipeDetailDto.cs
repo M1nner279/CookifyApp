@@ -1,5 +1,5 @@
-﻿using CookifyAPI.DTOs;
-namespace CookifyAPI.DTOs.Recipes;
+﻿using CookifyAPI.Models.DTOs;
+namespace CookifyAPI.Models.DTOs.Recipes;
 
 public class RecipeDetailDto
 {

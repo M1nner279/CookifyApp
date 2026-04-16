@@ -1,5 +1,5 @@
 ﻿using CookifyAPI.Data;
-using CookifyAPI.DTOs.Favorites;
+using CookifyAPI.Models.DTOs.Favorites;
 using CookifyAPI.Services.Implementations.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

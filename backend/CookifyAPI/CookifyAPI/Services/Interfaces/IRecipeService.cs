@@ -1,5 +1,5 @@
-﻿using CookifyAPI.DTOs.Pagination;
-using CookifyAPI.DTOs.Recipes;
+﻿using CookifyAPI.Models.DTOs.Pagination;
+using CookifyAPI.Models.DTOs.Recipes;
 
 namespace CookifyAPI.Services.Implementations.Interfaces;
 

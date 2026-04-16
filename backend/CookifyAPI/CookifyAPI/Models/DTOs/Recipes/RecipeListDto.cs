@@ -1,12 +1,12 @@
-﻿namespace CookifyAPI.DTOs.Favorites;
+﻿namespace CookifyAPI.Models.DTOs.Recipes;
 
-public class FavoriteDto
+public class RecipeListDto
 {
     public int Id { get; set; }
     public string Title { get; set; } = null!;
-    public string? PreviewImageUrl { get; set; } 
+    public string? PreviewImageUrl { get; set; } // карусельку?
     public int CookingTimeMin { get; set; }
-    //public int Servings { get; set; }
+    public int Servings { get; set; }
     public int Difficulty { get; set; }
     public List<string> Tags { get; set; } = new();
 }

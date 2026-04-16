@@ -1,4 +1,4 @@
-﻿using CookifyAPI.DTOs.Favorites;
+﻿using CookifyAPI.Models.DTOs.Favorites;
 
 namespace CookifyAPI.Services.Implementations.Interfaces;
 

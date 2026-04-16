@@ -1,8 +1,8 @@
 ﻿using CookifyAPI.Data;
-using CookifyAPI.DTOs;
-using CookifyAPI.DTOs.Pagination;
-using CookifyAPI.DTOs.Recipes;
-using CookifyAPI.Models;
+using CookifyAPI.Models.DTOs;
+using CookifyAPI.Models.DTOs.Pagination;
+using CookifyAPI.Models.DTOs.Recipes;
+using CookifyAPI.Models.Entities;
 using CookifyAPI.Services.Implementations.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

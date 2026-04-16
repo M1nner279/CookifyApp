@@ -1,4 +1,4 @@
-﻿using CookifyAPI.Models;
+﻿using CookifyAPI.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookifyAPI.Data;

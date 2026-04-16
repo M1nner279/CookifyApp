@@ -1,4 +1,4 @@
-﻿namespace CookifyAPI.DTOs.Recipes;
+﻿namespace CookifyAPI.Models.DTOs.Recipes;
 
 public class RecipeStepDto
 {

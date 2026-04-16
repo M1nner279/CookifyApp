@@ -1,4 +1,4 @@
-﻿namespace CookifyAPI.DTOs.Pagination;
+﻿namespace CookifyAPI.Models.DTOs.Pagination;
 
 public class OffsetPagedResult<T>
 {
