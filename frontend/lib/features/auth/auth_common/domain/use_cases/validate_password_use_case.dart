@@ -22,7 +22,7 @@ class ValidatePasswordUseCase {
     }
 
     if (!RegExp(
-      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).*$',
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_]).*$',
     ).hasMatch(payload.password)) {
       throw InvalidPasswordException();
     }
