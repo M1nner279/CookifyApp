@@ -69,3 +69,6 @@ nunit-*.xml
 ## MSBuild Binary and Structured Log
 ## =====================
 *.binlog
+
+.venv/
+.idea/
