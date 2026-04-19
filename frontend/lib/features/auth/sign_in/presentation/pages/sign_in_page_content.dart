@@ -9,6 +9,7 @@ import 'package:cookify/features/auth/sign_in/presentation/bloc/sign_in_state.da
 import 'package:cookify/features/auth/sign_up/presentation/bloc/sign_up_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SignInPageContent extends StatefulWidget {
   const SignInPageContent({super.key});
@@ -115,10 +116,7 @@ class _SignInPageContentState extends State<SignInPageContent> {
       },
       listener: (context, state) {
         if (state is SignUpSuccess) {
-          // context.push('/auth/otp', extra: {
-          //   'verifyCode': context.read<SignUpCubit>().verifyCode,
-          //   'resendCode': context.read<SignUpCubit>().resendCode,
-          // });
+          context.go('/');
         }
       },
     );

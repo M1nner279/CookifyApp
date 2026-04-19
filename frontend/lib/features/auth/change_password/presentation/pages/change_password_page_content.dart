@@ -166,7 +166,7 @@ class _ChangePasswordPageContentState extends State<ChangePasswordPageContent> {
                                   ChangePasswordState state,
                                 ) {
                                   if (state is ChangePasswordSuccess) {
-                                    context.go('/auth');
+                                    context.go('/');
                                   }
                                 },
                           ),

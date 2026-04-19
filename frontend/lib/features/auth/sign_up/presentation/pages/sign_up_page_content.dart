@@ -181,7 +181,7 @@ class _SignUpPageContentState extends State<SignUpPageContent> {
         if (state is SignUpSuccess) {
           context.go(
             '/otp',
-            extra: OtpPageArgs(login: emailController.text, nextPage: ''),
+            extra: OtpPageArgs(login: emailController.text, nextPage: '/'),
           );
         }
       },
