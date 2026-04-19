@@ -1,6 +1,7 @@
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_bar.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_bottom.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_top.dart';
+import 'package:cookify/features/auth/restore/presentation/pages/restore_page.dart';
 import 'package:cookify/features/auth/sign_in/presentation/pages/sign_in_page.dart';
 import 'package:cookify/features/auth/sign_up/presentation/pages/sign_up_page.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _AuthPageContentState extends State<AuthPageContent> {
                       spacing: 48.0,
                       children: [
                         const AuthTop(),
-      
+
                         Container(
                           padding: const EdgeInsets.all(32.0),
                           decoration: BoxDecoration(
@@ -53,57 +54,29 @@ class _AuthPageContentState extends State<AuthPageContent> {
                                   setState(() => type = value);
                                 },
                               ),
-      
-                              AnimatedSize(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                              alignment: Alignment.topCenter,
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                layoutBuilder:
-                                    (
-                                      Widget? currentChild,
-                                      List<Widget> previousChildren,
-                                    ) {
-                                      return Stack(
-                                        alignment: Alignment.topCenter,
-                                        children: <Widget>[?currentChild],
-                                      );
-                                    },
-                                transitionBuilder:
-                                    (
-                                      Widget child,
-                                      Animation<double> animation,
-                                    ) {
-                                      final isInAnimation =
-                                          child.key == ValueKey(type);
 
-                                      return SlideTransition(
-                                        position:
-                                            Tween<Offset>(
-                                              begin: isInAnimation
-                                                  ? const Offset(-1.0, 0.0)
-                                                  : const Offset(1.0, 0.0),
-                                              end: Offset.zero,
-                                            ).animate(
-                                              CurvedAnimation(
-                                                parent: animation,
-                                                curve: Curves.easeInOut,
-                                              ),
-                                            ),
-                                        child: FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        ),
-                                      );
-                                    },
-                                child: _buildAuthContent(),
+                              AnimatedSize(
+                                alignment: Alignment.topCenter,
+                                duration: const Duration(milliseconds: 300),
+                                child: AnimatedSwitcher(
+                                  layoutBuilder:
+                                      (
+                                        Widget? currentChild,
+                                        List<Widget> previousChildren,
+                                      ) {
+                                        return Stack(
+                                          alignment: Alignment.topCenter,
+                                          children: <Widget>[?currentChild],
+                                        );
+                                      },
+                                  duration: const Duration(milliseconds: 300),
+                                  child: _buildAuthContent(),
+                                ),
                               ),
-                            ),
                             ],
                           ),
                         ),
-      
+
                         const AuthBottom(),
                       ],
                     ),
@@ -121,7 +94,7 @@ class _AuthPageContentState extends State<AuthPageContent> {
     return switch (type) {
       AuthPageContentType.signIn => const SignInPage(),
       AuthPageContentType.signUp => const SignUpPage(),
-      AuthPageContentType.restore => Placeholder(),//const RestorePage(),
+      AuthPageContentType.restore => const RestorePage(),
     };
   }
 }
