@@ -6,11 +6,13 @@ import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_butt
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_divider.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_service_button.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_text_field.dart';
+import 'package:cookify/features/auth/otp/presentation/pages/otp_page_args.dart';
 import 'package:cookify/features/auth/sign_up/domain/exceptions/sign_up_exception.dart';
 import 'package:cookify/features/auth/sign_up/presentation/bloc/sign_up_cubit.dart';
 import 'package:cookify/features/auth/sign_up/presentation/bloc/sign_up_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpPageContent extends StatefulWidget {
   const SignUpPageContent({super.key});
@@ -177,10 +179,10 @@ class _SignUpPageContentState extends State<SignUpPageContent> {
       },
       listener: (context, state) {
         if (state is SignUpSuccess) {
-          // context.push('/auth/otp', extra: {
-          //   'verifyCode': context.read<SignUpCubit>().verifyCode,
-          //   'resendCode': context.read<SignUpCubit>().resendCode,
-          // });
+          context.go(
+            '/otp',
+            extra: OtpPageArgs(login: emailController.text, nextPage: ''),
+          );
         }
       },
     );

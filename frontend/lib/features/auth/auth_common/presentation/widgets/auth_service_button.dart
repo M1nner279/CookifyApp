@@ -1,4 +1,4 @@
-import 'package:cookify/deprecated/shared/presentation/widget/cookify_image.dart';
+import 'package:cookify/core/presentation/widgets/cookify_image.dart';
 import 'package:flutter/widgets.dart';
 
 class AuthServiceButton extends StatelessWidget {

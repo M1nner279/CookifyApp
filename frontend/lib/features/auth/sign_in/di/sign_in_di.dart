@@ -23,6 +23,7 @@ abstract class SignInDi {
           validateLoginUseCase: getIt(),
           validatePasswordUseCase: getIt(),
           signInUseCase: getIt(),
+          saveTokenUseCase: getIt(),
         ),
       );
   }
