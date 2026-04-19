@@ -61,7 +61,10 @@ class OtpCubit extends Cubit<OtpState> {
       return;
     }
 
+    _cancelTimer();
+    _remainingSeconds = 0;
     await resetState();
+    _startTimer();
 
     final result = await _resendCodeUseCase(ResendCodePayload(login: _login));
 
@@ -73,10 +76,7 @@ class OtpCubit extends Cubit<OtpState> {
   }
 
   Future<void> resetState() async {
-    _cancelTimer();
-    _remainingSeconds = 0;
     emit(OtpInitial());
-    _startTimer();
   }
 
   void _startTimer() {
