@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CookifyAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api")]
 public class AuthController(IAuthService authService) : ControllerBase
 {
     [HttpPost("login")]
@@ -24,7 +24,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         return Ok(response);
     }
     
-    [HttpPost("register")]
+    [HttpPost("sign-up")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         var result = await authService.RegisterAsync(request);
