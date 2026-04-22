@@ -181,6 +181,7 @@ class _ChangePasswordPageContentState extends State<ChangePasswordPageContent> {
             },
           ),
         ),
+        backgroundColor: Color(0xFF1A0F0A),
       ),
     );
   }
