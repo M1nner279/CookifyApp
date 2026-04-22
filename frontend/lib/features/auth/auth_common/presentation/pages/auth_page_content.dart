@@ -86,6 +86,7 @@ class _AuthPageContentState extends State<AuthPageContent> {
             },
           ),
         ),
+        backgroundColor: Color(0xFF1A0F0A),
       ),
     );
   }

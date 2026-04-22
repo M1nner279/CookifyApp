@@ -115,7 +115,7 @@ class _SignInPageContentState extends State<SignInPageContent> {
         );
       },
       listener: (context, state) {
-        if (state is SignUpSuccess) {
+        if (state is SignInSuccess) {
           context.go('/');
         }
       },

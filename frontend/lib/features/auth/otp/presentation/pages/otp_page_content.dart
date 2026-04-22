@@ -188,6 +188,7 @@ class _OtpPageContentState extends State<OtpPageContent> {
             },
           ),
         ),
+        backgroundColor: Color(0xFF1A0F0A),
       ),
     );
   }
