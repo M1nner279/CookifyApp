@@ -1,11 +1,15 @@
 ﻿using CookifyAPI.Models.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookifyAPI.Data;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int> // IdentityUserClaim<int>
 {
-    public DbSet<User> Users => Set<User>();
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    
+    //public DbSet<User> Users => Set<User>();
     public DbSet<Recipe> Recipes => Set<Recipe>();
     public DbSet<RecipeStep> RecipeSteps => Set<RecipeStep>();
     public DbSet<RecipeImage> RecipeImages => Set<RecipeImage>();
@@ -17,6 +21,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<User>().ToTable("Users");
         // Composite keys
         modelBuilder.Entity<Favorite>()
             .HasKey(f => new { f.UserId, f.RecipeId });
@@ -106,10 +112,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<User>()
             .Property(x => x.Email)
             .HasMaxLength(100);
-
-        modelBuilder.Entity<User>()
-            .HasIndex(x => x.Email)
-            .IsUnique();
 
         modelBuilder.Entity<RecipeStep>()
             .Property(x => x.Description)

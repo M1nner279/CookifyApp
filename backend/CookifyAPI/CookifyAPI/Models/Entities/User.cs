@@ -1,19 +1,14 @@
-﻿namespace CookifyAPI.Models.Entities;
+﻿using Microsoft.AspNetCore.Identity;
 
-    public class User
+namespace CookifyAPI.Models.Entities;
+
+    public class User : IdentityUser<int>
     {
-        public int Id { get; set; } // u_id
-
-        public string Username { get; set; } = null!; // nvarchar(50)
-        public string Email { get; set; } = null!;    // nvarchar(100)
-        public string PasswordHash { get; set; } = null!; // nvarchar(255)
-
-        public DateTime CreatedAt { get; set; } // datetime2
-
-        public string? AvatarUrl { get; set; } // nullable
-
+        public string? AvatarUrl { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
         // Navigation
-
-        public List<Recipe> Recipes { get; set; } = new(); // authored recipes
+        public List<Recipe> Recipes { get; set; } = new();
         //public List<Favorite> Favorites { get; set; } = new();
     }

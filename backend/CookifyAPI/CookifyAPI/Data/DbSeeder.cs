@@ -14,7 +14,7 @@ public static class DbSeeder
         var user = new User
         {
             Email = "my@gmail.com",
-            Username = "hi_there",
+            UserName = "hi_there",
             PasswordHash = "0"
         };
         
