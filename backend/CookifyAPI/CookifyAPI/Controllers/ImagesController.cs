@@ -1,5 +1,4 @@
-﻿using CookifyAPI.Services.Implementations;
-using CookifyAPI.Services.Implementations.Interfaces;
+﻿using CookifyAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CookifyAPI.Controllers;

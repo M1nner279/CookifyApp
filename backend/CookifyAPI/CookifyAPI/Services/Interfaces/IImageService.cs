@@ -1,4 +1,4 @@
-﻿namespace CookifyAPI.Services.Implementations.Interfaces;
+﻿namespace CookifyAPI.Services;
 
 public interface IImageService
 {

@@ -1,7 +1,7 @@
 ﻿using CookifyAPI.Models.DTOs.Pagination;
 using CookifyAPI.Models.DTOs.Recipes;
 
-namespace CookifyAPI.Services.Implementations.Interfaces;
+namespace CookifyAPI.Services;
 
 public interface IRecipeService
 {

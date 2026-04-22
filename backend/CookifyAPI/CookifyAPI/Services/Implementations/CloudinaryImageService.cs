@@ -1,8 +1,8 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using CookifyAPI.Services.Implementations.Interfaces;
+using CookifyAPI.Services;
 
-namespace CookifyAPI.Services.Implementations;
+namespace CookifyAPI.Services;
 
 public class CloudinaryImageService : IImageService
 {

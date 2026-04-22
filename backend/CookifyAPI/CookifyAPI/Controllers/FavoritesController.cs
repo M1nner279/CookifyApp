@@ -1,5 +1,6 @@
-﻿using CookifyAPI.Services.Implementations;
-using CookifyAPI.Services.Implementations.Interfaces;
+﻿using System.Security.Claims;
+using CookifyAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CookifyAPI.Controllers;
@@ -17,13 +18,20 @@ public class FavoritesController(IFavoriteService service) : ControllerBase
     /// <summary>
     ///     Возвращает список избранных рецептов пользователя
     /// </summary>
-    /// <param name="userId"></param>
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetFavorites(
-        int userId)
+    public async Task<ActionResult> GetFavorites()
     {
-        return Ok(await service.GetFavoritesAsync(userId));
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier); // временно парсим в контроллере
+        if (string.IsNullOrEmpty(userIdString))
+        {
+            return Unauthorized();
+        }
+        int userId = int.Parse(userIdString);
+        
+        var favorites = await service.GetFavoritesAsync(userId);
+        return Ok(favorites);
     }
 
     /// <summary>

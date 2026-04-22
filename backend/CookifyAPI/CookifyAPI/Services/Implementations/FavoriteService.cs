@@ -1,9 +1,9 @@
 ﻿using CookifyAPI.Data;
 using CookifyAPI.Models.DTOs.Favorites;
-using CookifyAPI.Services.Implementations.Interfaces;
+using CookifyAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace CookifyAPI.Services.Implementations;
+namespace CookifyAPI.Services;
 
 public class FavoriteService : IFavoriteService
 {
