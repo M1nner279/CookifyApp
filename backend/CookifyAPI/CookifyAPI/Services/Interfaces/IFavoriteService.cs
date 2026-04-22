@@ -1,0 +1,11 @@
+﻿using CookifyAPI.Models.DTOs.Favorites;
+
+namespace CookifyAPI.Services;
+
+public interface IFavoriteService
+{
+    //Task AddFavoriteAsync(int userId, int recipeId);
+    Task<bool> AddFavoriteAsync(int userId, int recipeId);
+    Task RemoveFavoriteAsync(int userId, int recipeId);
+    Task<IEnumerable<FavoriteDto>> GetFavoritesAsync(int userId);
+}

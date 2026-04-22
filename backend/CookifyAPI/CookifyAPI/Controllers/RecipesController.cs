@@ -1,4 +1,4 @@
-﻿using CookifyAPI.DTOs.Recipes;
+﻿using CookifyAPI.Models.DTOs.Recipes;
 using CookifyAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 

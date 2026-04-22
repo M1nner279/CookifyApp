@@ -1,4 +1,4 @@
-﻿using CookifyAPI.Models;
+﻿using CookifyAPI.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookifyAPI.Data;
@@ -14,7 +14,7 @@ public static class DbSeeder
         var user = new User
         {
             Email = "my@gmail.com",
-            Username = "hi_there",
+            UserName = "hi_there",
             PasswordHash = "0"
         };
         
