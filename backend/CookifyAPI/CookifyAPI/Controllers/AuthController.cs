@@ -25,9 +25,9 @@ public class AuthController(IAuthService authService) : ControllerBase
     }
     
     [HttpPost("sign-up")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    public async Task<IActionResult> SignUp([FromBody] RegisterRequest request)
     {
-        var result = await authService.RegisterAsync(request);
+        var result = await authService.SignUpAsync(request);
 
         if (!result.Succeeded)
         {

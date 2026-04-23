@@ -66,8 +66,8 @@ def test_signup_duplicate_both():
 
     # Проверяем текст ошибки (приводим к нижнему регистру для надежности)
     error_text = response.text.lower()
-    assert "already exists" in error_text
-    assert "login" in error_text
+    assert "already taken" in error_text
+    assert "username" in error_text
     assert "email" in error_text
 
 
@@ -87,7 +87,7 @@ def test_signup_duplicate_email_only():
     assert response.status_code in [400, 409]
 
     error_text = response.text.lower()
-    assert "already exists" in error_text
+    assert "already taken" in error_text
     assert "email" in error_text
 
 
@@ -107,8 +107,8 @@ def test_signup_duplicate_login_only():
     assert response.status_code in [400, 409]
 
     error_text = response.text.lower()
-    assert "already exists" in error_text
-    assert "login" in error_text
+    assert "already taken" in error_text
+    assert "username" in error_text
 
 
 @pytest.mark.parametrize("missing_field", ["login", "email", "password"])

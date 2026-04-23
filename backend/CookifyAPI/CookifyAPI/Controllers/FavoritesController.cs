@@ -11,44 +11,33 @@ namespace CookifyAPI.Controllers;
 /// </summary>
 /// <param name="service">Сервис для работы с бизнес-логикой избранного.</param>
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public class FavoritesController(IFavoriteService service) : ControllerBase
+public class FavoritesController(IFavoriteService service) : AuthBaseController
 {
     /// <summary>
     ///     Возвращает список избранных рецептов пользователя
     /// </summary>
-    [Authorize]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> GetFavorites()
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier); // временно парсим в контроллере
-        if (string.IsNullOrEmpty(userIdString))
-        {
-            return Unauthorized();
-        }
-        int userId = int.Parse(userIdString);
-        
-        var favorites = await service.GetFavoritesAsync(userId);
-        return Ok(favorites);
+        return Ok(await service.GetFavoritesAsync(CurrentUserId));
     }
 
     /// <summary>
     ///     Добавляет рецепт в избранное пользователя.
     /// </summary>
     /// <param name="recipeId">Идентификатор рецепта</param>
-    /// <param name="userId">Идентификатор пользователя(исчезнет с появлением авторизации)</param>
     /// <response code="201">201 Created — рецепт добавлен в избранное</response>
     /// <response code="204">204 NoContent — рецепт уже был в избранном</response>
     [HttpPost("{recipeId}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> AddToFavorites(int recipeId, int userId)
+    public async Task<IActionResult> AddToFavorites(int recipeId)
     {
-        //int userId =  // из JWT TODO авторизованный пользователь по jwt токену
-
-        var created = await service.AddFavoriteAsync(userId, recipeId);
+        var created = await service.AddFavoriteAsync(CurrentUserId, recipeId);
 
         if (created)
             return Created(
@@ -64,12 +53,11 @@ public class FavoritesController(IFavoriteService service) : ControllerBase
     ///     Удаляет рецепт из избранного пользователя
     /// </summary>
     /// <param name="recipeId"></param>
-    /// <param name="userId"></param>
     [HttpDelete("{recipeId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> RemoveFromFavorites(int recipeId, int userId)
+    public async Task<IActionResult> RemoveFromFavorites(int recipeId)
     {
-        await service.RemoveFavoriteAsync(userId, recipeId);
+        await service.RemoveFavoriteAsync(CurrentUserId, recipeId);
 
         return NoContent();
     }
