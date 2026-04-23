@@ -1,3 +1,4 @@
+import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/features/recipe/recipe_search/di/recipe_search_di.dart';
 import 'package:cookify/features/recipe/recipe_search/presentation/bloc/recipe_search_form_cubit.dart';
 import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_form_page_content.dart';
@@ -11,7 +12,22 @@ class RecipeSearchFormPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<RecipeSearchFormCubit>(
       create: (_) => RecipeSearchDi.getIt(),
-      child: const RecipeSearchFormPageContent(),
+      child: SafeArea(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 50.0),
+              child: const RecipeSearchFormPageContent(),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: CookifyNavigationBar(index: 1),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

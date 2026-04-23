@@ -43,6 +43,8 @@ class RecipeSearchGeneralSection extends StatelessWidget {
 
           CookifyTextField(
             controller: maxCookingTimeController,
+            inputFormatter: FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+            maxLength: 5,
             onChanged: (_) {},
             hint: 'Максимальное время приготовления',
           ),

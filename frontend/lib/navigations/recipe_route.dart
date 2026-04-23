@@ -1,6 +1,7 @@
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page_args.dart';
 import 'package:cookify/features/recipe/recipe_feed/presentation/pages/recipe_feed_page.dart';
+import 'package:cookify/features/recipe/recipe_form/presentation/pages/recipe_form_page.dart';
 import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_form_page.dart';
 import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_page.dart';
 import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_page_args.dart';
@@ -28,7 +29,9 @@ final recipeRoute = [
     builder: (context, state) {
       final args = state.extra as RecipeSearchPageArgs;
 
-      return RecipeSearchPage(args: args,);
+      return RecipeSearchPage(args: args);
     },
   ),
+
+  GoRoute(path: '/create', builder: (context, state) => const RecipeFormPage()),
 ];
