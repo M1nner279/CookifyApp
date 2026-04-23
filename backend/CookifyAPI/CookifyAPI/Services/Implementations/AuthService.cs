@@ -41,14 +41,13 @@ public class AuthService(
         return new AuthResponse(access, refresh);
     }
     
-    public async Task<IdentityResult> RegisterAsync(RegisterRequest request)
+    public async Task<IdentityResult> SignUpAsync(RegisterRequest request)
     {
         var user = new User
         {
             UserName = request.Login,
             Email = request.Email,
             CreatedAt = DateTime.UtcNow
-            // Id и PasswordHash Identity установит сама
         };
 
         // Создаем пользователя. Пароль автоматически захешируется.

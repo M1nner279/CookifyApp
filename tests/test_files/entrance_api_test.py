@@ -2,6 +2,7 @@ from conftest import BASE_URL
 import requests
 import pytest
 import uuid
+import time
 
 SIGNUP_ENDPOINT = f"{BASE_URL}/api/sign-up"
 LOGIN_ENDPOINT = f"{BASE_URL}/api/login"
@@ -95,6 +96,8 @@ def test_refresh_tokens_success(registered_user):
     login_res = requests.post(LOGIN_ENDPOINT, json=login_payload).json()
     old_access_token = login_res["access_token"]
     old_refresh_token = login_res["refresh_token"]
+    
+    time.sleep(1.1)
 
     # 2. Отправляем refresh_token на обновление
     refresh_payload = {

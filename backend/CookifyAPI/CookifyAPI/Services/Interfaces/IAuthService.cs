@@ -7,5 +7,5 @@ namespace CookifyAPI.Services;
 public interface IAuthService {
     Task<AuthResponse?> LoginAsync(LoginRequest request);
     Task<AuthResponse?> RefreshAsync(RefreshRequest request);
-    Task<IdentityResult> RegisterAsync(RegisterRequest request);
+    Task<IdentityResult> SignUpAsync(RegisterRequest request);
 }
