@@ -14,17 +14,19 @@ public static class IdentityServiceExtensions
         // --- НАСТРОЙКА IDENTITY ---
         services.AddIdentity<User, IdentityRole<int>>(options =>
             {
-                // Настройки сложности пароля (упрощено для разработки)
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-        
-                options.User.RequireUniqueEmail = true;
+                configuration.GetSection("IdentityOptions").Bind(options);
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+        
+        var authSection = configuration.GetSection("AuthSettings");
+        services.Configure<AuthSettings>(authSection);
+        var authSettings = authSection.Get<AuthSettings>();
+        
+        if (authSettings == null || string.IsNullOrEmpty(authSettings.Key))
+        {
+            throw new InvalidOperationException("JWT Key is not configured in AuthSettings.");
+        }
 
         // --- НАСТРОЙКА JWT АУТЕНТИФИКАЦИИ ---
         services.AddAuthentication(options =>
@@ -40,9 +42,9 @@ public static class IdentityServiceExtensions
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["AuthSettings:Issuer"],
-                    ValidAudience = configuration["AuthSettings:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AuthSettings:Key"]!)),
+                    ValidIssuer = authSettings.Issuer,
+                    ValidAudience = authSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSettings.Key)),
                     ClockSkew = TimeSpan.Zero // Убирает 5-минутную задержку просрочки токена
                 };
             });
