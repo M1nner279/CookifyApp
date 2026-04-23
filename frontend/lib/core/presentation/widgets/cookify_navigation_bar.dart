@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CookifyNavigationBar extends StatefulWidget {
-  const CookifyNavigationBar({super.key});
+  const CookifyNavigationBar({super.key, required this.index});
+
+  final int index;
 
   @override
   State<CookifyNavigationBar> createState() => _CookifyNavigationBarState();
 }
 
 class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
-  int _index = 0;
-
   @override
   Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).matchedLocation;
+    final index = widget.index;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
       decoration: BoxDecoration(
@@ -25,26 +28,29 @@ class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
         children: [
           _Item(
             onTap: () {
-              setState(() {
-                _index = 0;
-              });
               context.go('/');
             },
-            isActive: _index == 0,
+            isActive: index == 0,
             activeIconData: Icons.home,
             inactiveIconData: Icons.home_outlined,
           ),
 
           _Item(
             onTap: () {
-              setState(() {
-                _index = 1;
-              });
               context.go('/search-form');
             },
-            isActive: _index == 1,
+            isActive: index == 1,
             activeIconData: Icons.search,
             inactiveIconData: Icons.search,
+          ),
+
+          _Item(
+            onTap: () {
+              context.go('/create');
+            },
+            isActive: index == 2,
+            activeIconData: Icons.add,
+            inactiveIconData: Icons.add,
           ),
         ],
       ),

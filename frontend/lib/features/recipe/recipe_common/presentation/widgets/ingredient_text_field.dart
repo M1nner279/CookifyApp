@@ -169,7 +169,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
           GestureDetector(
             onTap: widget.onDelete,
             child: const Icon(
-              Icons.minimize_outlined,
+              Icons.delete_outlined,
               color: Color(0xFFE5C9A8),
               size: 24.0,
             ),

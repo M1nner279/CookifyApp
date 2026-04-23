@@ -10,8 +10,10 @@ class CategoryController {
   TextEditingController get controller => _controller;
   CategoryEntity? get category => _category;
 
-  void selectCategory(CategoryEntity category) =>
-      _controller.text = category.name;
+  void selectCategory(CategoryEntity category) {
+    _category = category;
+    _controller.text = category.name;
+  }
 
   void clearCategory() {
     _controller.clear();

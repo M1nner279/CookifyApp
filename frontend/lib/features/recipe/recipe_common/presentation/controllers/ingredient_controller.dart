@@ -10,8 +10,10 @@ class IngredientController {
   TextEditingController get controller => _controller;
   IngredientEntity? get ingredient => _ingredient;
 
-  void selectIngredient(IngredientEntity category) =>
-      _controller.text = category.name;
+  void selectIngredient(IngredientEntity ingredient) {
+    _ingredient = ingredient;
+    _controller.text = ingredient.name;
+  }
 
   void clearIngredient() {
     _controller.clear();
