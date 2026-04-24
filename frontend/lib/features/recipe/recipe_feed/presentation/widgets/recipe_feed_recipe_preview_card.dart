@@ -1,9 +1,11 @@
+import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
 import 'package:cookify/core/presentation/widgets/cookify_cached_network_image.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/enums/recipe_difficulty.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page_args.dart';
 import 'package:cookify/features/recipe/recipe_feed/domain/entities/recipe_preview_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/extensions/styled_recipe_difficulty.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class RecipeFeedRecipePreviewCard extends StatelessWidget {
@@ -71,13 +73,25 @@ class RecipeFeedRecipePreviewCard extends StatelessWidget {
                         ),
                       ),
 
-                      IconButton(
-                        iconSize: 24.0,
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.bookmark_border,
-                          color: const Color(0xFFE5C9A8),
-                        ),
+                      ValueListenableBuilder<List<RecipePreviewEntity>>(
+                        valueListenable: GetIt.I<SavedRecipeRepository>()
+                            .savedRecipesListenable,
+                        builder: (context, _, _) {
+                          final isSaved = GetIt.I<SavedRecipeRepository>()
+                              .isSaved(recipe.id);
+                          return IconButton(
+                            iconSize: 24.0,
+                            onPressed: () {
+                              GetIt.I<SavedRecipeRepository>().toggleRecipe(
+                                recipe,
+                              );
+                            },
+                            icon: Icon(
+                              isSaved ? Icons.bookmark : Icons.bookmark_border,
+                              color: const Color(0xFFE5C9A8),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

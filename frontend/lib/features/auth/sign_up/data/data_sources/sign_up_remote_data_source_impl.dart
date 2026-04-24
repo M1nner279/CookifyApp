@@ -9,7 +9,6 @@ class SignUpRemoteDataSourceImpl implements SignUpRemoteDataSource {
 
   @override
   Future<void> signUp(SignUpRequest request) async {
-    return;
-    await _dio.post('/api/auth/sign-up', data: request.toJson());
+    await _dio.post('/api/sign-up', data: request.toJson());
   }
 }

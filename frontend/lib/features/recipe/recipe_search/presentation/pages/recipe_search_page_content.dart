@@ -65,6 +65,9 @@ class _RecipeSearchPageContentState extends State<RecipeSearchPageContent> {
                     recipes: state.recipes,
                     isLoading: state.isLoading,
                     controller: controller,
+                    onAtBottom: () {
+                      context.read<RecipeSearchCubit>().searchRecipeList();
+                    },
                   );
                 case RecipeSearchError():
                   return const Text('Error');

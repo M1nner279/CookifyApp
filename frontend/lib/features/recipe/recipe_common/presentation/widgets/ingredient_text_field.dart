@@ -119,7 +119,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
-            'Категории не найдены',
+            'Ингредиенты не найдены',
             style: TextStyle(color: Color(0xFFE5C9A8)),
           ),
         ),
@@ -163,7 +163,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
               controller: _textController,
               focusNode: _focusNode,
               onChanged: widget.onChanged,
-              hint: 'Здоровое питание',
+              hint: 'Курица',
             ),
           ),
           GestureDetector(

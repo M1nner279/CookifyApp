@@ -13,7 +13,6 @@ class CookifyNavigationBar extends StatefulWidget {
 class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
   @override
   Widget build(BuildContext context) {
-    final location = GoRouterState.of(context).matchedLocation;
     final index = widget.index;
 
     return Container(
@@ -51,6 +50,15 @@ class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
             isActive: index == 2,
             activeIconData: Icons.add,
             inactiveIconData: Icons.add,
+          ),
+
+          _Item(
+            onTap: () {
+              context.go('/saved');
+            },
+            isActive: index == 3,
+            activeIconData: Icons.bookmark,
+            inactiveIconData: Icons.bookmark_border,
           ),
         ],
       ),
