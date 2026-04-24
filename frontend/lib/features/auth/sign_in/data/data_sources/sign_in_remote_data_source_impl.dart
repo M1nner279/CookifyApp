@@ -10,7 +10,8 @@ class SignInRemoteDataSourceImpl implements SignInRemoteDataSource {
 
   @override
   Future<TokenModel> signIn(SignInRequest request) async {
-    return TokenModel(accessToken: '', refreshToken: '');
-    await _dio.post('/api/auth/sign-in', data: request.toJson());
+    final response = await _dio.post('/api/login', data: request.toJson());
+
+    return TokenModel.fromJson(response.data);
   }
 }

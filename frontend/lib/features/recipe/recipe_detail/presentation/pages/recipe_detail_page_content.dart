@@ -1,6 +1,9 @@
 import 'package:cookify/core/presentation/widgets/cookify_loading_content.dart';
+import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
+import 'package:cookify/features/recipe/recipe_feed/domain/entities/recipe_preview_entity.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/bloc/recipe_detail_cubit.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/bloc/recipe_detail_state.dart';
+import 'package:cookify/features/recipe/recipe_detail/domain/entities/recipe_detail_entity.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/widgets/recipe_detail_info_card.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/widgets/recipe_detail_ingredients_card.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/widgets/recipe_detail_photos_card.dart';
@@ -8,9 +11,22 @@ import 'package:cookify/features/recipe/recipe_detail/presentation/widgets/recip
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 class RecipeDetailPageContent extends StatelessWidget {
   const RecipeDetailPageContent({super.key});
+
+  RecipePreviewEntity _toPreview(RecipeDetailEntity detail) {
+    return RecipePreviewEntity(
+      id: detail.id,
+      photoUrl: detail.photoUrls.isEmpty ? '' : detail.photoUrls.first,
+      name: detail.name,
+      cookingTime: detail.cookingTime,
+      servingCount: detail.servingCount.round(),
+      difficulty: detail.difficulty,
+      categories: detail.categories.map((e) => e.name).toList(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +50,40 @@ class RecipeDetailPageContent extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.favorite_border, color: Color(0xFFE5C9A8)),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {},
             ),
-            IconButton(
-              icon: const Icon(Icons.bookmark_border, color: Color(0xFFE5C9A8)),
-              onPressed: () => Navigator.pop(context),
+            BlocBuilder<RecipeDetailCubit, RecipeDetailState>(
+              builder: (context, state) {
+                if (state is! RecipeDetailLoaded) {
+                  return const IconButton(
+                    onPressed: null,
+                    icon: Icon(Icons.bookmark_border, color: Color(0xFFE5C9A8)),
+                  );
+                }
+
+                final savedRepository = GetIt.I<SavedRecipeRepository>();
+                final preview = _toPreview(state.recipe);
+
+                return ValueListenableBuilder<List<RecipePreviewEntity>>(
+                  valueListenable: savedRepository.savedRecipesListenable,
+                  builder: (context, _, _) {
+                    final isSaved = savedRepository.isSaved(preview.id);
+                    return IconButton(
+                      icon: Icon(
+                        isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        color: const Color(0xFFE5C9A8),
+                      ),
+                      onPressed: () {
+                        savedRepository.toggleRecipe(preview);
+                      },
+                    );
+                  },
+                );
+              },
             ),
           ],
           centerTitle: true,
-                    backgroundColor: Color(0xFF1A0F0A),
+          backgroundColor: Color(0xFF1A0F0A),
           surfaceTintColor: Color(0xFF1A0F0A),
         ),
         body: Padding(

@@ -59,6 +59,9 @@ class _RecipeFeedPageContentState extends State<RecipeFeedPageContent> {
                     recipes: state.recipes,
                     isLoading: state.isLoading,
                     controller: controller,
+                    onAtBottom: () {
+                      context.read<RecipeFeedCubit>().getRecipeList();
+                    },
                   );
                 case RecipeFeedError():
                   return const Text('Error');

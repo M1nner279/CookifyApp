@@ -16,7 +16,7 @@ class RecipeFeedPage extends StatelessWidget {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 50.0),
+              padding: const EdgeInsets.only(bottom: 80.0),
               child: const RecipeFeedPageContent(),),
             Positioned(
               left: 0,

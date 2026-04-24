@@ -14,6 +14,7 @@ class CookifyTextField extends StatefulWidget {
     required this.hint,
     this.isPassword = false,
     this.failureMessage,
+    this.maxLines,
   });
 
   final TextEditingController controller;
@@ -26,6 +27,7 @@ class CookifyTextField extends StatefulWidget {
   final String hint;
   final bool isPassword;
   final String? failureMessage;
+  final int? maxLines;
 
   @override
   State<CookifyTextField> createState() => _CookifyTextFieldState();
@@ -67,6 +69,7 @@ class _CookifyTextFieldState extends State<CookifyTextField> {
               controller: widget.controller,
               focusNode: widget.focusNode,
               obscureText: widget.isPassword && !_isPasswordVisible,
+              maxLines: widget.maxLines,
               decoration: InputDecoration(
                 hintText: widget.hint,
                 hintStyle: const TextStyle(

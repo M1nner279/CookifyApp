@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cookify/core/domain/use_cases/results/result.dart';
+import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/core/presentation/widgets/cookify_text_field.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/category_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/recipe_ingredient_entity.dart';
@@ -51,6 +52,20 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
     ingredientDrafts.add(_IngredientDraft(controller: IngredientController()));
     stepDrafts.add(_StepDraft());
     photoController.addListener(_syncPhotos);
+    proteinsController.addListener(() => _limitValue(proteinsController, 100));
+    fatsController.addListener(() => _limitValue(fatsController, 100));
+    carbsController.addListener(() => _limitValue(carbsController, 100));
+    //caloriesController.addListener(() => _limitValue(caloriesController, 100));
+  }
+
+  void _limitValue(TextEditingController controller, int limit) {
+    final text = controller.text;
+    if (text.isNotEmpty) {
+      final value = int.tryParse(text) ?? 0;
+      if (value > limit) {
+        controller.text = limit.toString();
+      }
+    }
   }
 
   @override
@@ -248,269 +263,299 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
           surfaceTintColor: const Color(0xFF1A0F0A),
         ),
         backgroundColor: const Color(0xFF1A0F0A),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: BlocBuilder<RecipeFormCubit, RecipeFormState>(
-            builder: (context, state) {
-              return ListView(
-                padding: const EdgeInsets.only(bottom: 24.0),
-                children: [
-                  RecipeFormPhotoField(controller: photoController),
-                  const SizedBox(height: 16.0),
-                  CookifyTextField(
-                    controller: nameController,
-                    label: 'НАЗВАНИЕ РЕЦЕПТА',
-                    hint: 'Название вашего шедевра',
-                    maxLength: 80,
-                  ),
-                  const SizedBox(height: 12.0),
-                  CookifyTextField(
-                    controller: descriptionController,
-                    label: 'ОПИСАНИЕ',
-                    hint: 'Расскажите нам почему это вкусно...',
-                    maxLength: 300,
-                  ),
-                  const SizedBox(height: 16.0),
-                  const _SectionLabel('КБЖУ'),
-                  const SizedBox(height: 8.0),
-                  Row(
-                    children: [
-                      _MetricField(
-                        label: 'БЕЛ',
-                        controller: proteinsController,
-                      ),
-                      const SizedBox(width: 8.0),
-                      _MetricField(label: 'ЖИР', controller: fatsController),
-                      const SizedBox(width: 8.0),
-                      _MetricField(label: 'УГЛ', controller: carbsController),
-                      const SizedBox(width: 8.0),
-                      _MetricField(
-                        label: 'КАЛОРИИ',
-                        controller: caloriesController,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  const _SectionLabel('СЛОЖНОСТЬ'),
-                  const SizedBox(height: 8.0),
-                  Row(
-                    children: [
-                      _DifficultyChip(
-                        label: 'ЛЕГКО',
-                        isSelected: difficulty == RecipeDifficulty.easy,
-                        onTap: () =>
-                            setState(() => difficulty = RecipeDifficulty.easy),
-                        difficulty: RecipeDifficulty.easy,
-                      ),
-                      const SizedBox(width: 8.0),
-                      _DifficultyChip(
-                        label: 'СРЕДНЕ',
-                        isSelected: difficulty == RecipeDifficulty.medium,
-                        onTap: () => setState(
-                          () => difficulty = RecipeDifficulty.medium,
+        body: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 50.0),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: BlocBuilder<RecipeFormCubit, RecipeFormState>(
+                  builder: (context, state) {
+                    return ListView(
+                      padding: const EdgeInsets.only(bottom: 24.0),
+                      children: [
+                        RecipeFormPhotoField(controller: photoController),
+                        const SizedBox(height: 16.0),
+                        CookifyTextField(
+                          controller: nameController,
+                          label: 'НАЗВАНИЕ РЕЦЕПТА',
+                          hint: 'Название вашего шедевра',
+                          maxLength: 80,
                         ),
-                        difficulty: RecipeDifficulty.medium,
-                      ),
-                      const SizedBox(width: 8.0),
-                      _DifficultyChip(
-                        label: 'СЛОЖНО',
-                        isSelected: difficulty == RecipeDifficulty.hard,
-                        onTap: () =>
-                            setState(() => difficulty = RecipeDifficulty.hard),
-                        difficulty: RecipeDifficulty.hard,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  CookifyTextField(
-                    controller: cookingTimeController,
-                    label: 'ВРЕМЯ ПРИГОТОВЛЕНИЯ',
-                    hint: '45 минут',
-                    inputType: TextInputType.number,
-                    inputFormatter: FilteringTextInputFormatter.digitsOnly,
-                    maxLength: 3,
-                  ),
-                  const SizedBox(height: 20.0),
-                  const _SectionLabel('КАТЕГОРИИ'),
-                  const SizedBox(height: 8.0),
-                  ...List.generate(
-                    categoryControllers.length,
-                    (i) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: CategoryTextField(
-                        key: ObjectKey(categoryControllers[i]),
-                        controller: categoryControllers[i],
-                        categories: state.searchedCategories,
-                        onChanged: context
-                            .read<RecipeFormCubit>()
-                            .searchCategoryList,
-                        onDelete: () {
-                          setState(() {
-                            categoryControllers
-                                .removeAt(i)
-                                .controller
-                                .dispose();
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  TextButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        categoryControllers.add(CategoryController());
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.add_circle_outline,
-                      color: Color(0xFFE5C9A8),
-                    ),
-                    label: const Text(
-                      'Добавить категорию',
-                      style: TextStyle(color: Color(0xFFE5C9A8)),
-                    ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const _SectionLabel('ИНГРЕДИЕНТЫ'),
-                      TextButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            ingredientDrafts.add(
-                              _IngredientDraft(
-                                controller: IngredientController(),
+                        const SizedBox(height: 12.0),
+                        CookifyTextField(
+                          controller: descriptionController,
+                          label: 'ОПИСАНИЕ',
+                          hint: 'Расскажите нам почему это вкусно...',
+                          maxLines: 3,
+                          maxLength: 300,
+                        ),
+                        const SizedBox(height: 16.0),
+                        const _SectionLabel('КБЖУ'),
+                        const SizedBox(height: 8.0),
+                        Row(
+                          children: [
+                            _MetricField(
+                              label: 'БЕЛ',
+                              controller: proteinsController,
+                            ),
+                            const SizedBox(width: 8.0),
+                            _MetricField(
+                              label: 'ЖИР',
+                              controller: fatsController,
+                            ),
+                            const SizedBox(width: 8.0),
+                            _MetricField(
+                              label: 'УГЛ',
+                              controller: carbsController,
+                            ),
+                            const SizedBox(width: 8.0),
+                            _MetricField(
+                              label: 'КАЛОРИИ',
+                              controller: caloriesController,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16.0),
+                        const _SectionLabel('СЛОЖНОСТЬ'),
+                        const SizedBox(height: 8.0),
+                        Row(
+                          children: [
+                            _DifficultyChip(
+                              label: 'ЛЕГКО',
+                              isSelected: difficulty == RecipeDifficulty.easy,
+                              onTap: () => setState(
+                                () => difficulty = RecipeDifficulty.easy,
                               ),
-                            );
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.add_circle_outline,
-                          color: Color(0xFFE5C9A8),
+                              difficulty: RecipeDifficulty.easy,
+                            ),
+                            const SizedBox(width: 8.0),
+                            _DifficultyChip(
+                              label: 'СРЕДНЕ',
+                              isSelected: difficulty == RecipeDifficulty.medium,
+                              onTap: () => setState(
+                                () => difficulty = RecipeDifficulty.medium,
+                              ),
+                              difficulty: RecipeDifficulty.medium,
+                            ),
+                            const SizedBox(width: 8.0),
+                            _DifficultyChip(
+                              label: 'СЛОЖНО',
+                              isSelected: difficulty == RecipeDifficulty.hard,
+                              onTap: () => setState(
+                                () => difficulty = RecipeDifficulty.hard,
+                              ),
+                              difficulty: RecipeDifficulty.hard,
+                            ),
+                          ],
                         ),
-                        label: const Text(
-                          'ADD',
-                          style: TextStyle(color: Color(0xFFE5C9A8)),
+                        const SizedBox(height: 16.0),
+                        CookifyTextField(
+                          controller: cookingTimeController,
+                          label: 'ВРЕМЯ ПРИГОТОВЛЕНИЯ',
+                          hint: '45 минут',
+                          inputType: TextInputType.number,
+                          inputFormatter:
+                              FilteringTextInputFormatter.digitsOnly,
+                          maxLength: 3,
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8.0),
-                  ...ingredientDrafts.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final draft = entry.value;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: IngredientTextField(
-                              controller: draft.controller,
-                              ingredients: state.searchedIngredients,
+                        const SizedBox(height: 20.0),
+                        const _SectionLabel('КАТЕГОРИИ'),
+                        const SizedBox(height: 8.0),
+                        ...List.generate(
+                          categoryControllers.length,
+                          (i) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: CategoryTextField(
+                              key: ObjectKey(categoryControllers[i]),
+                              controller: categoryControllers[i],
+                              categories: state.searchedCategories,
                               onChanged: context
                                   .read<RecipeFormCubit>()
-                                  .searchIngredientList,
+                                  .searchCategoryList,
                               onDelete: () {
                                 setState(() {
-                                  ingredientDrafts.removeAt(index).dispose();
+                                  categoryControllers
+                                      .removeAt(i)
+                                      .controller
+                                      .dispose();
                                 });
                               },
                             ),
                           ),
-                          const SizedBox(width: 8.0),
-                          SizedBox(
-                            width: 84.0,
-                            child: _MiniTextField(
-                              controller: draft.amountController,
-                              hint: '100',
-                              inputType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d*\.?\d{0,2}$'),
-                                ),
-                                LengthLimitingTextInputFormatter(6),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8.0),
-                          SizedBox(
-                            width: 74.0,
-                            child: _MiniTextField(
-                              controller: draft.unitController,
-                              hint: 'g',
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'[a-zA-Zа-яА-Я]'),
-                                ),
-                                LengthLimitingTextInputFormatter(10),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                  const SizedBox(height: 20.0),
-                  const _SectionLabel('ШАГИ ПРИГОТОВЛЕНИЯ'),
-                  const SizedBox(height: 8.0),
-                  ...stepDrafts.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final step = entry.value;
-                    return _StepCard(
-                      index: index + 1,
-                      draft: step,
-                      canDelete: stepDrafts.length > 1,
-                      onPhotoTap: () async {
-                        await step.pickPhoto();
-                        if (context.mounted) {
-                          setState(() {});
-                        }
-                      },
-                      onDelete: () {
-                        setState(() {
-                          stepDrafts.removeAt(index).dispose();
-                        });
-                      },
-                    );
-                  }),
-                  const SizedBox(height: 8.0),
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        stepDrafts.add(_StepDraft());
-                      });
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFFE5C9A8),
-                      side: const BorderSide(color: Color(0x1AE5C9A8)),
-                      minimumSize: const Size.fromHeight(52.0),
-                    ),
-                    icon: const Icon(Icons.add),
-                    label: const Text('ДОБАВИТЬ ШАГ'),
-                  ),
-                  const SizedBox(height: 18.0),
-                  SizedBox(
-                    height: 56.0,
-                    child: ElevatedButton(
-                      onPressed: state.isPublishing ? null : _publish,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE5C9A8),
-                        foregroundColor: const Color(0xFF1A0F0A),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
                         ),
-                      ),
-                      child: Text(
-                        state.isPublishing ? 'Публикация...' : 'Опубликовать рецепт',
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
+                        TextButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              categoryControllers.add(CategoryController());
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.add_circle_outline,
+                            color: Color(0xFFE5C9A8),
+                          ),
+                          label: const Text(
+                            'Добавить категорию',
+                            style: TextStyle(color: Color(0xFFE5C9A8)),
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const _SectionLabel('ИНГРЕДИЕНТЫ'),
+                            TextButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  ingredientDrafts.add(
+                                    _IngredientDraft(
+                                      controller: IngredientController(),
+                                    ),
+                                  );
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.add_circle_outline,
+                                color: Color(0xFFE5C9A8),
+                              ),
+                              label: const Text(
+                                'ADD',
+                                style: TextStyle(color: Color(0xFFE5C9A8)),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8.0),
+                        ...ingredientDrafts.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final draft = entry.value;
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: IngredientTextField(
+                                    controller: draft.controller,
+                                    ingredients: state.searchedIngredients,
+                                    onChanged: context
+                                        .read<RecipeFormCubit>()
+                                        .searchIngredientList,
+                                    onDelete: () {
+                                      setState(() {
+                                        ingredientDrafts
+                                            .removeAt(index)
+                                            .dispose();
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 8.0),
+                                SizedBox(
+                                  width: 84.0,
+                                  child: _MiniTextField(
+                                    controller: draft.amountController,
+                                    hint: '100',
+                                    inputType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp(r'^\d*\.?\d{0,2}$'),
+                                      ),
+                                      LengthLimitingTextInputFormatter(6),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8.0),
+                                SizedBox(
+                                  width: 74.0,
+                                  child: _MiniTextField(
+                                    controller: draft.unitController,
+                                    hint: 'g',
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp(r'[a-zA-Zа-яА-Я]'),
+                                      ),
+                                      LengthLimitingTextInputFormatter(10),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                        const SizedBox(height: 20.0),
+                        const _SectionLabel('ШАГИ ПРИГОТОВЛЕНИЯ'),
+                        const SizedBox(height: 8.0),
+                        ...stepDrafts.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final step = entry.value;
+                          return _StepCard(
+                            index: index + 1,
+                            draft: step,
+                            canDelete: stepDrafts.length > 1,
+                            onPhotoTap: () async {
+                              await step.pickPhoto();
+                              if (context.mounted) {
+                                setState(() {});
+                              }
+                            },
+                            onDelete: () {
+                              setState(() {
+                                stepDrafts.removeAt(index).dispose();
+                              });
+                            },
+                          );
+                        }),
+                        const SizedBox(height: 8.0),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              stepDrafts.add(_StepDraft());
+                            });
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFFE5C9A8),
+                            side: const BorderSide(color: Color(0x1AE5C9A8)),
+                            minimumSize: const Size.fromHeight(52.0),
+                          ),
+                          icon: const Icon(Icons.add),
+                          label: const Text('ДОБАВИТЬ ШАГ'),
+                        ),
+                        const SizedBox(height: 18.0),
+                        SizedBox(
+                          height: 56.0,
+                          child: ElevatedButton(
+                            onPressed: state.isPublishing ? null : _publish,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFE5C9A8),
+                              foregroundColor: const Color(0xFF1A0F0A),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                            ),
+                            child: Text(
+                              state.isPublishing
+                                  ? 'Публикация...'
+                                  : 'Опубликовать рецепт',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: CookifyNavigationBar(index: 2),
+            ),
+          ],
         ),
       ),
     );
@@ -537,10 +582,15 @@ class _SectionLabel extends StatelessWidget {
 }
 
 class _MetricField extends StatelessWidget {
-  const _MetricField({required this.label, required this.controller});
+  const _MetricField({
+    required this.label,
+    required this.controller,
+    this.maxValue,
+  });
 
   final String label;
   final TextEditingController controller;
+  final int? maxValue;
 
   @override
   Widget build(BuildContext context) {
@@ -607,9 +657,8 @@ class _DifficultyChip extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected
-                  ? Colors.white : const Color(0x99E5C9A8),
-                  
+              color: isSelected ? Colors.white : const Color(0x99E5C9A8),
+
               fontWeight: FontWeight.w600,
             ),
           ),
