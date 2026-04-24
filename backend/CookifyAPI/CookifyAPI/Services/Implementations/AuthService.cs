@@ -1,15 +1,20 @@
-﻿using CookifyAPI.Models.DTOs.Requests;
+﻿using CookifyAPI.Extensions;
+using CookifyAPI.Models.DTOs.Requests;
 using CookifyAPI.Models.DTOs.Responses;
 using CookifyAPI.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace CookifyAPI.Services;
 
 public class AuthService(
     UserManager<User> userManager, 
-    ITokenService tokenService) : IAuthService 
+    ITokenService tokenService,
+    IEmailService emailService,
+    IOptions<AuthSettings> authSettings) : IAuthService 
 {
+    private readonly AuthSettings _settings = authSettings.Value;
     public async Task<AuthResponse?> LoginAsync(LoginRequest request) {
         var user = await userManager.FindByEmailAsync(request.Login) 
                    ?? await userManager.FindByNameAsync(request.Login);
@@ -52,6 +57,31 @@ public class AuthService(
 
         // Создаем пользователя. Пароль автоматически захешируется.
         var result = await userManager.CreateAsync(user, request.Password);
+        
+        if (result.Succeeded) 
+        {
+            // Генерируем 6-значный цифровой код
+            var code = await userManager.GenerateTwoFactorTokenAsync(user, "Email");
+            await emailService.SendOtpCodeAsync(user.Email!, code);
+        }
         return result;
+    }
+    
+    public async Task<AuthResponse?> VerifyCodeAsync(VerifyCodeRequest request)
+    {
+        var user = await userManager.FindByEmailAsync(request.Email);
+        if (user == null) return null;
+        
+        bool isCodeValid = _settings.SkipVerification || 
+                           await userManager.VerifyTwoFactorTokenAsync(user, "Email", request.Code);
+
+        if (!isCodeValid) return null;
+
+        // Активируем пользователя
+        user.EmailConfirmed = true;
+        await userManager.UpdateAsync(user);
+
+        // Сразу возвращаем токены
+        return await UpdateTokens(user);
     }
 }

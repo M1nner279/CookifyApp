@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using CookifyAPI.Data;
 using CookifyAPI.Models.Entities;
+using CookifyAPI.Models.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +28,8 @@ public static class IdentityServiceExtensions
         {
             throw new InvalidOperationException("JWT Key is not configured in AuthSettings.");
         }
+        
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
         // --- НАСТРОЙКА JWT АУТЕНТИФИКАЦИИ ---
         services.AddAuthentication(options =>

@@ -35,6 +35,16 @@ public class AuthController(IAuthService authService) : ControllerBase
             return BadRequest(result.Errors);
         }
 
-        return Ok(new { message = "Registration successful" });
+        return Ok(new { message = "OTP code sent to email" });
     }
+
+    [HttpPost("otp-confirm")]
+    public async Task<IActionResult> Confirm([FromBody] VerifyCodeRequest request)
+    {
+        var response = await authService.VerifyCodeAsync(request);
+        if (response == null) return BadRequest(new { message = "Invalid code or email" });
+        
+        return Ok(response);
+    }
+    
 }
