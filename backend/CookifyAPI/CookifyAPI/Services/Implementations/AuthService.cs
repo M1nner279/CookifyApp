@@ -35,15 +35,15 @@ public class AuthService(
         return await UpdateTokens(user);
     }
 
-    private async Task<AuthResponse> UpdateTokens(User user) {
-        var access = tokenService.GenerateAccessToken(user);
-        var refresh = tokenService.GenerateRefreshToken();
+    public async Task<bool> SendOtpCodeAsync(string login)
+    {
+        var user = await userManager.FindByEmailAsync(login)
+            ?? await userManager.FindByNameAsync(login);
+        if (user == null)
+            return false;
 
-        user.RefreshToken = refresh;
-        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-        await userManager.UpdateAsync(user);
-
-        return new AuthResponse(access, refresh);
+        await SendOtpInternal(user);
+        return true;
     }
     
     public async Task<IdentityResult> SignUpAsync(RegisterRequest request)
@@ -58,21 +58,44 @@ public class AuthService(
         // Создаем пользователя. Пароль автоматически захешируется.
         var result = await userManager.CreateAsync(user, request.Password);
         
-        if (result.Succeeded) 
-        {
-            // Генерируем 6-значный цифровой код
-            var code = await userManager.GenerateTwoFactorTokenAsync(user, "Email");
-            await emailService.SendOtpCodeAsync(user.Email!, code);
-        }
+        if (result.Succeeded && !_settings.SkipVerification) // влияет на отправку кода
+            await SendOtpInternal(user);
+        
         return result;
     }
-    
-    public async Task<AuthResponse?> VerifyCodeAsync(VerifyCodeRequest request)
+
+    public async Task<AuthResponse?> ResetPasswordAsync(ResetPasswordRequest request)
     {
-        var user = await userManager.FindByEmailAsync(request.Email);
+        var user = await userManager.FindByEmailAsync(request.Login)
+            ?? await userManager.FindByNameAsync(request.Login);
         if (user == null) return null;
         
-        bool isCodeValid = _settings.SkipVerification || 
+        bool isCodeValid = _settings.SkipVerification || // влияет на верификацию кода
+                           await userManager.VerifyTwoFactorTokenAsync(user, "Email", request.Code);
+        
+        if (!isCodeValid) return null;
+        
+        var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+        
+        var result = await userManager.ResetPasswordAsync(user, resetToken, request.NewPassword);
+
+        if (result.Succeeded)
+        {
+            user.EmailConfirmed = true; // На случай если это новый юзер
+            await userManager.UpdateAsync(user);
+            return await UpdateTokens(user);
+        }
+
+        return null;
+    }
+    
+    public async Task<AuthResponse?> VerifyCodeAsync(ConfirmOtpRequest request)
+    {
+        var user = await userManager.FindByEmailAsync(request.Login) 
+                   ?? await userManager.FindByNameAsync(request.Login);
+        if (user == null) return null;
+        
+        bool isCodeValid = _settings.SkipVerification || // влияет на верификацию кода
                            await userManager.VerifyTwoFactorTokenAsync(user, "Email", request.Code);
 
         if (!isCodeValid) return null;
@@ -83,5 +106,22 @@ public class AuthService(
 
         // Сразу возвращаем токены
         return await UpdateTokens(user);
+    }
+        
+    private async Task SendOtpInternal(User user)
+    {
+        var code = await userManager.GenerateTwoFactorTokenAsync(user, "Email");
+        await emailService.SendOtpCodeAsync(user.Email!, code);
+    }
+    
+    private async Task<AuthResponse> UpdateTokens(User user) {
+        var access = tokenService.GenerateAccessToken(user);
+        var refresh = tokenService.GenerateRefreshToken();
+
+        user.RefreshToken = refresh;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+        await userManager.UpdateAsync(user);
+
+        return new AuthResponse(access, refresh);
     }
 }
