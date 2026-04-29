@@ -26,11 +26,11 @@ public static class MigrationExtensions
                     retries--;
                     if (retries == 0)
                     {
-                        Console.WriteLine("CRITICAL: Database is not ready after multiple retries.");
+                        Console.WriteLine("CRITICAL ERROR: Database is not ready after multiple retries.");
                         throw; // Приложение упадет, и Docker его перезапустит
                     }
-                    Console.WriteLine($"Database is starting up... waiting. ({retries} attempts left)");
-                    Thread.Sleep(15000);
+                    Console.WriteLine($"WARNING: Database is starting up... waiting. ({retries} attempts left)");
+                    Thread.Sleep(10000);
                 }
             }
         }

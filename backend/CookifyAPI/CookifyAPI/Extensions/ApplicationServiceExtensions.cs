@@ -11,6 +11,8 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IRecipeService, RecipeService>();
         services.AddScoped<IFavoriteService, FavoriteService>();
         services.AddScoped<IImageService, CloudinaryImageService>();
+        services.AddScoped<IEmailService, EmailService>();
+            
 
         // Автоматический поиск профилей AutoMapper
         //services.AddAutoMapper(Assembly.GetExecutingAssembly());

@@ -35,6 +35,46 @@ public class AuthController(IAuthService authService) : ControllerBase
             return BadRequest(result.Errors);
         }
 
-        return Ok(new { message = "Registration successful" });
+        return Ok(new { message = "OTP code sent to email" });
     }
+    
+    [HttpPost("restore")]
+    public async Task<IActionResult> Restore(RestoreRequest request)
+    {
+        var result = await authService.SendOtpCodeAsync(request.Login);
+        return result ? Ok(new { message = "OTP sent" }) : BadRequest("Account not found");
+    }
+    
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        var response = await authService.ResetPasswordAsync(request);
+
+        if (response == null)
+        {
+            return BadRequest(new { 
+                message = "Invalid code, account not found, or password does not meet requirements." 
+            });
+        }
+
+        // Возвращаем access_token и refresh_token
+        return Ok(response);
+    }
+    
+    [HttpPost("otp/resend")]
+    public async Task<IActionResult> ResendOtp(ResendOtpRequest request)
+    {
+        var result = await authService.SendOtpCodeAsync(request.Login);
+        return result ? Ok(new { message = "OTP resent" }) : BadRequest("Account not found");
+    }
+
+    [HttpPost("otp/confirm")]
+    public async Task<IActionResult> Confirm([FromBody] ConfirmOtpRequest request)
+    {
+        var response = await authService.VerifyCodeAsync(request);
+        if (response == null) return BadRequest(new { message = "Invalid code or email" });
+        
+        return Ok(response);
+    }
+    
 }
