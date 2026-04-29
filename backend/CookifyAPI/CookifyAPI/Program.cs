@@ -10,6 +10,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddWebServices();
 
 var app = builder.Build();
+app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {
@@ -23,7 +24,6 @@ if (app.Environment.IsDevelopment())
 
 app.ApplyMigrations();
 
-app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthentication(); 
 app.UseAuthorization();
