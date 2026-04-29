@@ -42,7 +42,7 @@ ScaffoldingReadMe.txt
 .env
 
 # Local appsettings with secrets (Cloudinary keys, DB passwords)
-appsettings.Development.json
+# appsettings.Development.json
 secrets.json
 
 # User Secrets folder (optional, depending on setup)
