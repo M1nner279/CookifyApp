@@ -10,8 +10,8 @@ import 'package:cookify/features/auth/sign_in/domain/payloads/sign_in_payload.da
 import 'package:cookify/features/auth/sign_in/domain/use_cases/sign_up_use_case.dart';
 import 'package:cookify/features/auth/sign_in/presentation/bloc/sign_in_state.dart';
 import 'package:cookify/features/token/domain/entities/token.dart';
-import 'package:cookify/features/token/domain/payloads/save_token_payload.dart';
-import 'package:cookify/features/token/domain/use_cases/save_token_use_case.dart';
+import 'package:cookify/features/token/domain/payloads/set_token_payload.dart';
+import 'package:cookify/features/token/domain/use_cases/set_token_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignInCubit extends Cubit<SignInState> {
@@ -19,7 +19,7 @@ class SignInCubit extends Cubit<SignInState> {
     required ValidateLoginUseCase validateLoginUseCase,
     required ValidatePasswordUseCase validatePasswordUseCase,
     required SignInUseCase signInUseCase,
-    required SaveTokenUseCase saveTokenUseCase
+    required SetTokenUseCase saveTokenUseCase
   }) : _validateLoginUseCase = validateLoginUseCase,
        _validatePasswordUseCase = validatePasswordUseCase,
        _signInUseCase = signInUseCase,
@@ -29,7 +29,7 @@ class SignInCubit extends Cubit<SignInState> {
   final ValidateLoginUseCase _validateLoginUseCase;
   final ValidatePasswordUseCase _validatePasswordUseCase;
   final SignInUseCase _signInUseCase;
-  final SaveTokenUseCase _saveTokenUseCase;
+  final SetTokenUseCase _saveTokenUseCase;
 
   Future<void> validateLogin(String login) async {
     if (state is SignInError) {
@@ -108,7 +108,7 @@ class SignInCubit extends Cubit<SignInState> {
     );
 
     if (result is Success<Token>) {
-      await _saveTokenUseCase(SaveTokenPayload(token: result.data));
+      await _saveTokenUseCase(SetTokenPayload(token: result.data));
       emit(SignInSuccess());
     } else if (result is Failure<Token>) {
       final exception = result.exception;

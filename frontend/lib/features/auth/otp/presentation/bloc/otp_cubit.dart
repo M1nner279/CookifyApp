@@ -7,8 +7,8 @@ import 'package:cookify/features/auth/otp/domain/use_cases/confirm_code_use_case
 import 'package:cookify/features/auth/otp/domain/use_cases/resend_code_use_case.dart';
 import 'package:cookify/features/auth/otp/presentation/bloc/otp_state.dart';
 import 'package:cookify/features/token/domain/entities/token.dart';
-import 'package:cookify/features/token/domain/payloads/save_token_payload.dart';
-import 'package:cookify/features/token/domain/use_cases/save_token_use_case.dart';
+import 'package:cookify/features/token/domain/payloads/set_token_payload.dart';
+import 'package:cookify/features/token/domain/use_cases/set_token_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OtpCubit extends Cubit<OtpState> {
@@ -16,7 +16,7 @@ class OtpCubit extends Cubit<OtpState> {
     required String login,
     required ConfirmCodeUseCase confirmCodeUseCase,
     required ResendCodeUseCase resendCodeUseCase,
-    required SaveTokenUseCase saveTokenUseCase,
+    required SetTokenUseCase saveTokenUseCase,
     this.initialTimerSeconds = 30,
   }) : _login = login,
        _confirmCodeUseCase = confirmCodeUseCase,
@@ -29,7 +29,7 @@ class OtpCubit extends Cubit<OtpState> {
   final String _login;
   final ConfirmCodeUseCase _confirmCodeUseCase;
   final ResendCodeUseCase _resendCodeUseCase;
-  final SaveTokenUseCase _saveTokenUseCase;
+  final SetTokenUseCase _saveTokenUseCase;
   final int initialTimerSeconds;
 
   Timer? _timer;
@@ -48,7 +48,7 @@ class OtpCubit extends Cubit<OtpState> {
 
     if (result is Success<Token>) {
       _cancelTimer();
-      await _saveTokenUseCase(SaveTokenPayload(token: result.data));
+      await _saveTokenUseCase(SetTokenPayload(token: result.data));
       emit(OtpSuccess());
     } else if (result is Failure<Token>) {
       final exception = result.exception;

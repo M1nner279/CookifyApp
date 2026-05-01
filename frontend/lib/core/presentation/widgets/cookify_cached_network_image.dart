@@ -17,6 +17,13 @@ class CookifyCachedNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: imageUrl ?? '',
+      placeholder: (context, url) => Container(
+        width: width,
+        height: height,
+        color: const Color(0xFF2C1C16),
+      ),
+      fadeInDuration: Duration.zero,
+      fadeOutDuration: Duration.zero,
       errorWidget: (context, url, error) => Center(
         child: Icon(
           Icons.photo_size_select_actual,

@@ -20,7 +20,7 @@ class SignInRepositoryImpl implements SignInRepository {
         SignInRequest(login: payload.login, password: payload.password),
       );
 
-      return TokenMapper.fromModel(token);
+      return TokenMapper.toEntity(token);
     } on DioException {
       throw IncorrectLoginOrPasswordException();
     }
