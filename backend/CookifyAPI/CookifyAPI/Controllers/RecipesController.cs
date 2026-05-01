@@ -6,15 +6,8 @@ namespace CookifyAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RecipesController : ControllerBase
+public class RecipesController(IRecipeService service) : ControllerBase
 {
-    private readonly IRecipeService _service;
-
-    public RecipesController(IRecipeService service)
-    {
-        _service = service;
-    }
-
     // GET: api/recipes
     /// <summary>
     /// 
@@ -25,14 +18,14 @@ public class RecipesController : ControllerBase
     public async Task<ActionResult> GetRecipesKeyset(
         int? lastId = null)
     {
-        return Ok(await _service.GetRecipesKeysetAsync(lastId));
+        return Ok(await service.GetRecipesKeysetAsync(lastId));
     }
 
     // GET: api/recipes/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<RecipeDetailDto>> GetRecipe(int id)
     {
-        var recipe = await _service.GetRecipeByIdAsync(id);
+        var recipe = await service.GetRecipeByIdAsync(id);
         if (recipe == null)
             return NotFound();
 
