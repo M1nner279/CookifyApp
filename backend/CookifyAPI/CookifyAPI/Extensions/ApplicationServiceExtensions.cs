@@ -1,4 +1,5 @@
-﻿using CookifyAPI.Services;
+﻿using System.Reflection;
+using CookifyAPI.Services;
 
 namespace CookifyAPI.Extensions;
 
@@ -12,6 +13,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IFavoriteService, FavoriteService>();
         services.AddScoped<IImageService, CloudinaryImageService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IUserService, UserService>();
             
 
         // Автоматический поиск профилей AutoMapper

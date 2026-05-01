@@ -1,26 +1,36 @@
-﻿using CookifyAPI.Data;
+﻿using System.Security.Claims;
+using CookifyAPI.Data;
 using CookifyAPI.Models.Entities;
+using CookifyAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookifyAPI.Controllers;
 
+/// <summary>
+/// Контроллер для взаимодействия с профилем пользователя.
+/// Предоставляет API для получения данных профиля.
+/// </summary>
+/// <param name="service">Сервис для работы с бизнес-логикой профиля.</param>
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : ControllerBase
+[Authorize]
+[Produces("application/json")]
+public class UsersController(IUserService userService) : AuthBaseController
 {
-    private readonly AppDbContext _db;
-
-    public UsersController(AppDbContext db)
+    // GET: api/recipes
+    /// <summary>
+    ///     Возвращает данные профиля
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("me")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> GetMe()
     {
-        _db = db;
+        return Ok(await userService.GetCurrentUserProfileAsync(CurrentUserId));
     }
-
-    // [HttpGet]
-    // public async Task<IEnumerable<User>> Get()
-    // {
-    //     return await _db.Users.ToListAsync();
-    // }
     //
     // [HttpPost]
     // public async Task<IActionResult> Create(User user)
