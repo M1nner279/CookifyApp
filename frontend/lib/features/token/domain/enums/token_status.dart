@@ -1,0 +1,1 @@
+enum TokenStatus { valid, invalid }
