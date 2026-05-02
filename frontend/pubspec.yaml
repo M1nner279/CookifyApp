@@ -13,7 +13,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   cached_network_image: ^3.4.1
-  dartz: ^0.10.1
   equatable: ^2.0.8
   dio: ^5.9.2
   flutter_bloc: ^9.1.1
@@ -35,6 +34,8 @@ dependencies:
   crypto: ^3.0.7
   flutter_otp_text_field: ^1.5.1+1
   flutter_secure_storage: ^10.0.0
+  fpdart: ^1.2.0
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:

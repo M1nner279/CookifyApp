@@ -22,7 +22,7 @@ class OtpRepositoryImpl implements OtpRepository {
         ConfirmCodeRequest(login: payload.login),
       );
 
-      return TokenMapper.fromModel(token);
+      return TokenMapper.toEntity(token);
     } on DioException {
       throw IncorrectCodeException();
     }

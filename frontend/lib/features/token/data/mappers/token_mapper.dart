@@ -2,7 +2,7 @@ import 'package:cookify/features/token/data/models/token_model.dart';
 import 'package:cookify/features/token/domain/entities/token.dart';
 
 abstract class TokenMapper {
-  static Token fromModel(TokenModel model) {
+  static Token toEntity(TokenModel model) {
     return Token(
       accessToken: model.accessToken,
       refreshToken: model.refreshToken,

@@ -1,0 +1,1 @@
+const refreshTokenEndPoint = '/api/auth/refresh';

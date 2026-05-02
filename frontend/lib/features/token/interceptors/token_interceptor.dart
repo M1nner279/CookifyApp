@@ -1,5 +1,3 @@
-import 'package:cookify/core/domain/use_cases/results/result.dart';
-import 'package:cookify/features/token/domain/entities/token.dart';
 import 'package:cookify/features/token/domain/use_cases/get_token_use_case.dart';
 import 'package:cookify/features/token/domain/use_cases/refresh_token_use_case.dart';
 import 'package:dio/dio.dart';
@@ -20,11 +18,11 @@ class TokenInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     final result = await _getTokenUseCase();
-    if (result is Success<Token?>) {
-      if (result.data != null) {
-        options.headers['Authorization'] = 'Bearer ${result.data}';
+    result.fold((_) {}, (token) {
+      if (token != null) {
+        options.headers['Authorization'] = 'Bearer ${token.accessToken}';
       }
-    }
+    });
     handler.next(options);
   }
 

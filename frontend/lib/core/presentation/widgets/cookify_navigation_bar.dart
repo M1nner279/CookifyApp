@@ -60,6 +60,15 @@ class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
             activeIconData: Icons.bookmark,
             inactiveIconData: Icons.bookmark_border,
           ),
+
+          _Item(
+            onTap: () {
+              context.go('/profile');
+            },
+            isActive: index == 4,
+            activeIconData: Icons.person,
+            inactiveIconData: Icons.person_outline,
+          ),
         ],
       ),
     );
