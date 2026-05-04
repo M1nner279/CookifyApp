@@ -1,0 +1,1 @@
+enum ConfirmPasswordValidationStatus { notMatch, valid }

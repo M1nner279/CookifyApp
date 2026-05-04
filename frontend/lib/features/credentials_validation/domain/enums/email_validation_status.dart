@@ -1,0 +1,1 @@
+enum EmailValidationStatus { empty, invalid, valid }
