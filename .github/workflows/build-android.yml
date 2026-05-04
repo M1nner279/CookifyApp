@@ -29,12 +29,15 @@ jobs:
           # flutter-version: '3.19.0'
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: flutter pub get
 
       - name: Build apk
+        working-directory: ./frontend
         run: flutter build apk --split-per-abi
 
       - name: Rename APK files
+        working-directory: ./frontend
         run: |
           cd build/app/outputs/flutter-apk/
           
@@ -53,6 +56,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            build/app/outputs/flutter-apk/*-armeabi.apk
-            build/app/outputs/flutter-apk/*-arm64.apk
-            build/app/outputs/flutter-apk/*-x86.apk
+            frontend/build/app/outputs/flutter-apk/*-armeabi.apk
+            frontend/build/app/outputs/flutter-apk/*-arm64.apk
+            frontend/build/app/outputs/flutter-apk/*-x86.apk
