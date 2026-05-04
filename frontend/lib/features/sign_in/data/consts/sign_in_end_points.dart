@@ -1,0 +1,1 @@
+const signInEndpoint = '/api/login';

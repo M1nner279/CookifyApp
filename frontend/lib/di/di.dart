@@ -1,8 +1,16 @@
+import 'package:cookify/dependencies/change_password_dependency_impl.dart';
 import 'package:cookify/dependencies/profile_dependency_impl.dart';
-import 'package:cookify/features/auth/di/auth_di.dart';
+import 'package:cookify/dependencies/restore_dependency_impl.dart';
+import 'package:cookify/dependencies/sign_in_dependency_impl.dart';
+import 'package:cookify/dependencies/sign_up_dependency_impl.dart';
+import 'package:cookify/features/restore/dependencies/restore_dependency.dart';
+import 'package:cookify/features/sign_in/dependecies/sign_in_dependency.dart';
+import 'package:cookify/features/change_password/dependencies/change_password_dependency.dart';
+import 'package:cookify/features/credentials_validation/di/credentials_validation_di.dart';
 import 'package:cookify/features/locale/di/locale_di.dart';
 import 'package:cookify/features/profile/dependencies/profile_dependency.dart';
 import 'package:cookify/features/recipe/di/recipe_di.dart';
+import 'package:cookify/features/sign_up/dependencies/sign_up_dependency.dart';
 import 'package:cookify/features/token/di/token_di.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -16,27 +24,52 @@ abstract class Di {
   static Future<void> init(String address) async {
     await initStorages(address);
 
-    await TokenDi.init();
-    await AuthDi.init();
+    getIt.registerSingleton(FlutterSecureStorage());
+
     await RecipeDi.init();
   }
 
   static Future<void> initStorages(String address) async {
-    final dio = Dio(BaseOptions(baseUrl: 'http://$address'));
+    dio = Dio(BaseOptions(baseUrl: 'http://$address'));
+    dio.interceptors.add(TokenDi.tokenInterceptor);
     dio.interceptors.add(PrettyDioLogger());
     getIt.registerSingleton(dio);
-
-    getIt.registerSingleton(FlutterSecureStorage());
+    Di.dio = dio;
   }
 
-  static final Dio dio = Dio(BaseOptions())
-    ..interceptors.add(PrettyDioLogger())
-    ..interceptors.add(TokenDi.tokenInterceptor);
+  static Dio dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:8080'));
 
   static final SharedPreferencesAsync sharedPreferences =
       SharedPreferencesAsync();
 
   static final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+
+  static SignInDependency get signInDependency => SignInDependencyImpl(
+    validatePasswordUseCase: CredentialsValidationDi.validatePasswordUseCase,
+    validateLoginUseCase: CredentialsValidationDi.validateLoginUseCase,
+    setTokenUseCase: TokenDi.setTokenUseCase,
+  );
+
+  static SignUpDependency get signUpDependency => SignUpDependencyImpl(
+    validateLoginUseCase: CredentialsValidationDi.validateLoginUseCase,
+    validateEmailUseCase: CredentialsValidationDi.validateEmailUseCase,
+    validatePasswordUseCase: CredentialsValidationDi.validatePasswordUseCase,
+    validateConfirmPasswordUseCase:
+        CredentialsValidationDi.validateConfirmPasswordUseCase,
+  );
+
+  static RestoreDependency get restoreDependency => RestoreDependencyImpl(
+    validateLoginUseCase: CredentialsValidationDi.validateLoginUseCase,
+    validateEmailUseCase: CredentialsValidationDi.validateEmailUseCase,
+  );
+
+  static ChangePasswordDependency get changePasswordDependency =>
+      ChangePasswordDependencyImpl(
+        validatePasswordUseCase:
+            CredentialsValidationDi.validatePasswordUseCase,
+        validateConfirmPasswordUseCase:
+            CredentialsValidationDi.validateConfirmPasswordUseCase,
+      );
 
   static ProfileDependency get profileDependency => ProfileDependencyImpl(
     getLocaleUseCase: LocaleDi.getLocaleUseCase,
