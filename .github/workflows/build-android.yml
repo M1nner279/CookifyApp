@@ -1,0 +1,58 @@
+name: Build and Realease android apk
+
+on:
+  release:
+    types: [ published ]
+
+permission:
+  contents: write
+
+jobs:
+  build:
+    name: Build apk
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          # flutter-version: '3.19.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build apk
+        run: flutter build apk --split-per-abi
+
+      - name: Rename APK files
+        run: |
+          cd build/app/outputs/flutter-apk/
+          
+          APP_NAME="Cookify"
+               
+          # тут лежит версия
+          VERSION="${{ github.event.release.tag_name }}" 
+          
+          # Переименовываем каждый файл
+          mv app-armeabi-v7a-release.apk $APP_NAME-$VERSION-armeabi.apk
+          mv app-arm64-v8a-release.apk $APP_NAME-$VERSION-arm64.apk
+          mv app-x86_64-release.apk $APP_NAME-$VERSION-x86.apk
+
+      # Автоматически создаем Релиз в GitHub и прикрепляем туда наши переименованные APK
+      - name: Upload APKs to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/app/outputs/flutter-apk/*-armeabi.apk
+            build/app/outputs/flutter-apk/*-arm64.apk
+            build/app/outputs/flutter-apk/*-x86.apk
