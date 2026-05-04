@@ -1,4 +1,4 @@
-import 'package:cookify/core/presentation/widgets/cookify_cached_network_image.dart';
+import 'package:cookify/core/presentation/widgets/cookify_network_or_file_image.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/recipe_step_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -99,18 +99,19 @@ class _Step extends StatelessWidget {
           ],
         ),
 
-        LayoutBuilder(
-          builder: (context, constraints) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: CookifyCachedNetworkImage(
-                step.photoUrl,
-                width: constraints.maxWidth,
-                height: constraints.maxWidth * 2 / 3,
-              ),
-            );
-          },
-        ),
+        if (step.photoUrl != null && step.photoUrl!.trim().isNotEmpty)
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: cookifyNetworkOrFileImage(
+                  step.photoUrl!,
+                  width: constraints.maxWidth,
+                  height: constraints.maxWidth * 2 / 3,
+                ),
+              );
+            },
+          ),
 
         Text(
           step.description,

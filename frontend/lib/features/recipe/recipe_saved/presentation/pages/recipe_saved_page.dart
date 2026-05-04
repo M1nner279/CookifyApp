@@ -1,7 +1,6 @@
 import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
 import 'package:cookify/features/recipe/recipe_feed/domain/entities/recipe_preview_entity.dart';
-import 'package:cookify/features/recipe/recipe_feed/presentation/widgets/recipe_feed_recipe_list.dart';
 import 'package:cookify/features/recipe/recipe_saved/presentation/widgets/recipe_saved_wrap.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
