@@ -1,4 +1,4 @@
-import 'package:cookify/core/presentation/widgets/cookify_cached_network_image.dart';
+import 'package:cookify/core/presentation/widgets/cookify_network_or_file_image.dart';
 import 'package:flutter/material.dart';
 
 class CookifyCarousel extends StatefulWidget {
@@ -22,6 +22,19 @@ class _CookifyCarouselState extends State<CookifyCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.imageUrls.isEmpty) {
+      return Container(
+        color: const Color(0xFF2C1C16),
+        child: const Center(
+          child: Icon(
+            Icons.photo_size_select_actual,
+            size: 48.0,
+            color: Color(0x1AE5C9A8),
+          ),
+        ),
+      );
+    }
+
     return Stack(
       children: [
         PageView.builder(
@@ -31,8 +44,9 @@ class _CookifyCarouselState extends State<CookifyCarousel> {
               _activeIndicatorIndex = value;
             });
           },
-          itemBuilder: (context, index) =>
-              CookifyCachedNetworkImage(widget.imageUrls[index]),
+          itemBuilder: (context, index) => SizedBox.expand(
+            child: cookifyNetworkOrFileImage(widget.imageUrls[index]),
+          ),
           itemCount: widget.imageUrls.length,
         ),
 

@@ -45,7 +45,7 @@ class _CookifyNavigationBarState extends State<CookifyNavigationBar> {
 
           _Item(
             onTap: () {
-              context.go('/create');
+              context.go('/drafts');
             },
             isActive: index == 2,
             activeIconData: Icons.add,
