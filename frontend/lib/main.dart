@@ -1,4 +1,4 @@
-import 'package:cookify/navigations/router.dart';
+import 'package:cookify/navigations/navigator.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -6,7 +6,8 @@ Future<void> main() async {
 
   runApp(
     MaterialApp.router(
-      routerConfig: router,
+      title: 'Cookify',
+      routerConfig: navigator,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFF1E100A),

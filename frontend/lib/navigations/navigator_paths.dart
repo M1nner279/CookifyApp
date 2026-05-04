@@ -3,7 +3,11 @@ abstract class NavigatorPaths {
 
   static const auth = '/auth';
 
+  static const otp = '/otp';
+
   static const changePassword = '/change-password';
+
+  static const recipeFeed = '/';
 
   static const profile = '/profile';
 }
