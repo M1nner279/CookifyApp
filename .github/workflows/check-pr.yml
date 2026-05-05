@@ -1,0 +1,39 @@
+name: PR Build Check
+
+# Запускаем проверку при открытии или обновлении Pull Request в ветку main
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-build:
+    name: Test Compilation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: flutter pub get
+
+      - name: Run build_runner (Generate code)
+        working-directory: ./frontend
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Check Build
+        working-directory: ./frontend
+        run: flutter build apk --target-platform android-arm64 --no-pub

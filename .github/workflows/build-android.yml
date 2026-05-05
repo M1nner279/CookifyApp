@@ -38,7 +38,16 @@ jobs:
 
       - name: Build apk
         working-directory: ./frontend
-        run: flutter build apk --split-per-abi
+        run: |
+          CLEAN_VERSION=$(echo "${{ github.event.release.tag_name }}" | sed 's/^v//')
+          
+          flutter build apk --release \
+            --split-per-abi \
+            --target-platform android-arm,android-arm64 \
+            --tree-shake-icons \
+            --no-pub \
+            --build-name=$CLEAN_VERSION \
+            --build-number=${{ github.run_number }}
 
       - name: Rename APK files
         working-directory: ./frontend
@@ -51,15 +60,12 @@ jobs:
           VERSION="${{ github.event.release.tag_name }}" 
           
           # Переименовываем каждый файл
-          mv app-armeabi-v7a-release.apk $APP_NAME-$VERSION-armeabi.apk
-          mv app-arm64-v8a-release.apk $APP_NAME-$VERSION-arm64.apk
-          mv app-x86_64-release.apk $APP_NAME-$VERSION-x86.apk
+          mv app-armeabi-v7a-release.apk $APP_NAME-$VERSION-android-old.apk
+          mv app-arm64-v8a-release.apk $APP_NAME-$VERSION-android-new.apk
 
-      # Автоматически создаем Релиз в GitHub и прикрепляем туда наши переименованные APK
       - name: Upload APKs to Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            frontend/build/app/outputs/flutter-apk/*-armeabi.apk
-            frontend/build/app/outputs/flutter-apk/*-arm64.apk
-            frontend/build/app/outputs/flutter-apk/*-x86.apk
+            frontend/build/app/outputs/flutter-apk/*-android-old.apk
+            frontend/build/app/outputs/flutter-apk/*-android-new.apk
