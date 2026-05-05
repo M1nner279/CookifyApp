@@ -19,7 +19,11 @@ abstract class RecipeDetailDi {
       )
       ..registerFactory(() => GetRecipeDetailUseCase(getIt()))
       ..registerFactoryParam<RecipeDetailCubit, String, void>(
-        (id, _) => RecipeDetailCubit(id: id, getRecipeDetailUseCase: getIt()),
+        (id, _) => RecipeDetailCubit(
+          id: id,
+          getRecipeDetailUseCase: getIt(),
+          userSavedRecipeDetailRepository: getIt(),
+        ),
       );
   }
 }

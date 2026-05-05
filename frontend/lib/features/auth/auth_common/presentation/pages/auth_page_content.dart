@@ -1,9 +1,12 @@
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_bar.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_bottom.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_top.dart';
-import 'package:cookify/features/auth/restore/presentation/pages/restore_page.dart';
-import 'package:cookify/features/auth/sign_in/presentation/pages/sign_in_page.dart';
-import 'package:cookify/features/auth/sign_up/presentation/pages/sign_up_page.dart';
+import 'package:cookify/features/restore/presentation/pages/restore_widget.dart';
+import 'package:cookify/features/sign_in/presentation/pages/sign_in_widget.dart';
+import 'package:cookify/features/sign_up/presentation/pages/sign_up_widget.dart';
+import 'package:cookify/navigations/navigators/restore_navigator_impl.dart';
+import 'package:cookify/navigations/navigators/sign_in_navigator_impl.dart';
+import 'package:cookify/navigations/navigators/sign_up_navigator_impl.dart';
 import 'package:flutter/material.dart';
 
 enum AuthPageContentType { signIn, signUp, restore }
@@ -93,9 +96,15 @@ class _AuthPageContentState extends State<AuthPageContent> {
 
   Widget _buildAuthContent() {
     return switch (type) {
-      AuthPageContentType.signIn => const SignInPage(),
-      AuthPageContentType.signUp => const SignUpPage(),
-      AuthPageContentType.restore => const RestorePage(),
+      AuthPageContentType.signIn => SignInWidget(
+        signInNavigator: SignInNavigatorImpl(context),
+      ),
+      AuthPageContentType.signUp => SignUpWidget(
+        signUpNavigator: SignUpNavigatorImpl(context),
+      ),
+      AuthPageContentType.restore => RestoreWidget(
+        restoreNavigator: RestoreNavigatorImpl(context),
+      ),
     };
   }
 }

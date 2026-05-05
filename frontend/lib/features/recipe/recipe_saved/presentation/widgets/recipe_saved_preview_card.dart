@@ -1,11 +1,9 @@
-import 'package:cookify/core/presentation/widgets/cookify_cached_network_image.dart';
+import 'package:cookify/core/presentation/widgets/cookify_network_or_file_image.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/enums/recipe_difficulty.dart';
-import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/extensions/styled_recipe_difficulty.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page_args.dart';
 import 'package:cookify/features/recipe/recipe_feed/domain/entities/recipe_preview_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class RecipeSavedPreviewCard extends StatelessWidget {
@@ -34,6 +32,7 @@ class RecipeSavedPreviewCard extends StatelessWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
@@ -42,7 +41,11 @@ class RecipeSavedPreviewCard extends StatelessWidget {
                     return SizedBox(
                       width: constraints.maxWidth,
                       height: constraints.maxWidth,
-                      child: CookifyCachedNetworkImage(recipe.photoUrl),
+                      child: cookifyNetworkOrFileImage(
+                        recipe.photoUrl,
+                        width: constraints.maxWidth,
+                        height: constraints.maxWidth,
+                      ),
                     );
                   },
                 ),
@@ -52,6 +55,7 @@ class RecipeSavedPreviewCard extends StatelessWidget {
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     _Difficulty(difficulty: recipe.difficulty),
 
@@ -132,7 +136,7 @@ class _Difficulty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const .symmetric(horizontal: 12.0, vertical: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       decoration: BoxDecoration(
         color: difficulty.color(),
         borderRadius: BorderRadius.circular(9999.0),
@@ -143,34 +147,6 @@ class _Difficulty extends StatelessWidget {
           color: Color(0xFFFFFFFF),
           fontSize: 10.0,
           fontWeight: FontWeight.w600,
-          letterSpacing: 0.5,
-          height: 15.0 / 10.0,
-        ),
-      ),
-    );
-  }
-}
-
-class _Category extends StatelessWidget {
-  const _Category({required this.category});
-
-  final String category;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      padding: const .symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: const Color(0x1AFFFFFF),
-        borderRadius: BorderRadius.circular(9999.0),
-      ),
-      child: Text(
-        category.toUpperCase(),
-        style: const TextStyle(
-          color: Color(0xFFE5C9A8),
-          fontSize: 10.0,
-          fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
           height: 15.0 / 10.0,
         ),

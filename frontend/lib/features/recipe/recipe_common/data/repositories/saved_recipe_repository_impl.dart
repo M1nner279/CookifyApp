@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
+import 'package:cookify/features/recipe/recipe_common/domain/repositories/user_saved_recipe_detail_repository.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/enums/recipe_difficulty.dart';
 import 'package:cookify/features/recipe/recipe_feed/domain/entities/recipe_preview_entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 
 class SavedRecipeRepositoryImpl implements SavedRecipeRepository {
   SavedRecipeRepositoryImpl({required FlutterSecureStorage storage})
@@ -65,6 +67,9 @@ class SavedRecipeRepositoryImpl implements SavedRecipeRepository {
         .toList();
     _savedRecipesNotifier.value = recipes;
     await _persist();
+    if (GetIt.I.isRegistered<UserSavedRecipeDetailRepository>()) {
+      await GetIt.I<UserSavedRecipeDetailRepository>().remove(recipeId);
+    }
   }
 
   @override

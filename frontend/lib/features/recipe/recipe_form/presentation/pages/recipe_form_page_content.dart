@@ -4,6 +4,7 @@ import 'package:cookify/core/domain/use_cases/results/result.dart';
 import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/core/presentation/widgets/cookify_text_field.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/category_entity.dart';
+import 'package:cookify/features/recipe/recipe_common/domain/entities/cpfc_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/recipe_ingredient_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/recipe_step_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/enums/recipe_difficulty.dart';
@@ -13,18 +14,28 @@ import 'package:cookify/features/recipe/recipe_common/presentation/controllers/p
 import 'package:cookify/features/recipe/recipe_common/presentation/extensions/styled_recipe_difficulty.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/widgets/category_text_field.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/widgets/ingredient_text_field.dart';
+import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
+import 'package:cookify/features/recipe/recipe_common/domain/repositories/user_saved_recipe_detail_repository.dart';
+import 'package:cookify/features/recipe/recipe_common/domain/user_saved_recipe_id.dart';
+import 'package:cookify/features/recipe/recipe_feed/domain/entities/recipe_preview_entity.dart';
+import 'package:cookify/features/recipe/recipe_detail/domain/entities/recipe_detail_entity.dart';
 import 'package:cookify/features/recipe/recipe_form/domain/payloads/publish_recipe_payload.dart';
+import 'package:cookify/features/recipe/recipe_form/domain/entities/draft_recipe_entity.dart';
+import 'package:cookify/features/recipe/recipe_form/domain/repositories/draft_recipe_repository.dart';
 import 'package:cookify/features/recipe/recipe_form/presentation/bloc/recipe_form_cubit.dart';
 import 'package:cookify/features/recipe/recipe_form/presentation/bloc/recipe_form_state.dart';
 import 'package:cookify/features/recipe/recipe_form/presentation/widgets/recipe_form_photo_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class RecipeFormPageContent extends StatefulWidget {
-  const RecipeFormPageContent({super.key});
+  const RecipeFormPageContent({super.key, this.draftId});
+
+  final String? draftId;
 
   @override
   State<RecipeFormPageContent> createState() => _RecipeFormPageContentState();
@@ -44,6 +55,9 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
   final stepDrafts = <_StepDraft>[];
 
   RecipeDifficulty difficulty = RecipeDifficulty.easy;
+  String? _draftId;
+  bool _isSavingDraft = false;
+  bool _isSavingToSaved = false;
 
   @override
   void initState() {
@@ -56,6 +70,94 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
     fatsController.addListener(() => _limitValue(fatsController, 100));
     carbsController.addListener(() => _limitValue(carbsController, 100));
     //caloriesController.addListener(() => _limitValue(caloriesController, 100));
+
+    _draftId = widget.draftId;
+    if (_draftId != null && _draftId!.trim().isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _loadDraft(_draftId!),
+      );
+    }
+  }
+
+  Future<void> _loadDraft(String id) async {
+    final repo = GetIt.I<DraftRecipeRepository>();
+    final draft = repo.getById(id);
+    if (draft == null) return;
+
+    setState(() {
+      _draftId = draft.id;
+
+      nameController.text = draft.name;
+      descriptionController.text = draft.description;
+      proteinsController.text = draft.cpfc.proteins.toString();
+      fatsController.text = draft.cpfc.fats.toString();
+      carbsController.text = draft.cpfc.carbohydrates.toString();
+      caloriesController.text = draft.cpfc.calories.toString();
+      cookingTimeController.text = draft.cookingTimeMinutes.toString();
+      difficulty = draft.difficulty;
+
+      photoController.clear();
+      photoController.addAll(draft.photoPaths.map(XFile.new).toList());
+
+      for (final c in categoryControllers) {
+        c.controller.dispose();
+      }
+      categoryControllers
+        ..clear()
+        ..addAll(
+          draft.categories.map((c) {
+            final controller = CategoryController();
+            controller.selectCategory(c);
+            return controller;
+          }),
+        );
+      if (categoryControllers.isEmpty) {
+        categoryControllers.add(CategoryController());
+      }
+
+      for (final i in ingredientDrafts) {
+        i.dispose();
+      }
+      ingredientDrafts
+        ..clear()
+        ..addAll(
+          draft.ingredients.map((i) {
+            final controller = IngredientController();
+            controller.selectIngredient(i.ingredient);
+            final d = _IngredientDraft(controller: controller);
+            d.amountController.text = i.amount == 0 ? '' : i.amount.toString();
+            d.unitController.text = i.unit;
+            return d;
+          }),
+        );
+      if (ingredientDrafts.isEmpty) {
+        ingredientDrafts.add(
+          _IngredientDraft(controller: IngredientController()),
+        );
+      }
+
+      for (final s in stepDrafts) {
+        s.dispose();
+      }
+      stepDrafts
+        ..clear()
+        ..addAll(
+          draft.steps.map((s) {
+            final d = _StepDraft();
+            d.titleController.text = s.title;
+            d.descriptionController.text = s.description;
+            d.photo = s.photoPath == null ? null : XFile(s.photoPath!);
+            return d;
+          }),
+        );
+      if (stepDrafts.isEmpty) {
+        stepDrafts.add(_StepDraft());
+      }
+    });
+
+    if (mounted) {
+      context.read<RecipeFormCubit>().onPhotosChanged(photoController.photos);
+    }
   }
 
   void _limitValue(TextEditingController controller, int limit) {
@@ -98,6 +200,180 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
 
   int _toInt(TextEditingController controller) {
     return int.tryParse(controller.text) ?? 0;
+  }
+
+  Future<DraftRecipeEntity> _upsertCurrentDraft() async {
+    final repo = GetIt.I<DraftRecipeRepository>();
+
+    final categoriesEntities = categoryControllers
+        .map((controller) => controller.category)
+        .whereType<CategoryEntity>()
+        .toList();
+
+    final ingredients = ingredientDrafts
+        .where((draft) => draft.controller.ingredient != null)
+        .map(
+          (draft) => DraftRecipeIngredientEntity(
+            ingredient: draft.controller.ingredient!,
+            amount: double.tryParse(draft.amountController.text) ?? 0,
+            unit: draft.unitController.text.trim().isEmpty
+                ? 'g'
+                : draft.unitController.text.trim(),
+          ),
+        )
+        .toList();
+
+    final steps = stepDrafts
+        .where(
+          (step) =>
+              step.titleController.text.trim().isNotEmpty ||
+              step.descriptionController.text.trim().isNotEmpty ||
+              step.photo != null,
+        )
+        .map(
+          (step) => DraftRecipeStepEntity(
+            title: step.titleController.text.trim(),
+            description: step.descriptionController.text.trim(),
+            photoPath: step.photo?.path,
+          ),
+        )
+        .toList();
+
+    final draft = DraftRecipeEntity(
+      id: _draftId ?? '',
+      updatedAt: DateTime.now(),
+      name: nameController.text.trim(),
+      description: descriptionController.text.trim(),
+      cpfc: CpfcEntity(
+        calories: _toInt(caloriesController),
+        proteins: _toInt(proteinsController),
+        fats: _toInt(fatsController),
+        carbohydrates: _toInt(carbsController),
+      ),
+      difficulty: difficulty,
+      cookingTimeMinutes: _toInt(cookingTimeController),
+      categories: categoriesEntities,
+      ingredients: ingredients,
+      steps: steps,
+      photoPaths: photoController.photos.map((p) => p.path).toList(),
+    );
+
+    return repo.upsert(draft);
+  }
+
+  Future<void> _saveDraft() async {
+    if (_isSavingDraft) return;
+    setState(() => _isSavingDraft = true);
+
+    try {
+      final saved = await _upsertCurrentDraft();
+      _draftId = saved.id;
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Черновик сохранён')));
+    } finally {
+      if (mounted) {
+        setState(() => _isSavingDraft = false);
+      }
+    }
+  }
+
+  RecipeDetailEntity _buildRecipeDetailEntity(String id) {
+    final categoriesEntities = categoryControllers
+        .map((controller) => controller.category)
+        .whereType<CategoryEntity>()
+        .toList();
+
+    final ingredients = ingredientDrafts
+        .where((draft) => draft.controller.ingredient != null)
+        .where((draft) => draft.amountController.text.trim().isNotEmpty)
+        .where((draft) => draft.unitController.text.trim().isNotEmpty)
+        .map(
+          (draft) => RecipeIngredientEntity(
+            name: draft.controller.ingredient!.name,
+            amount: double.tryParse(draft.amountController.text) ?? 0,
+            unit: draft.unitController.text.trim(),
+            cpfc: draft.controller.ingredient!.cpfc,
+          ),
+        )
+        .toList();
+
+    final steps = stepDrafts
+        .asMap()
+        .entries
+        .where((entry) => entry.value.titleController.text.trim().isNotEmpty)
+        .where(
+          (entry) => entry.value.descriptionController.text.trim().isNotEmpty,
+        )
+        .map(
+          (entry) => RecipeStepEntity(
+            id: '${entry.key + 1}',
+            name: entry.value.titleController.text.trim(),
+            description: entry.value.descriptionController.text.trim(),
+            photoUrl: entry.value.photo?.path,
+          ),
+        )
+        .toList();
+
+    return RecipeDetailEntity(
+      id: id,
+      creator: null,
+      photoUrls: photoController.photos.map((p) => p.path).toList(),
+      name: nameController.text.trim(),
+      difficulty: difficulty,
+      categories: categoriesEntities,
+      cookingTime: _toInt(cookingTimeController),
+      cpfc: CpfcEntity(
+        calories: _toInt(caloriesController),
+        proteins: _toInt(proteinsController),
+        fats: _toInt(fatsController),
+        carbohydrates: _toInt(carbsController),
+      ),
+      description: descriptionController.text.trim(),
+      servingCount: 1,
+      ingredients: ingredients,
+      steps: steps,
+    );
+  }
+
+  Future<void> _saveToMyRecipes() async {
+    if (!_validateBeforePublish()) return;
+    if (_isSavingToSaved || _isSavingDraft) return;
+    setState(() => _isSavingToSaved = true);
+    try {
+      final draft = await _upsertCurrentDraft();
+      _draftId = draft.id;
+
+      final userSavedId = UserSavedRecipeId.fromDraft(draft.id);
+      final detail = _buildRecipeDetailEntity(userSavedId);
+
+      final photoPath =
+          detail.photoUrls.isNotEmpty ? detail.photoUrls.first : '';
+
+      final preview = RecipePreviewEntity(
+        id: userSavedId,
+        photoUrl: photoPath,
+        name: detail.name,
+        cookingTime: detail.cookingTime,
+        servingCount: detail.servingCount.round(),
+        difficulty: detail.difficulty,
+        categories: detail.categories.map((c) => c.name).toList(),
+      );
+
+      await GetIt.I<SavedRecipeRepository>().saveRecipe(preview);
+      await GetIt.I<UserSavedRecipeDetailRepository>().save(userSavedId, detail);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Рецепт добавлен в сохранённые')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isSavingToSaved = false);
+      }
+    }
   }
 
   bool _validateBeforePublish() {
@@ -232,6 +508,16 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
     if (!mounted) return;
     switch (result) {
       case Success():
+        final draftId = _draftId;
+        if (draftId != null && draftId.trim().isNotEmpty) {
+          final savedRepo = GetIt.I<SavedRecipeRepository>();
+          final userSavedId = UserSavedRecipeId.fromDraft(draftId);
+          if (savedRepo.isSaved(userSavedId)) {
+            await savedRepo.removeRecipe(userSavedId);
+          }
+          await GetIt.I<DraftRecipeRepository>().remove(draftId);
+        }
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Рецепт опубликован')));
@@ -250,6 +536,12 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Icon(Icons.arrow_back, color: Color(0xFFE5C9A8)),
+          ),
           title: const Text(
             'Создание рецепта',
             style: TextStyle(
@@ -522,9 +814,67 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                         ),
                         const SizedBox(height: 18.0),
                         SizedBox(
+                          height: 52.0,
+                          child: OutlinedButton(
+                            onPressed:
+                                _isSavingDraft ||
+                                    _isSavingToSaved ||
+                                    state.isPublishing
+                                ? null
+                                : _saveDraft,
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: const Color(0xFFE5C9A8),
+                              side: const BorderSide(color: Color(0x1AE5C9A8)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                            ),
+                            child: Text(
+                              _isSavingDraft
+                                  ? 'Сохранение...'
+                                  : 'Сохранить черновик',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10.0),
+                        SizedBox(
+                          height: 52.0,
+                          child: OutlinedButton(
+                            onPressed:
+                                _isSavingDraft ||
+                                    _isSavingToSaved ||
+                                    state.isPublishing
+                                ? null
+                                : _saveToMyRecipes,
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: const Color(0xFFE5C9A8),
+                              side: const BorderSide(color: Color(0x1AE5C9A8)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                            ),
+                            child: Text(
+                              _isSavingToSaved
+                                  ? 'Сохранение...'
+                                  : 'В сохранённые',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10.0),
+                        SizedBox(
                           height: 56.0,
                           child: ElevatedButton(
-                            onPressed: state.isPublishing ? null : _publish,
+                            onPressed: state.isPublishing ||
+                                    _isSavingDraft ||
+                                    _isSavingToSaved
+                                ? null
+                                : _publish,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFE5C9A8),
                               foregroundColor: const Color(0xFF1A0F0A),
@@ -582,15 +932,10 @@ class _SectionLabel extends StatelessWidget {
 }
 
 class _MetricField extends StatelessWidget {
-  const _MetricField({
-    required this.label,
-    required this.controller,
-    this.maxValue,
-  });
+  const _MetricField({required this.label, required this.controller});
 
   final String label;
   final TextEditingController controller;
-  final int? maxValue;
 
   @override
   Widget build(BuildContext context) {
@@ -876,27 +1221,5 @@ class _StepDraft {
   void dispose() {
     titleController.dispose();
     descriptionController.dispose();
-  }
-}
-
-class _DifficultyDescription extends StatelessWidget {
-  const _DifficultyDescription({required this.difficulty});
-
-  final RecipeDifficulty difficulty;
-
-  @override
-  Widget build(BuildContext context) {
-    final description = switch (difficulty) {
-      RecipeDifficulty.easy => 'Easy: быстро и просто, подходит новичкам.',
-      RecipeDifficulty.medium =>
-        'Medium: требует базовых кулинарных навыков и внимания.',
-      RecipeDifficulty.hard =>
-        'Hard: много этапов и точность приготовления важна.',
-    };
-
-    return Text(
-      description,
-      style: const TextStyle(color: Color(0x99E5C9A8), fontSize: 12.0),
-    );
   }
 }

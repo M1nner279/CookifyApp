@@ -1,0 +1,1 @@
+const changePasswordEndPoint = '/api/auth/change-password';

@@ -1,7 +1,9 @@
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page_args.dart';
 import 'package:cookify/features/recipe/recipe_feed/presentation/pages/recipe_feed_page.dart';
+import 'package:cookify/features/recipe/recipe_form/presentation/pages/recipe_drafts_page.dart';
 import 'package:cookify/features/recipe/recipe_form/presentation/pages/recipe_form_page.dart';
+import 'package:cookify/features/recipe/recipe_form/presentation/pages/recipe_form_page_args.dart';
 import 'package:cookify/features/recipe/recipe_saved/presentation/pages/recipe_saved_page.dart';
 import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_form_page.dart';
 import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_page.dart';
@@ -42,8 +44,18 @@ final recipeRoute = [
 
   GoRoute(
     path: '/create',
+    pageBuilder: (context, state) {
+      final args = state.extra is RecipeFormPageArgs
+          ? state.extra as RecipeFormPageArgs
+          : const RecipeFormPageArgs();
+      return MaterialPage(child: RecipeFormPage(args: args));
+    },
+  ),
+
+  GoRoute(
+    path: '/drafts',
     pageBuilder: (context, state) =>
-        MaterialPage(child: const RecipeFormPage()),
+        MaterialPage(child: const RecipeDraftsPage()),
   ),
 
   GoRoute(

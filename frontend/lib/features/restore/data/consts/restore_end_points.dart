@@ -1,0 +1,1 @@
+const restoreEndPoint = '/api/auth/restore';
