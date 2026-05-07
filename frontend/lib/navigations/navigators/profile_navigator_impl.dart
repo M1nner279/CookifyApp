@@ -1,3 +1,4 @@
+import 'package:cookify/features/change_password/presentation/pages/change_password_page_args.dart';
 import 'package:cookify/features/profile/navigator/profile_navigator.dart';
 import 'package:cookify/navigations/navigator_paths.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,10 @@ final class ProfileNavigatorImpl implements ProfileNavigator {
 
   @override
   void pushChangePassword() {
-    context.push(NavigatorPaths.changePassword);
+    context.push(
+      NavigatorPaths.changePassword,
+      extra: ChangePasswordPageArgs(goNext: context.pop),
+    );
   }
 
   @override

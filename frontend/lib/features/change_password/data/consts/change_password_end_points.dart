@@ -1,1 +1,1 @@
-const changePasswordEndPoint = '/api/auth/change-password';
+const changePasswordEndPoint = '/api/reset-password';

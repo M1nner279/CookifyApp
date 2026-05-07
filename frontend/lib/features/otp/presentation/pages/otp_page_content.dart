@@ -75,7 +75,7 @@ class _OtpPageContentState extends State<OtpPageContent> {
                                     children: [
                                       OtpTextField(
                                         showCursor: false,
-                                        numberOfFields: 4,
+                                        numberOfFields: 6,
                                         fieldWidth: 52.0,
                                         fieldHeight: 52.0,
                                         textStyle: const TextStyle(

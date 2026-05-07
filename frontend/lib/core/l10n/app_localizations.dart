@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_en.dart';
 import 'app_localizations_ru.dart';
 
 // ignore_for_file: type=lint
@@ -92,7 +93,64 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('ru')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('ru'),
+  ];
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Профиль'**
+  String get profileTitle;
+
+  /// No description provided for @profileUserInfoCreatedAt.
+  ///
+  /// In ru, this message translates to:
+  /// **'На кухне с {date}'**
+  String profileUserInfoCreatedAt(Object date);
+
+  /// No description provided for @profileUserStatisticInfoFavorite.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранено'**
+  String get profileUserStatisticInfoFavorite;
+
+  /// No description provided for @profileUserStatisticInfoCreated.
+  ///
+  /// In ru, this message translates to:
+  /// **'Создано'**
+  String get profileUserStatisticInfoCreated;
+
+  /// No description provided for @profileUserStatisticInfoPublished.
+  ///
+  /// In ru, this message translates to:
+  /// **'Опубликовано'**
+  String get profileUserStatisticInfoPublished;
+
+  /// No description provided for @profileSettings.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки'**
+  String get profileSettings;
+
+  /// No description provided for @profileSettingsLocale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сменить язык'**
+  String get profileSettingsLocale;
+
+  /// No description provided for @profileSettingsChangePassword.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смена пароля'**
+  String get profileSettingsChangePassword;
+
+  /// No description provided for @profileSettingsSignout.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выйти из аккаунта'**
+  String get profileSettingsSignout;
 }
 
 class _AppLocalizationsDelegate
@@ -106,7 +164,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['ru'].contains(locale.languageCode);
+      <String>['en', 'ru'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -115,6 +173,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
     case 'ru':
       return AppLocalizationsRu();
   }

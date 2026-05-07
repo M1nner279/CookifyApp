@@ -12,8 +12,10 @@ class LocaleWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: LocaleBloc(getLocaleUseCase: LocaleDi.getLocaleUseCase)
-        ..add(InitLocale()),
+      value: LocaleBloc(
+        getLocaleUseCase: LocaleDi.getLocaleUseCase,
+        listenLocaleUseCase: LocaleDi.listenLocaleUseCase,
+      )..add(InitLocale()),
       child: child,
     );
   }

@@ -6,8 +6,9 @@ part 'user_statistic_model.g.dart';
 @freezed
 abstract class UserStatisticModel with _$UserStatisticModel {
   const factory UserStatisticModel({
-    required int favoriteRecipesCount,
-    required int createdRecipesCount,
+    @JsonKey(name: 'favorite_recipes_count') required int favoriteRecipesCount,
+    @JsonKey(name: 'created_recipes_count') required int createdRecipesCount,
+    @JsonKey(name: 'published_recipes_count')
     required int publishedRecipesCount,
   }) = _UserStatisticModel;
 

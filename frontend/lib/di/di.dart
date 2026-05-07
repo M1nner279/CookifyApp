@@ -22,22 +22,22 @@ abstract class Di {
   static final getIt = GetIt.instance;
 
   static Future<void> init(String address) async {
-    await initStorages(address);
+    getIt.registerSingleton(secureStorage);
 
-    getIt.registerSingleton(FlutterSecureStorage());
+    await initStorages(address);
 
     await RecipeDi.init();
   }
 
   static Future<void> initStorages(String address) async {
-    dio = Dio(BaseOptions(baseUrl: 'http://$address'));
-    dio.interceptors.add(TokenDi.tokenInterceptor);
+    dio = Dio(BaseOptions(baseUrl: 'https://$address'));
+    Di.dio = dio;
     dio.interceptors.add(PrettyDioLogger());
     getIt.registerSingleton(dio);
-    Di.dio = dio;
+    dio.interceptors.add(TokenDi.tokenInterceptor);
   }
 
-  static Dio dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:8080'));
+  static late Dio dio;
 
   static final SharedPreferencesAsync sharedPreferences =
       SharedPreferencesAsync();
