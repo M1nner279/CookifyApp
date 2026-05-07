@@ -1,0 +1,14 @@
+{
+    "profileTitle": "Profile",
+
+    "profileUserInfoCreatedAt": "In the kitchen since {date}",
+
+    "profileUserStatisticInfoFavorite": "Saved",
+    "profileUserStatisticInfoCreated": "Created",
+    "profileUserStatisticInfoPublished": "Published",
+
+    "profileSettings": "Settings",
+    "profileSettingsLocale": "Change language",
+    "profileSettingsChangePassword": "Change password",
+    "profileSettingsSignout": "Sign out"
+}

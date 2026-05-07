@@ -1,3 +1,14 @@
 {
-    
+    "profileTitle": "Профиль",
+
+    "profileUserInfoCreatedAt": "На кухне с {date}",
+
+    "profileUserStatisticInfoFavorite": "Сохранено",
+    "profileUserStatisticInfoCreated": "Создано",
+    "profileUserStatisticInfoPublished": "Опубликовано",
+
+    "profileSettings": "Настройки",
+    "profileSettingsLocale": "Сменить язык",
+    "profileSettingsChangePassword": "Смена пароля",
+    "profileSettingsSignout": "Выйти из аккаунта"
 }
