@@ -1,3 +1,3 @@
-const getUserEndPoint = '/users/me';
+const getUserEndPoint = '/api/users/me';
 
-const updateAvatarEndPoint = '/users/me/avatar';
+const updateAvatarEndPoint = '/api/users/me/avatar';

@@ -1,20 +1,8 @@
-import 'package:cookify/navigations/navigator.dart';
+import 'package:cookify/core/presentation/widgets/app.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(
-    MaterialApp.router(
-      title: 'Cookify',
-      routerConfig: navigator,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFF1E100A),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1E100A),
-        ),
-      ),
-    ),
-  );
+  runApp(const App());
 }

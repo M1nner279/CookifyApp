@@ -6,4 +6,8 @@ abstract interface class LocaleRepository {
   Future<MyEither<Locale?>> getLocale();
 
   Future<MyEither<Locale>> setLocale(SetLocalePayload payload);
+
+  Future<MyEither<Stream<Locale>>> listenLocale();
+
+  Future<MyEither<void>> addLocaleToStream(Locale locale);
 }

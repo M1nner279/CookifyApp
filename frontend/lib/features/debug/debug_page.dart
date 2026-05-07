@@ -16,6 +16,7 @@ class DebugPage extends StatefulWidget {
 
 class _DebugPageState extends State<DebugPage> {
   final ipController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -76,6 +77,7 @@ class _DebugPageState extends State<DebugPage> {
 
                               AuthButton(
                                 onPressed: () async {
+                                  setState(() => isLoading = true);
                                   await Di.init('${ipController.text}:5022');
                                   final user = await ProfileDi.getUserUseCase();
                                   user.fold(
@@ -84,7 +86,7 @@ class _DebugPageState extends State<DebugPage> {
                                   );
                                 },
                                 title: 'Подключиться',
-                                isLoading: false,
+                                isLoading: isLoading,
                               ),
                             ],
                           ),

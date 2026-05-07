@@ -8,10 +8,10 @@ part 'user_model.g.dart';
 abstract class UserModel with _$UserModel {
   const factory UserModel({
     required int id,
-    required String? avatarUrl,
+    @JsonKey(name: 'avatar_url') required String? avatarUrl,
     required String login,
     required String email,
-    required String createdAt,
+    @JsonKey(name: 'created_at') required String createdAt,
     required UserStatisticModel statistic,
   }) = _UserModel;
 

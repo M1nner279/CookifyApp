@@ -1,2 +1,2 @@
-const confirmCodeEndPoint = '/otp/confirm-code';
-const resendCodeEndPoint = '/otp/resend-code';
+const confirmCodeEndPoint = '/api/otp/confirm';
+const resendCodeEndPoint = '/api/otp/resend';
