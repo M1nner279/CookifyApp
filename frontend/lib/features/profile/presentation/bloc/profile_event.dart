@@ -16,5 +16,5 @@ sealed class ProfileEvent with _$ProfileEvent {
 
   const factory ProfileEvent.pushChangePassword() = PushChangePassword;
 
-  const factory ProfileEvent.logout() = Logout;
+  const factory ProfileEvent.signout() = Signout;
 }

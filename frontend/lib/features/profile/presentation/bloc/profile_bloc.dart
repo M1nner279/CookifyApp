@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/profile/dependencies/profile_dependency.dart';
 import 'package:cookify/features/profile/domain/payloads/update_avatar_payload.dart';
 import 'package:cookify/features/profile/domain/use_cases/get_user_use_case.dart';
@@ -19,12 +20,12 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
        _profileDependency = profileDependency,
        _getUserUseCase = getUserUseCase,
        _updateAvatarUseCase = updateAvatarUseCase,
-       super(ProfileInitial()) {
+       super(ProfileInitial(locale: MyLocale.initial)) {
     on<InitProfile>(_onInitProfile);
     on<UpdateAvatar>(_onUpdateAvatar);
     on<ChangeLocale>(_onChangeLocale);
     on<PushChangePassword>(_onPushChangePassword);
-    on<Logout>(_onLogout);
+    on<Signout>(_onSignout);
   }
 
   ProfileNavigator? _profileNavigator;
@@ -36,7 +37,7 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     InitProfile event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(ProfileLoading());
+    emit(ProfileLoading(locale: MyLocale.initial));
 
     final userResult = await _getUserUseCase();
     final localeResult = await _profileDependency.geLocale();
@@ -44,9 +45,9 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     emit(
       userResult.fold(
-        (failure) => ProfileError(failure: failure),
+        (failure) => ProfileError(failure: failure, locale: MyLocale.initial),
         (user) => localeResult.fold(
-          (failure) => ProfileError(failure: failure),
+          (failure) => ProfileError(failure: failure, locale: state.locale),
           (locale) => ProfileLoaded(user: user, locale: locale),
         ),
       ),
@@ -67,7 +68,7 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     final loadedState = state as ProfileLoaded;
     emit(
       result.fold(
-        (failure) => ProfileError(failure: failure),
+        (failure) => ProfileError(failure: failure, locale: state.locale),
         (avatarUrl) => loadedState.copyWith(
           user: loadedState.user.copyWith(avatarUrl: avatarUrl),
         ),
@@ -79,16 +80,13 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ChangeLocale event,
     Emitter<ProfileState> emit,
   ) async {
-    if (state is! ProfileLoaded) return;
-
     final result = await _profileDependency.setLocale(event.locale);
     if (isClosed) return;
 
-    final loadedState = state as ProfileLoaded;
     emit(
       result.fold(
-        (failure) => ProfileError(failure: failure),
-        (locale) => loadedState.copyWith(locale: locale),
+        (failure) => ProfileError(failure: failure, locale: state.locale),
+        (locale) => state.copyWith(locale: locale),
       ),
     );
   }
@@ -100,7 +98,7 @@ final class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     _profileNavigator?.pushChangePassword();
   }
 
-  FutureOr<void> _onLogout(Logout event, Emitter<ProfileState> emit) async {
+  FutureOr<void> _onSignout(Signout event, Emitter<ProfileState> emit) async {
     await _profileDependency.deleteToken();
     _profileNavigator?.goAuth();
   }

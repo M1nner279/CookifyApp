@@ -8,14 +8,17 @@ part 'profile_state.freezed.dart';
 
 @freezed
 sealed class ProfileState with _$ProfileState {
-  const factory ProfileState.initial() = ProfileInitial;
+  const factory ProfileState.initial({required Locale locale}) = ProfileInitial;
 
-  const factory ProfileState.loading() = ProfileLoading;
+  const factory ProfileState.loading({required Locale locale}) = ProfileLoading;
 
   const factory ProfileState.loaded({
     required UserEntity user,
     required Locale locale,
   }) = ProfileLoaded;
 
-  const factory ProfileState.error({required Failure failure}) = ProfileError;
+  const factory ProfileState.error({
+    required Failure failure,
+    required Locale locale,
+  }) = ProfileError;
 }
