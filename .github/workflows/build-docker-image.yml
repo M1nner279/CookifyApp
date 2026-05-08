@@ -1,7 +1,7 @@
 name: Build docker image for cookifyAPI
 
 on:
-  pysh:
+  push:
     branches: [ main ]
   release:
     types: [ published ]
