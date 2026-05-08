@@ -84,8 +84,8 @@ final class ChangePasswordBloc
       state.confirmPassword.value,
       emit,
     );
-    if (state.password.localizeError == null &&
-        state.confirmPassword.localizeError == null) {
+    if (state.password.localizeError != null ||
+        state.confirmPassword.localizeError != null) {
       return;
     }
 

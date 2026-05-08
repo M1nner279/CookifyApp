@@ -11,4 +11,6 @@ sealed class SignInEvent with _$SignInEvent {
       ValidatePassword;
 
   const factory SignInEvent.signIn() = SignIn;
+
+  const factory SignInEvent.signInWithGoogle() = SignInWithGoogle;
 }

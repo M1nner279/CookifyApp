@@ -13,18 +13,15 @@ class RecipeFeedPage extends StatelessWidget {
     return BlocProvider<RecipeFeedCubit>(
       create: (_) => RecipeFeedDi.getIt(),
       child: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 80.0),
-              child: const RecipeFeedPageContent(),),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: CookifyNavigationBar(index: 0),
-            ),
-          ],
+        child: Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: const RecipeFeedPageContent(),
+              ),
+              CookifyNavigationBar(index: 0),
+            ],
+          ),
         ),
       ),
     );

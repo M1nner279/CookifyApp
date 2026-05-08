@@ -18,4 +18,6 @@ sealed class SignUpEvent with _$SignUpEvent {
   }) = ValidateConfirmPassword;
 
   const factory SignUpEvent.signUp() = SignUp;
+
+  const factory SignUpEvent.signUpWithGoogle() = SignUpWithGoogle;
 }

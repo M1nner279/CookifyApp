@@ -23,13 +23,13 @@ final class RestoreDependencyImpl implements RestoreDependency {
   Localize? validateLogin(String login) {
     final status = _validateLoginUseCase(ValidateLoginPayload(login: login));
 
-    return status == LoginValidationStatus.valid ? null : status.localize;
+    return status == LoginValidationStatus.empty ? status.localize : null;
   }
 
   @override
   Localize? validateEmail(String email) {
     final status = _validateEmailUseCase(ValidateEmailPayload(email: email));
 
-    return status == EmailValidationStatus.valid ? null : status.localize;
+    return status == EmailValidationStatus.empty ? status.localize : null;
   }
 }

@@ -49,23 +49,14 @@ class RestoreBloc extends Bloc<RestoreEvent, RestoreState> {
     Emitter<RestoreState> emit,
   ) async {
     _validateLogin(state.login.value, emit);
-    if (state.login.localizeError == null) {
+    if (state.login.localizeError != null) {
       return;
     }
 
     emit(state.copyWith(isLoading: true, hasError: false));
 
-    final result = await _restoreUseCase(
-      RestorePayload(login: state.login.value),
-    );
-    if (isClosed) return;
-
-    result.fold(
-      (failure) => emit(state.copyWith(isLoading: false, hasError: true)),
-      (_) {
-        _restoreNavigator?.goOtp(state.login.value);
-      },
-    );
+    _restoreUseCase(RestorePayload(login: state.login.value));
+    _restoreNavigator?.goOtp(state.login.value);
   }
 
   @override
