@@ -16,4 +16,9 @@ final class SignUpNavigatorImpl implements SignUpNavigator {
       extra: OtpPageArgs(login: login, nextPage: NavigatorPaths.recipeFeed),
     );
   }
+
+  @override
+  void goRecipeFeed() {
+    context.go(NavigatorPaths.recipeFeed);
+  }
 }

@@ -44,8 +44,12 @@ final navigator = GoRouter(
       path: NavigatorPaths.changePassword,
       builder: (context, state) {
         if (state.extra is! ChangePasswordPageArgs) {
-          context.go(NavigatorPaths.auth);
-          return const SizedBox();
+          return ChangePasswordPage(
+          changePasswordNavigator: ChangePasswordNavigatorImpl(context),
+          args: ChangePasswordPageArgs(goNext: () {
+            context.go(NavigatorPaths.recipeFeed);
+          },),
+        );
         }
         final args = state.extra as ChangePasswordPageArgs;
 

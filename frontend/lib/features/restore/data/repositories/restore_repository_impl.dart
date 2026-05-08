@@ -16,7 +16,7 @@ class RestoreRepositoryImpl implements RestoreRepository {
   Future<MyEither<void>> restore(RestorePayload payload) async {
     try {
       final request = RestoreMapper.toRequest(payload);
-      final result = _remoteDataSource.restore(request);
+      final result = await _remoteDataSource.restore(request);
 
       return Right(result);
     } on Exception catch (e) {

@@ -11,7 +11,7 @@ class RestoreRemoteDataSourceImpl implements RestoreRemoteDataSource {
   @override
   Future<void> restore(RestoreRequest request) async {
     try {
-      await _dio.post('/api/auth/restore', data: request.toJson());
+      await _dio.post('/api/restore', data: request.toJson());
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
         throw NonExistentLoginOrEmailException();

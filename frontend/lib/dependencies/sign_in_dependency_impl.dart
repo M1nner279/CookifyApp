@@ -29,7 +29,7 @@ final class SignInDependencyImpl implements SignInDependency {
   Localize? validateLogin(String login) {
     final status = _validateLoginUseCase(ValidateLoginPayload(login: login));
 
-    return status == LoginValidationStatus.valid ? null : status.localize;
+    return status == LoginValidationStatus.empty ? status.localize : null;
   }
 
   @override
@@ -38,7 +38,7 @@ final class SignInDependencyImpl implements SignInDependency {
       ValidatePasswordPayload(password: password),
     );
 
-    return status == PasswordValidationStatus.valid ? null : status.localize;
+    return status == PasswordValidationStatus.empty ? status.localize : null;
   }
 
   @override
