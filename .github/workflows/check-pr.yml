@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  check-build:
+  check-flatter-build:
     name: Test Compilation
     runs-on: ubuntu-latest
 
@@ -37,3 +37,18 @@ jobs:
       - name: Check Build
         working-directory: ./frontend
         run: flutter build apk --target-platform android-arm64 --no-pub
+
+  check-cookifyAPI-image-build:
+    name: Build docker image check
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Build Docker image
+          uses: docker/build-push-action@v5
+          with:
+            context: ./backend/CookifyAPI/CookifyAPI
+            file: ./backend/CookifyAPI/CookifyAPI/Dockerfile
+            push: false
+            tags: cookify-test:latest
