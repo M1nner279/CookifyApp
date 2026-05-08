@@ -7,6 +7,7 @@ import 'package:cookify/features/sign_in/presentation/bloc/sign_in_event.dart';
 import 'package:cookify/features/sign_in/presentation/bloc/sign_in_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInWidgetContent extends StatefulWidget {
   const SignInWidgetContent({super.key});
@@ -82,7 +83,9 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
               children: [
                 Expanded(
                   child: AuthServiceButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      signInWithGoogle();
+                    },
                     imagePath: 'google',
                   ),
                 ),
@@ -101,3 +104,29 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
     );
   }
 }
+
+final GoogleSignIn _googleSignIn = GoogleSignIn(
+  serverClientId: '139854363821-gv5jnts7t67e8mpm2a1erv6fu84gd8nr.apps.googleusercontent.com',
+);
+
+Future<void> signInWithGoogle() async {
+  try {
+    final GoogleSignInAccount? account = await _googleSignIn.signIn();
+    if (account != null) {
+      final GoogleSignInAuthentication auth = await account.authentication;
+
+      // Это тот самый токен, который ждет бэкенд
+      final String? idToken = auth.idToken;
+
+      // Отправляем на C#
+      // var response = await http.post(
+      //   Uri.parse('https://your-api.com'),
+      //   body: {'idToken': idToken},
+      // );
+      // print('Статус бэка: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Ошибка входа: $error');
+  }
+}
+
