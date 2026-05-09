@@ -31,6 +31,32 @@ public class UsersController(IUserService userService) : AuthBaseController
     {
         return Ok(await userService.GetCurrentUserProfileAsync(CurrentUserId));
     }
+    
+    
+    [HttpPost("me/avatar")]
+    public async Task<IActionResult> UpdateAvatar(IFormFile file)
+    {
+        // Проверяем, что файл вообще прислали
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "File is empty or not provided" });
+
+        // Базовая валидация на картинку
+        if (!file.ContentType.StartsWith("image/"))
+            return BadRequest(new { message = "Only images are allowed" });
+        try
+        {
+            var avatarUrl = await userService.UpdateAvatarAsync(CurrentUserId, file);
+            if (avatarUrl == null) return NotFound("User not found");
+            
+            return Ok(avatarUrl);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Error uploading avatar", details = ex.Message });
+        }
+    }
+    
+    
     //
     // [HttpPost]
     // public async Task<IActionResult> Create(User user)

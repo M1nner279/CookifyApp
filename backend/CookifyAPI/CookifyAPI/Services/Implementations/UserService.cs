@@ -9,7 +9,8 @@ namespace CookifyAPI.Services;
 
 public class UserService(
     UserManager<User> userManager,
-    AppDbContext context) : IUserService
+    AppDbContext context,
+    IImageService imageService) : IUserService
 {
     public async Task<UserInfoResponse?> GetCurrentUserProfileAsync(int userId)
     {
@@ -19,12 +20,12 @@ public class UserService(
 
         // Собираем статистику напрямую из БД через CountAsync (это быстро)
         var favoriteCount = 0;
-            // await dbContext.Favorites
-            // .CountAsync(f => f.UserId == userId);
+            await context.Favorites
+            .CountAsync(f => f.UserId == userId);
 
         var totalCreated = 0; 
-            // await dbContext.Recipes
-            // .CountAsync(r => r.AuthorId == userId);
+            await context.Recipes
+            .CountAsync();
             
         var publishedCount = await context.Recipes
             .CountAsync(r => r.AuthorId == userId);
@@ -44,5 +45,21 @@ public class UserService(
             statistic);
         
         return response;
+    }
+    
+    public async Task<string?> UpdateAvatarAsync(int userId, IFormFile file)
+    {
+        var user = await context.Users.FindAsync(userId);
+        if (user == null) return null;
+
+        // Загружаем картинку в облако
+        var avatarUrl = await imageService.UploadAsync(file, "avatars");
+        if (avatarUrl == null) throw new Exception("Failed to upload image");
+
+        // Обновляем сущность пользователя
+        user.AvatarUrl = avatarUrl;
+        await context.SaveChangesAsync();
+
+        return avatarUrl;
     }
 }
