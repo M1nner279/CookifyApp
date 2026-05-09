@@ -23,7 +23,10 @@ final recipeRoute = [
     pageBuilder: (context, state) {
       final args = state.extra as RecipeDetailPageArgs;
 
-      return NoTransitionPage(child: RecipeDetailPage(args: args));
+      return NoTransitionPage(
+        key: state.pageKey,
+        child: RecipeDetailPage(args: args),
+      );
     },
   ),
 
@@ -38,7 +41,10 @@ final recipeRoute = [
     pageBuilder: (context, state) {
       final args = state.extra as RecipeSearchPageArgs;
 
-      return NoTransitionPage(child: RecipeSearchPage(args: args));
+      return NoTransitionPage(
+        key: state.pageKey,
+        child: RecipeSearchPage(args: args),
+      );
     },
   ),
 
@@ -48,7 +54,10 @@ final recipeRoute = [
       final args = state.extra is RecipeFormPageArgs
           ? state.extra as RecipeFormPageArgs
           : const RecipeFormPageArgs();
-      return MaterialPage(child: RecipeFormPage(args: args));
+      return NoTransitionPage(
+        key: state.pageKey,
+        child: RecipeFormPage(args: args),
+      );
     },
   ),
 

@@ -138,7 +138,7 @@ class _ChangePasswordPageContentState extends State<ChangePasswordPageContent> {
                                       ),
 
                                       GestureDetector(
-                                        onTap: () => context.go('/auth'),
+                                        onTap: () => context.pop(),
                                         behavior: HitTestBehavior.opaque,
                                         child: Text(
                                           'Назад',

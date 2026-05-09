@@ -349,8 +349,9 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
       final userSavedId = UserSavedRecipeId.fromDraft(draft.id);
       final detail = _buildRecipeDetailEntity(userSavedId);
 
-      final photoPath =
-          detail.photoUrls.isNotEmpty ? detail.photoUrls.first : '';
+      final photoPath = detail.photoUrls.isNotEmpty
+          ? detail.photoUrls.first
+          : '';
 
       final preview = RecipePreviewEntity(
         id: userSavedId,
@@ -363,7 +364,10 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
       );
 
       await GetIt.I<SavedRecipeRepository>().saveRecipe(preview);
-      await GetIt.I<UserSavedRecipeDetailRepository>().save(userSavedId, detail);
+      await GetIt.I<UserSavedRecipeDetailRepository>().save(
+        userSavedId,
+        detail,
+      );
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -694,28 +698,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                         const SizedBox(height: 20.0),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const _SectionLabel('ИНГРЕДИЕНТЫ'),
-                            TextButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  ingredientDrafts.add(
-                                    _IngredientDraft(
-                                      controller: IngredientController(),
-                                    ),
-                                  );
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.add_circle_outline,
-                                color: Color(0xFFE5C9A8),
-                              ),
-                              label: const Text(
-                                'ADD',
-                                style: TextStyle(color: Color(0xFFE5C9A8)),
-                              ),
-                            ),
-                          ],
+                          children: [const _SectionLabel('ИНГРЕДИЕНТЫ')],
                         ),
                         const SizedBox(height: 8.0),
                         ...ingredientDrafts.asMap().entries.map((entry) {
@@ -774,6 +757,25 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                             ),
                           );
                         }),
+                        TextButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              ingredientDrafts.add(
+                                _IngredientDraft(
+                                  controller: IngredientController(),
+                                ),
+                              );
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.add_circle_outline,
+                            color: Color(0xFFE5C9A8),
+                          ),
+                          label: const Text(
+                            'Добавить ингридиент',
+                            style: TextStyle(color: Color(0xFFE5C9A8)),
+                          ),
+                        ),
                         const SizedBox(height: 20.0),
                         const _SectionLabel('ШАГИ ПРИГОТОВЛЕНИЯ'),
                         const SizedBox(height: 8.0),
@@ -870,7 +872,8 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                         SizedBox(
                           height: 56.0,
                           child: ElevatedButton(
-                            onPressed: state.isPublishing ||
+                            onPressed:
+                                state.isPublishing ||
                                     _isSavingDraft ||
                                     _isSavingToSaved
                                 ? null
