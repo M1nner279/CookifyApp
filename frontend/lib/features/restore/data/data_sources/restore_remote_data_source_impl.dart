@@ -1,3 +1,4 @@
+import 'package:cookify/core/data/exceptions/exceptions.dart';
 import 'package:cookify/features/restore/data/data_sources/restore_remote_data_source.dart';
 import 'package:cookify/features/restore/data/exceptions/restore_exceptions.dart';
 import 'package:cookify/features/restore/data/requests/restore_request.dart';
@@ -13,6 +14,9 @@ class RestoreRemoteDataSourceImpl implements RestoreRemoteDataSource {
     try {
       await _dio.post('/api/restore', data: request.toJson());
     } on DioException catch (e) {
+      if (e.error is NetworkException) {
+      throw e.error as NetworkException;
+    }
       if (e.response?.statusCode == 400) {
         throw NonExistentLoginOrEmailException();
       }

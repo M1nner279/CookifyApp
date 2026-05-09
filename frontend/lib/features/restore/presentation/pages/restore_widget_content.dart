@@ -1,3 +1,4 @@
+import 'package:cookify/core/presentation/widgets/app.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_button.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_divider.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_service_button.dart';
@@ -7,6 +8,7 @@ import 'package:cookify/features/restore/presentation/bloc/restore_event.dart';
 import 'package:cookify/features/restore/presentation/bloc/restore_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RestoreWidgetContent extends StatefulWidget {
   const RestoreWidgetContent({super.key});
@@ -19,7 +21,15 @@ class _RestoreWidgetContentState extends State<RestoreWidgetContent> {
   final loginController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast!.init(context);
+  }
+
+  @override
   void dispose() {
+    fToast = null;
     loginController.dispose();
     super.dispose();
   }
@@ -42,7 +52,9 @@ class _RestoreWidgetContentState extends State<RestoreWidgetContent> {
                   label: 'ЛОГИН ИЛИ EMAIL',
                   hint: 'Введите логин или email',
                   isPassword: false,
-                  failureMessage: state.login.localizeError?.call(context),
+                  failureMessage:
+                      state.login.localizeError?.call(context) ??
+                      (state.hasError ? 'Неверный логин или email' : null),
                 ),
 
                 AuthButton(

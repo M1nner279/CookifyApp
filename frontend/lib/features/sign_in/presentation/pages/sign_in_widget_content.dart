@@ -1,3 +1,5 @@
+import 'package:cookify/core/presentation/widgets/app.dart';
+import 'package:cookify/core/presentation/widgets/app_toast.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_button.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_divider.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_service_button.dart';
@@ -7,6 +9,7 @@ import 'package:cookify/features/sign_in/presentation/bloc/sign_in_event.dart';
 import 'package:cookify/features/sign_in/presentation/bloc/sign_in_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInWidgetContent extends StatefulWidget {
@@ -20,16 +23,24 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
 
+    @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast!.init(context);
+  }
+
   @override
   void dispose() {
     loginController.dispose();
     passwordController.dispose();
+    fToast = null;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignInBloc, SignInState>(
+    return BlocConsumer<SignInBloc, SignInState>(
       builder: (context, state) {
         return Column(
           spacing: 40.0,
@@ -84,7 +95,7 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
                 Expanded(
                   child: AuthServiceButton(
                     onPressed: () {
-                      signInWithGoogle();
+                      context.read<SignInBloc>().add(SignInWithGoogle());
                     },
                     imagePath: 'google',
                   ),
@@ -101,32 +112,9 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
           ],
         );
       },
+      listener: (context, state) {
+
+      },
     );
   }
 }
-
-final GoogleSignIn _googleSignIn = GoogleSignIn(
-  serverClientId: '139854363821-gv5jnts7t67e8mpm2a1erv6fu84gd8nr.apps.googleusercontent.com',
-);
-
-Future<void> signInWithGoogle() async {
-  try {
-    final GoogleSignInAccount? account = await _googleSignIn.signIn();
-    if (account != null) {
-      final GoogleSignInAuthentication auth = await account.authentication;
-
-      // Это тот самый токен, который ждет бэкенд
-      final String? idToken = auth.idToken;
-
-      // Отправляем на C#
-      // var response = await http.post(
-      //   Uri.parse('https://your-api.com'),
-      //   body: {'idToken': idToken},
-      // );
-      // print('Статус бэка: ${response.statusCode}');
-    }
-  } catch (error) {
-    print('Ошибка входа: $error');
-  }
-}
-

@@ -6,7 +6,7 @@ extension LocalizedPasswordValidationStatus on PasswordValidationStatus {
     PasswordValidationStatus.empty => 'Поле не может быть пустым',
     PasswordValidationStatus.tooShort => 'Пароль слишком короткий',
     PasswordValidationStatus.tooLong => 'Пароль слишком длинный',
-    PasswordValidationStatus.invalid => 'Пароль должен содержать строчные и заглавные буквы, цифры и спец символы',
+    PasswordValidationStatus.invalid => r'Пароль должен содержать строчные и заглавные латинские буквы, цифры и спец символы (@$!%*?&_)',
     PasswordValidationStatus.valid => '',
   };
 }

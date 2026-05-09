@@ -1,3 +1,4 @@
+import 'package:cookify/core/presentation/widgets/app.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_button.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_divider.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_service_button.dart';
@@ -8,6 +9,7 @@ import 'package:cookify/features/sign_up/presentation/bloc/sign_up_event.dart';
 import 'package:cookify/features/sign_up/presentation/bloc/sign_up_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpWidgetContent extends StatefulWidget {
   const SignUpWidgetContent({super.key});
@@ -22,8 +24,16 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
+      @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast!.init(context);
+  }
+
   @override
   void dispose() {
+    fToast = null;
     loginController.dispose();
     emailController.dispose();
     passwordController.dispose();

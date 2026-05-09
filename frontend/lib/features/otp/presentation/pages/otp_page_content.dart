@@ -76,7 +76,7 @@ class _OtpPageContentState extends State<OtpPageContent> {
                                       OtpTextField(
                                         showCursor: false,
                                         numberOfFields: 6,
-                                        fieldWidth: 52.0,
+                                        fieldWidth: 40.0,
                                         fieldHeight: 52.0,
                                         textStyle: const TextStyle(
                                           color: Color(0xFFFFE6C9),

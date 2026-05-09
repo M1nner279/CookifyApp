@@ -1,3 +1,4 @@
+import 'package:cookify/core/data/exceptions/exceptions.dart';
 import 'package:cookify/dependencies/change_password_dependency_impl.dart';
 import 'package:cookify/dependencies/profile_dependency_impl.dart';
 import 'package:cookify/dependencies/restore_dependency_impl.dart';
@@ -33,6 +34,7 @@ abstract class Di {
     dio = Dio(BaseOptions(baseUrl: 'https://$address'));
     Di.dio = dio;
     dio.interceptors.add(PrettyDioLogger());
+    dio.interceptors.add(FailureInterceptor());
     getIt.registerSingleton(dio);
     dio.interceptors.add(TokenDi.tokenInterceptor);
   }
@@ -77,3 +79,19 @@ abstract class Di {
     deleteTokenUseCase: TokenDi.deleteTokenUseCase,
   );
 }
+
+class FailureInterceptor extends InterceptorsWrapper {
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    if (err.type == DioExceptionType.connectionError || 
+        err.type == DioExceptionType.connectionTimeout) {
+      
+      // Создаем кастомную ошибку, сохраняя контекст запроса
+      throw NetworkException();
+    }
+    
+    // Если это не ошибка сети, пропускаем ошибку дальше
+    return handler.next(err);
+  }
+}
+
