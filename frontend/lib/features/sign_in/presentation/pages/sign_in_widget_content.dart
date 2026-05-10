@@ -100,13 +100,6 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
                     imagePath: 'google',
                   ),
                 ),
-
-                Expanded(
-                  child: AuthServiceButton(
-                    onPressed: () {},
-                    imagePath: 'apple',
-                  ),
-                ),
               ],
             ),
           ],

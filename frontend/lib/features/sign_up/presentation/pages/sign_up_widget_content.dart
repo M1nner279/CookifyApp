@@ -133,15 +133,10 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
               children: [
                 Expanded(
                   child: AuthServiceButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.read<SignUpBloc>().add(SignUpWithGoogle());
+                    },
                     imagePath: 'google',
-                  ),
-                ),
-
-                Expanded(
-                  child: AuthServiceButton(
-                    onPressed: () {},
-                    imagePath: 'apple',
                   ),
                 ),
               ],

@@ -280,18 +280,18 @@ class _Calories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const .symmetric(horizontal: 10.0, vertical: 6.0),
+      padding: const .symmetric(horizontal: 8.0, vertical: 6.0),
       decoration: BoxDecoration(
         color: const Color(0x33E5C9A8),
         border: Border.all(color: const Color(0x4DE5C9A8)),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
-        spacing: 6.0,
+        spacing: 4.0,
         children: [
           Icon(
             Icons.local_fire_department,
-            size: 16.0,
+            size: 14.0,
             color: const Color(0xFFE5C9A8),
           ),
 

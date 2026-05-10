@@ -4,6 +4,7 @@ import 'package:cookify/features/recipe/recipe_feed/domain/entities/recipe_previ
 import 'package:cookify/features/recipe/recipe_saved/presentation/widgets/recipe_saved_wrap.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 
 class RecipeSavedPage extends StatefulWidget {
   const RecipeSavedPage({super.key});
@@ -53,11 +54,91 @@ class _RecipeSavedPageState extends State<RecipeSavedPage> {
                 valueListenable: repository.savedRecipesListenable,
                 builder: (context, recipes, _) {
                   if (recipes.isEmpty) {
-                    return const Center(
-                      child: Text(
-                        'Пока нет сохранённых рецептов',
-                        style: TextStyle(color: Color(0xFFE5C9A8)),
-                      ),
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 16,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 50,
+                            horizontal: 32,
+                          ),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF2C1C16),
+                            border: Border.all(
+                              color: Color(
+                                0xFFE5C9A8,
+                              ).withAlpha((0.1 * 255).toInt()),
+                            ),
+                            borderRadius: BorderRadius.circular(48.0),
+                          ),
+                          child: Column(
+                            spacing: 16,
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 96,
+                                height: 96,
+                                decoration: BoxDecoration(
+                                  color: Color(
+                                    0xFFE5C9A8,
+                                  ).withAlpha((0.05 * 255).toInt()),
+                                  border: Border.all(
+                                    color: Color(
+                                      0xFFE5C9A8,
+                                    ).withAlpha((0.1 * 255).toInt()),
+                                  ),
+                                  borderRadius: BorderRadius.circular(48.0),
+                                ),
+                                child: Icon(
+                                  Icons.bookmark_border,
+                                  size: 48.0,
+                                  color: Color(0xFFE5C9A8),
+                                ),
+                              ),
+
+                              Text(
+                                'Здесь пока пусто. Сохраняйте понравившиеся рецепты из ленты, чтобы не потерять их',
+                                style: TextStyle(
+                                  color: Color(0xFFE5C9A8),
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w300,
+                                  letterSpacing: 0.0,
+                                  height: 20.0 / 16.0,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: () {
+                            context.go('/');
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 26.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color(0xFFE5C9A8),
+                              borderRadius: BorderRadius.circular(48.0),
+                            ),
+                            child: Text(
+                              'Найти',
+                              style: TextStyle(
+                                color: Color(0xFF2C1C16),
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.0,
+                                height: 20.0 / 16.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   }
 
