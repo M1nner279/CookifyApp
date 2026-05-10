@@ -166,6 +166,7 @@
         "value": {}
       }
     },
+    "recipeSearchText": "По заданным фильтрам не найдено рецептов",
     "searchNutritionGoals": "Цели в питании",
     "searchCaloriesLabel": "КАЛОРИИ",
     "searchProteinsLabel": "БЕЛКИ",

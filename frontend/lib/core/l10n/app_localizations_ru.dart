@@ -388,6 +388,9 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get recipeSearchText => 'По заданным фильтрам не найдено рецептов';
+
+  @override
   String get searchNutritionGoals => 'Цели в питании';
 
   @override

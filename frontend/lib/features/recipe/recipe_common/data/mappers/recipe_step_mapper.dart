@@ -5,7 +5,7 @@ abstract class RecipeStepMapper {
   static RecipeStepEntity fromModel(RecipeStepModel model) {
     return RecipeStepEntity(
       id: model.id.toString(),
-      name: model.name,
+      name: model.name!,
       photoUrl: model.photoUrl,
       description: model.description,
     );

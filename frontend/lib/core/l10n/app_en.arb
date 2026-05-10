@@ -166,6 +166,7 @@
         "value": {}
       }
     },
+    "recipeSearchText": "No recipes found with the specified filters",
     "searchNutritionGoals": "Nutrition goals",
     "searchCaloriesLabel": "CALORIES",
     "searchProteinsLabel": "PROTEINS",

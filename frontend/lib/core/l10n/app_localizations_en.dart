@@ -387,6 +387,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get recipeSearchText => 'No recipes found with the specified filters';
+
+  @override
   String get searchNutritionGoals => 'Nutrition goals';
 
   @override

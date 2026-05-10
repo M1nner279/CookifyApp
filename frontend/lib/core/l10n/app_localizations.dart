@@ -812,6 +812,12 @@ abstract class AppLocalizations {
   /// **'до {value} мин'**
   String searchCookingTimeUpTo(Object value);
 
+  /// No description provided for @recipeSearchText.
+  ///
+  /// In ru, this message translates to:
+  /// **'По заданным фильтрам не найдено рецептов'**
+  String get recipeSearchText;
+
   /// No description provided for @searchNutritionGoals.
   ///
   /// In ru, this message translates to:

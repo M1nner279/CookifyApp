@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cookify/core/l10n/my_locale.dart';
@@ -13,6 +14,7 @@ import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_
 import 'package:flutter/material.dart' hide KeyboardListener;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:image_picker/image_picker.dart';
 
 // --- Константы стиля ---
@@ -36,9 +38,9 @@ class RecipeSearchFormPageContent extends StatefulWidget {
 
 class _RecipeSearchFormPageContentState
     extends State<RecipeSearchFormPageContent> {
-bool _isShowKeyboard = false;
+  bool _isShowKeyboard = false;
 
- final KeyboardListener _keyboardListener = KeyboardListener();
+  final KeyboardListener _keyboardListener = KeyboardListener();
 
   // Links & Overlays
   final LayerLink _categoryLink = LayerLink();
@@ -51,7 +53,7 @@ bool _isShowKeyboard = false;
   final _ingredientFocus = FocusNode();
 
   // State
-  final List<RecipeDifficulty> difficulties = RecipeDifficulty.values;
+  final List<RecipeDifficulty> difficulties = RecipeDifficulty.values.toList();
   int cookingTime = 45;
   int minCalories = 0, maxCalories = 4000;
   int minProteins = 0, maxProteins = 100;
@@ -65,15 +67,16 @@ bool _isShowKeyboard = false;
   void initState() {
     super.initState();
     _setupFocusListeners();
-       _keyboardListener.addListener(onChange: (bool isVisible) {
-     setState(() {
-       
-       if (_isShowKeyboard && !isVisible) {
-        _closeOverlay();
-       }
-       _isShowKeyboard = isVisible;
-     });
-   });
+    _keyboardListener.addListener(
+      onChange: (bool isVisible) {
+        setState(() {
+          if (_isShowKeyboard && !isVisible) {
+            _closeOverlay();
+          }
+          _isShowKeyboard = isVisible;
+        });
+      },
+    );
   }
 
   void _setupFocusListeners() {
@@ -236,30 +239,106 @@ bool _isShowKeyboard = false;
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
           // Категории
-          _buildSearchSection(
-            title: MyLocale.of(context).searchCategoriesTitle,
-            hint: MyLocale.of(context).searchAddCategoryHint,
-            link: _categoryLink,
-            focusNode: _categoryFocus,
-            items: selectedCategories,
-            onSearch: (val) =>
-                context.read<RecipeSearchFormCubit>().searchCategoryList(val),
-            onRemove: (item) => setState(() => selectedCategories.remove(item)),
+          SliverToBoxAdapter(
+            child: _buildSearchSection(
+              title: MyLocale.of(context).searchCategoriesTitle,
+              hint: MyLocale.of(context).searchAddCategoryHint,
+              link: _categoryLink,
+              focusNode: _categoryFocus,
+              items: selectedCategories,
+              onSearch: (val) =>
+                  context.read<RecipeSearchFormCubit>().searchCategoryList(val),
+              onRemove: (item) =>
+                  setState(() => selectedCategories.remove(item)),
+              onTap: () =>
+                  context.read<RecipeSearchFormCubit>().searchCategoryList(''),
+            ),
           ),
 
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
 
           // Ингредиенты
-          _buildSearchSection(
-            title: MyLocale.of(context).searchIngredientsTitle,
-            hint: MyLocale.of(context).searchAddIngredientHint,
-            link: _ingredientLink,
-            focusNode: _ingredientFocus,
-            items: selectedIngredients,
-            onSearch: (val) =>
-                context.read<RecipeSearchFormCubit>().searchIngredientList(val),
-            onRemove: (item) =>
-                setState(() => selectedIngredients.remove(item)),
+          SliverToBoxAdapter(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 15.0,
+              children: [
+                Expanded(
+                  child: _buildSearchSection(
+                    title: MyLocale.of(context).searchIngredientsTitle,
+                    hint: MyLocale.of(context).searchAddIngredientHint,
+                    link: _ingredientLink,
+                    focusNode: _ingredientFocus,
+                    items: selectedIngredients,
+                    onSearch: (val) => context
+                        .read<RecipeSearchFormCubit>()
+                        .searchIngredientList(val),
+                    onRemove: (item) =>
+                        setState(() => selectedIngredients.remove(item)),
+                    onTap: () => context
+                        .read<RecipeSearchFormCubit>()
+                        .searchIngredientList(''),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 48.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      final image = await ImagePickerSheet.show(context);
+                  
+                      if (image != null) {
+                        final model = GenerativeModel(
+                          model: 'models/gemini-2.5-flash',
+                          apiKey: 'AIzaSyCGlL2vJ24CtZ-zKi6lv9PN_Jom3qM-lUA',
+                          // Настройка формата ответа JSON
+                          generationConfig: GenerationConfig(
+                            responseMimeType: 'application/json',
+                          ),
+                        );
+                  
+                        final bytes = await image.readAsBytes();
+                  
+                        final prompt = TextPart(
+                          "Перечисли все продукты на фото. "
+                          "Ответь строго в формате JSON: {'products': ['название', 'название']}",
+                        );
+                  
+                        final content = [
+                          Content.multi([prompt, DataPart('image/jpeg', bytes)]),
+                        ];
+                  
+                        final response = await model.generateContent(content);
+                        if (context.mounted) {
+                          final json =
+                              jsonDecode(response.text ?? '')
+                                  as Map<String, dynamic>;
+                          final ingredients = await context
+                              .read<RecipeSearchFormCubit>()
+                              .searchIngredientListFromAI(
+                                (json['products'] as List<dynamic>)
+                                    .map((e) => e as String)
+                                    .toList(),
+                              );
+                  
+                          setState(() => selectedIngredients.addAll(ingredients));
+                        }
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                        color: AppColors.background,
+                        shape: BoxShape.circle,
+                      ),
+                      width: 40,
+                      height: 40,
+                      child: Icon(Icons.camera_alt, color: AppColors.accent),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
 
           const SliverToBoxAdapter(child: SizedBox(height: 28)),
@@ -300,46 +379,46 @@ bool _isShowKeyboard = false;
     required List items,
     required Function(String) onSearch,
     required Function(dynamic) onRemove,
+    Function()? onTap,
   }) {
-    return SliverToBoxAdapter(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
-          const SizedBox(height: 16),
-          CompositedTransformTarget(
-            link: link,
-            child: _CustomTextField(
-              focusNode: focusNode,
-              hintText: hint,
-              onChanged: onSearch,
-              fontSize: 14,
-            ),
+        ),
+        const SizedBox(height: 16),
+        CompositedTransformTarget(
+          link: link,
+          child: _CustomTextField(
+            focusNode: focusNode,
+            hintText: hint,
+            onChanged: onSearch,
+            onTap: onTap,
+            fontSize: 14,
           ),
-          if (items.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: items
-                  .map(
-                    (e) => _SelectionChip(
-                      label: e.name,
-                      onRemove: () => onRemove(e),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ],
+        ),
+        if (items.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: items
+                .map(
+                  (e) => _SelectionChip(
+                    label: e.name,
+                    onRemove: () => onRemove(e),
+                  ),
+                )
+                .toList(),
+          ),
         ],
-      ),
+      ],
     );
   }
 
@@ -416,6 +495,8 @@ bool _isShowKeyboard = false;
               ? selectedIngredients.removeWhere((e) => e.id == item.id)
               : selectedIngredients.add(item);
         }
+        _closeOverlay();
+        _showSearchOverlay(link: _categoryLink, isCategory: isCategory);
       }),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -473,10 +554,12 @@ class _CustomTextField extends StatelessWidget {
   final IconData? prefixIcon;
   final Function(String)? onChanged;
   final double fontSize;
+  final Function()? onTap;
 
   const _CustomTextField({
     this.controller,
     this.focusNode,
+    this.onTap,
     required this.hintText,
     this.prefixIcon,
     this.onChanged,
@@ -489,6 +572,7 @@ class _CustomTextField extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       onChanged: onChanged,
+      onTap: onTap,
       cursorColor: AppColors.accent,
       style: TextStyle(color: AppColors.textSecondary, fontSize: fontSize),
       decoration: InputDecoration(
@@ -797,7 +881,7 @@ class ImagePickerSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          
+
           Text(
             "Выберите источник", // Можно заменить на MyLocale.of(context)...
             style: TextStyle(
@@ -806,23 +890,23 @@ class ImagePickerSheet extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           _PickerOption(
             icon: Icons.camera_alt_rounded,
             label: "Камера",
             onTap: () => _pickImage(context, ImageSource.camera),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           _PickerOption(
             icon: Icons.photo_library_rounded,
             label: "Галерея",
             onTap: () => _pickImage(context, ImageSource.gallery),
           ),
-          
+
           const SizedBox(height: 32), // Отступ снизу (safe area)
         ],
       ),
@@ -851,9 +935,7 @@ class _PickerOption extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.background,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.05),
-          ),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
         child: Row(
           children: [
