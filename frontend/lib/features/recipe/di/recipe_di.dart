@@ -1,4 +1,5 @@
 import 'package:cookify/features/recipe/recipe_common/di/recipe_common_di.dart';
+import 'package:cookify/features/profile/data/local/user_statistic_local_store.dart';
 import 'package:cookify/features/recipe/recipe_common/data/repositories/saved_recipe_repository_impl.dart';
 import 'package:cookify/features/recipe/recipe_common/data/repositories/user_saved_recipe_detail_repository_impl.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
@@ -17,7 +18,10 @@ abstract class RecipeDi {
   static Future<void> init() async {
     if (!getIt.isRegistered<SavedRecipeRepository>()) {
       getIt.registerSingleton<SavedRecipeRepository>(
-        SavedRecipeRepositoryImpl(storage: getIt()),
+        SavedRecipeRepositoryImpl(
+          storage: getIt(),
+          userStatisticLocalStore: UserStatisticLocalStore(storage: getIt()),
+        ),
       );
     }
     await getIt<SavedRecipeRepository>().init();

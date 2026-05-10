@@ -1,4 +1,5 @@
 import 'package:cookify/core/presentation/widgets/app.dart';
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_button.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_divider.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_service_button.dart';
@@ -49,19 +50,21 @@ class _RestoreWidgetContentState extends State<RestoreWidgetContent> {
                   onChanged: (value) => context.read<RestoreBloc>().add(
                     ValidateLogin(login: value),
                   ),
-                  label: 'ЛОГИН ИЛИ EMAIL',
-                  hint: 'Введите логин или email',
+                  label: MyLocale.of(context).authRestoreLoginOrEmailLabel,
+                  hint: MyLocale.of(context).authRestoreLoginOrEmailHint,
                   isPassword: false,
                   failureMessage:
                       state.login.localizeError?.call(context) ??
-                      (state.hasError ? 'Неверный логин или email' : null),
+                      (state.hasError
+                          ? MyLocale.of(context).authRestoreWrongLoginOrEmail
+                          : null),
                 ),
 
                 AuthButton(
                   onPressed: () {
                     context.read<RestoreBloc>().add(Restore());
                   },
-                  title: 'Восстановить',
+                  title: MyLocale.of(context).authRestoreButton,
                   isLoading: state.isLoading,
                 ),
               ],

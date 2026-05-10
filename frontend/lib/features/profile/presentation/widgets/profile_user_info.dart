@@ -5,6 +5,7 @@ import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/profile/domain/entities/user_entity.dart';
 import 'package:cookify/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:cookify/features/profile/presentation/bloc/profile_event.dart';
+import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_form_page_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -56,9 +57,7 @@ class _Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        final image = await ImagePicker().pickImage(
-          source: ImageSource.gallery,
-        );
+        final image = await ImagePickerSheet.show(context);
 
         if (context.mounted && image != null) {
           context.read<ProfileBloc>().add(
@@ -69,16 +68,24 @@ class _Avatar extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            alignment: Alignment.center,
             width: 96.0,
             height: 96.0,
             decoration: BoxDecoration(
-              color: Color(0xFFE5C9A8),
-              border: Border.all(color: Color(0xFF1E100A), width: 4.0),
               shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFF1E100A), width: 4.0),
+              color: const Color(0xFFE5C9A8),
             ),
             child: CachedNetworkImage(
               imageUrl: avatarUrl ?? '',
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
               placeholder: (context, url) => _AvatarPlaceholder(login: login),
               errorWidget: (context, url, error) =>
                   _AvatarPlaceholder(login: login),
@@ -117,14 +124,16 @@ class _AvatarPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      login.substring(0, 1).toUpperCase(),
-      style: const TextStyle(
-        color: Color(0xFF1E100A),
-        fontSize: 36.0,
-        fontWeight: FontWeight.normal,
-        letterSpacing: 0.0,
-        height: 40.0 / 36.0,
+    return Center(
+      child: Text(
+        login.substring(0, 1).toUpperCase(),
+        style: const TextStyle(
+          color: Color(0xFF1E100A),
+          fontSize: 36.0,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 0.0,
+          height: 40.0 / 36.0,
+        ),
       ),
     );
   }

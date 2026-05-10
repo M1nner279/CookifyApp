@@ -14,11 +14,7 @@ class RecipeFormPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<RecipeFormCubit>(
       create: (_) => RecipeFormDi.getIt(),
-      child: SafeArea(
-        child: Stack(
-          children: [RecipeFormPageContent(draftId: args.draftId)],
-        ),
-      ),
+      child: RecipeFormPageContent(draftId: args.draftId),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/presentation/widgets/app.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_button.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_divider.dart';
@@ -24,7 +25,7 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-      @override
+  @override
   void initState() {
     super.initState();
     fToast = FToast();
@@ -56,14 +57,14 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                   onChanged: (value) => context.read<SignUpBloc>().add(
                     ValidateLogin(login: value),
                   ),
-                  label: 'ЛОГИН',
-                  hint: 'Введите логин',
+                  label: MyLocale.of(context).authLoginLabel,
+                  hint: MyLocale.of(context).authLoginHint,
                   isPassword: false,
                   failureMessage:
                       state.login.localizeError?.call(context) ??
                       (state.failure != null &&
                               state.failure is LoginAlreadyExistsFailure
-                          ? 'Логин занят'
+                          ? MyLocale.of(context).authSignUpLoginTaken
                           : null),
                 ),
 
@@ -74,12 +75,13 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                   ),
                   inputType: TextInputType.emailAddress,
                   label: 'EMAIL',
-                  hint: 'Введите email',
+                  hint: MyLocale.of(context).authEmailHint,
                   isPassword: false,
-                  failureMessage: state.email.localizeError?.call(context) ??
+                  failureMessage:
+                      state.email.localizeError?.call(context) ??
                       (state.failure != null &&
                               state.failure is EmailAlreadyExistsFailure
-                          ? 'Почта занята'
+                          ? MyLocale.of(context).authSignUpEmailTaken
                           : null),
                 ),
 
@@ -96,8 +98,8 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                     );
                   },
                   inputType: TextInputType.visiblePassword,
-                  label: 'ПАРОЛЬ',
-                  hint: 'Введите пароль',
+                  label: MyLocale.of(context).authPasswordLabel,
+                  hint: MyLocale.of(context).authPasswordHint,
                   isPassword: true,
                   failureMessage: state.password.localizeError?.call(context),
                 ),
@@ -108,8 +110,8 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                     ValidateConfirmPassword(confirmPassword: value),
                   ),
                   inputType: TextInputType.visiblePassword,
-                  label: 'ПОВТОРИТЕ ПАРОЛЬ',
-                  hint: 'Введите пароль повторно',
+                  label: MyLocale.of(context).authConfirmPasswordLabel,
+                  hint: MyLocale.of(context).authConfirmPasswordHint,
                   isPassword: true,
                   failureMessage: state.confirmPassword.localizeError?.call(
                     context,
@@ -120,7 +122,7 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                   onPressed: () {
                     context.read<SignUpBloc>().add(SignUp());
                   },
-                  title: 'Зарегистрироваться',
+                  title: MyLocale.of(context).authSignUpButton,
                   isLoading: state.isLoading,
                 ),
               ],

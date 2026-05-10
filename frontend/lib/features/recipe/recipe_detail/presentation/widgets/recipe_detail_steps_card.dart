@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/presentation/widgets/cookify_network_or_file_image.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/recipe_step_entity.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class RecipeDetailStepsCard extends StatelessWidget {
         spacing: 26.0,
         children: [
           Text(
-            'Шаги',
+            MyLocale.of(context).recipeDetailSteps,
             style: const TextStyle(
               color: Color(0xFFE5C9A8),
               fontSize: 20.0,

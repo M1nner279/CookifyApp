@@ -13,7 +13,7 @@ Future<void> main() async {
           Brightness.dark, // Темные иконки (для светлых фонов)
       // Нижняя панель (Navigation Bar)
       systemNavigationBarColor: Color(0xFF1E100A), // Ваш цвет из кода выше
-      systemNavigationBarIconBrightness: Brightness.dark, // Светлые иконки
+      systemNavigationBarIconBrightness: Brightness.light, // Светлые иконки
     ),
   );
 

@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/presentation/widgets/cookify_loading_content.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
 import 'package:cookify/features/recipe/recipe_feed/domain/entities/recipe_preview_entity.dart';
@@ -174,7 +175,7 @@ class RecipeDetailPageContent extends StatelessWidget {
                             ),
 
                             Text(
-                              'Нет подключения к инернету. Подключитесь к сети и обновите страницу.',
+                              MyLocale.of(context).commonOfflineMessage,
                               style: TextStyle(
                                 color: Color(0xFFE5C9A8),
                                 fontSize: 16.0,
@@ -202,7 +203,7 @@ class RecipeDetailPageContent extends StatelessWidget {
                             borderRadius: BorderRadius.circular(48.0),
                           ),
                           child: Text(
-                            'Обновить',
+                            MyLocale.of(context).commonRefresh,
                             style: TextStyle(
                               color: Color(0xFF2C1C16),
                               fontSize: 16.0,
@@ -215,7 +216,6 @@ class RecipeDetailPageContent extends StatelessWidget {
                       ),
                     ],
                   );
-
               }
             },
             listener: (context, state) {},

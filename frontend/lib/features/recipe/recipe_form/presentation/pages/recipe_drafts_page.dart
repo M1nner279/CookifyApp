@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/features/recipe/recipe_form/domain/entities/draft_recipe_entity.dart';
 import 'package:cookify/features/recipe/recipe_form/domain/repositories/draft_recipe_repository.dart';
@@ -19,7 +20,7 @@ class RecipeDraftsPage extends StatelessWidget {
           Scaffold(
             appBar: AppBar(
               title: Text(
-                'Черновики',
+                MyLocale.of(context).recipeDraftsTitle,
                 style: const TextStyle(
                   color: Color(0xFFE5C9A8),
                   fontSize: 18.0,
@@ -27,7 +28,6 @@ class RecipeDraftsPage extends StatelessWidget {
                   letterSpacing: -0.72,
                   height: 28.0 / 18.0,
                 ),
-              
               ),
               actions: [
                 IconButton(
@@ -98,7 +98,7 @@ class RecipeDraftsPage extends StatelessWidget {
                               ),
 
                               Text(
-                                'Здесь пока пусто. Создавайте свои собственные кулинарные шедевры',
+                                MyLocale.of(context).recipeDraftsEmptyMessage,
                                 style: TextStyle(
                                   color: Color(0xFFE5C9A8),
                                   fontSize: 16.0,
@@ -126,7 +126,7 @@ class RecipeDraftsPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(48.0),
                             ),
                             child: Text(
-                              'Создать',
+                              MyLocale.of(context).recipeDraftsCreate,
                               style: TextStyle(
                                 color: Color(0xFF2C1C16),
                                 fontSize: 16.0,
@@ -191,7 +191,7 @@ class _DraftTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = draft.name.trim().isEmpty
-        ? 'Без названия'
+        ? MyLocale.of(context).recipeDraftsUntitled
         : draft.name.trim();
 
     return Material(
@@ -224,7 +224,9 @@ class _DraftTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 6.0),
                     Text(
-                      'Обновлено: ${_formatDateTime(draft.updatedAt)}',
+                      MyLocale.of(
+                        context,
+                      ).recipeDraftsUpdated(_formatDateTime(draft.updatedAt)),
                       style: const TextStyle(
                         color: Color(0x99E5C9A8),
                         fontSize: 12.0,
@@ -241,9 +243,9 @@ class _DraftTile extends StatelessWidget {
                     builder: (context) {
                       return AlertDialog(
                         backgroundColor: const Color(0xFF2C1C16),
-                        title: const Text(
-                          'Удалить черновик?',
-                          style: TextStyle(color: Color(0xFFE5C9A8)),
+                        title: Text(
+                          MyLocale.of(context).recipeDraftsDeleteTitle,
+                          style: const TextStyle(color: Color(0xFFE5C9A8)),
                         ),
                         content: Text(
                           title,
@@ -252,15 +254,15 @@ class _DraftTile extends StatelessWidget {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text(
-                              'Отмена',
-                              style: TextStyle(color: Color(0xFFE5C9A8)),
+                            child: Text(
+                              MyLocale.of(context).commonCancel,
+                              style: const TextStyle(color: Color(0xFFE5C9A8)),
                             ),
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text(
-                              'Удалить',
+                            child: Text(
+                              MyLocale.of(context).commonDelete,
                               style: TextStyle(color: Color(0xFFE5C9A8)),
                             ),
                           ),

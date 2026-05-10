@@ -1,5 +1,5 @@
 import 'package:cookify/core/presentation/widgets/app.dart';
-import 'package:cookify/core/presentation/widgets/app_toast.dart';
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_button.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_divider.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_service_button.dart';
@@ -10,7 +10,6 @@ import 'package:cookify/features/sign_in/presentation/bloc/sign_in_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInWidgetContent extends StatefulWidget {
   const SignInWidgetContent({super.key});
@@ -23,7 +22,7 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
 
-    @override
+  @override
   void initState() {
     super.initState();
     fToast = FToast();
@@ -53,12 +52,14 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
                   onChanged: (value) => context.read<SignInBloc>().add(
                     ValidateLogin(login: value),
                   ),
-                  label: 'ЛОГИН',
-                  hint: 'Введите логин',
+                  label: MyLocale.of(context).authLoginLabel,
+                  hint: MyLocale.of(context).authLoginHint,
                   isPassword: false,
                   failureMessage:
                       state.login.localizeError?.call(context) ??
-                      (state.hasError ? 'Неправильный логин' : null),
+                      (state.hasError
+                          ? MyLocale.of(context).authSignInWrongLogin
+                          : null),
                 ),
 
                 AuthTextField(
@@ -69,19 +70,21 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
                     );
                   },
                   inputType: TextInputType.visiblePassword,
-                  label: 'ПАРОЛЬ',
-                  hint: 'Введите пароль',
+                  label: MyLocale.of(context).authPasswordLabel,
+                  hint: MyLocale.of(context).authPasswordHint,
                   isPassword: true,
                   failureMessage:
                       state.password.localizeError?.call(context) ??
-                      (state.hasError ? 'Неправильный пароль' : null),
+                      (state.hasError
+                          ? MyLocale.of(context).authSignInWrongPassword
+                          : null),
                 ),
 
                 AuthButton(
                   onPressed: () {
                     context.read<SignInBloc>().add(SignIn());
                   },
-                  title: 'Войти',
+                  title: MyLocale.of(context).authSignInButton,
                   isLoading: state.isLoading,
                 ),
               ],
@@ -105,9 +108,7 @@ class _SignInWidgetContentState extends State<SignInWidgetContent> {
           ],
         );
       },
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
     );
   }
 }

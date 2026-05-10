@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/auth/auth_common/presentation/pages/auth_page_content.dart';
 import 'package:flutter/material.dart';
 
@@ -23,21 +24,21 @@ class AuthBar extends StatelessWidget {
               onTypeChanged(AuthPageContentType.signIn);
             },
             isSelected: type == AuthPageContentType.signIn,
-            title: 'Вход',
+            title: MyLocale.of(context).authBarSignIn,
           ),
           AuthBarItem(
             onTap: () {
               onTypeChanged(AuthPageContentType.signUp);
             },
             isSelected: type == AuthPageContentType.signUp,
-            title: 'Регистрация',
+            title: MyLocale.of(context).authBarSignUp,
           ),
           AuthBarItem(
             onTap: () {
               onTypeChanged(AuthPageContentType.restore);
             },
             isSelected: type == AuthPageContentType.restore,
-            title: 'Восстановление',
+            title: MyLocale.of(context).authBarRestore,
           ),
         ],
       ),

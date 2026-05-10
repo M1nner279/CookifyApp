@@ -1,7 +1,9 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/presentation/widgets/cookify_text_field.dart';
+import 'package:cookify/core/presentation/widgets/key_board_listener.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/ingredient_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/controllers/ingredient_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide KeyboardListener;
 
 class IngredientTextField extends StatefulWidget {
   const IngredientTextField({
@@ -22,20 +24,32 @@ class IngredientTextField extends StatefulWidget {
 }
 
 class _IngredientTextFieldState extends State<IngredientTextField> {
+  bool _isShowKeyboard = false;
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _textController = TextEditingController();
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
+  int width = 0; 
 
   static const double _menuHeight = 100.0;
+
+   final KeyboardListener _keyboardListener = KeyboardListener();
 
   @override
   void initState() {
     super.initState();
     _focusNode.addListener(_onFocusChange);
+    _keyboardListener.addListener(onChange: (bool isVisible) {
+     setState(() {
+       if (_isShowKeyboard && !isVisible) {
+        _hideOverlay();
+       }
+       _isShowKeyboard = isVisible;
+     });
+   });
   }
 
-    @override
+  @override
   void didUpdateWidget(IngredientTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
 
@@ -51,6 +65,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
 
   @override
   void dispose() {
+    _keyboardListener.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     _textController.dispose();
@@ -90,7 +105,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
     final Size fieldSize = renderBox.size;
 
     return Positioned(
-      width: fieldSize.width,
+      width: width.toDouble() - 40,
       child: CompositedTransformFollower(
         link: _layerLink,
         showWhenUnlinked: false,
@@ -115,12 +130,12 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
     final filteredCategories = widget.ingredients;
 
     if (filteredCategories.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Text(
-            'Ингредиенты не найдены',
-            style: TextStyle(color: Color(0xFFE5C9A8)),
+            MyLocale.of(context).searchIngredientNotFound,
+            style: const TextStyle(color: Color(0xFFE5C9A8)),
           ),
         ),
       );
@@ -154,6 +169,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width.toInt();
     return CompositedTransformTarget(
       link: _layerLink,
       child: Row(
@@ -163,7 +179,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
               controller: _textController,
               focusNode: _focusNode,
               onChanged: widget.onChanged,
-              hint: 'Курица',
+              hint: MyLocale.of(context).searchIngredientHint,
             ),
           ),
           GestureDetector(

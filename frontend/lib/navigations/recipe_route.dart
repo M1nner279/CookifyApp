@@ -34,7 +34,7 @@ final recipeRoute = [
   ShellRoute(
     pageBuilder: (context, state, child) {
       return NoTransitionPage(
-            key: state.pageKey,
+        key: state.pageKey,
         child: SafeArea(
           child: Scaffold(
             body: Column(
@@ -68,30 +68,48 @@ final recipeRoute = [
     ],
   ),
 
-  GoRoute(
-    path: '/create',
-    pageBuilder: (context, state) {
-      final args = state.extra is RecipeFormPageArgs
-          ? state.extra as RecipeFormPageArgs
-          : const RecipeFormPageArgs();
+  ShellRoute(
+    pageBuilder: (context, state, child) {
       return NoTransitionPage(
         key: state.pageKey,
-        child: RecipeFormPage(args: args),
+        child: SafeArea(
+          child: Scaffold(
+            body: Column(
+              children: [
+                Expanded(child: child),
+
+                CookifyNavigationBar(index: 2),
+              ],
+            ),
+          ),
+        ),
       );
     },
+    routes: [
+      GoRoute(
+        path: '/create',
+        pageBuilder: (context, state) {
+          final args = state.extra is RecipeFormPageArgs
+              ? state.extra as RecipeFormPageArgs
+              : const RecipeFormPageArgs();
+          return NoTransitionPage(
+            key: state.pageKey,
+            child: RecipeFormPage(args: args),
+          );
+        },
+      ),
+    ],
   ),
 
   GoRoute(
     path: '/drafts',
     pageBuilder: (context, state) =>
-        NoTransitionPage(
-            key: state.pageKey,child: const RecipeDraftsPage()),
+        NoTransitionPage(key: state.pageKey, child: const RecipeDraftsPage()),
   ),
 
   GoRoute(
     path: '/saved',
     pageBuilder: (context, state) =>
-        NoTransitionPage(
-            key: state.pageKey,child: const RecipeSavedPage()),
+        NoTransitionPage(key: state.pageKey, child: const RecipeSavedPage()),
   ),
 ];

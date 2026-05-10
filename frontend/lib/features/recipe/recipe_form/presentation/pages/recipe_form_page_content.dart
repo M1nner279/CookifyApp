@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/domain/use_cases/results/result.dart';
 import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/core/presentation/widgets/cookify_text_field.dart';
+import 'package:cookify/features/profile/data/local/user_statistic_local_store.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/category_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/cpfc_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/recipe_ingredient_entity.dart';
@@ -25,9 +27,11 @@ import 'package:cookify/features/recipe/recipe_form/domain/repositories/draft_re
 import 'package:cookify/features/recipe/recipe_form/presentation/bloc/recipe_form_cubit.dart';
 import 'package:cookify/features/recipe/recipe_form/presentation/bloc/recipe_form_state.dart';
 import 'package:cookify/features/recipe/recipe_form/presentation/widgets/recipe_form_photo_field.dart';
+import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_form_page_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -58,6 +62,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
   String? _draftId;
   bool _isSavingDraft = false;
   bool _isSavingToSaved = false;
+  bool _showValidationErrors = false;
 
   @override
   void initState() {
@@ -266,13 +271,19 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
     setState(() => _isSavingDraft = true);
 
     try {
+      final isNewDraft = _draftId == null || _draftId!.trim().isEmpty;
       final saved = await _upsertCurrentDraft();
       _draftId = saved.id;
+      if (isNewDraft) {
+        await UserStatisticLocalStore(
+          storage: GetIt.I<FlutterSecureStorage>(),
+        ).incrementCreatedRecipesCount();
+      }
 
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Черновик сохранён')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(MyLocale.of(context).recipeFormDraftSaved)),
+      );
     } finally {
       if (mounted) {
         setState(() => _isSavingDraft = false);
@@ -371,7 +382,9 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Рецепт добавлен в сохранённые')),
+        SnackBar(
+          content: Text(MyLocale.of(context).recipeFormSavedRecipeAdded),
+        ),
       );
     } finally {
       if (mounted) {
@@ -395,22 +408,30 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
         .where((step) => step.descriptionController.text.trim().isNotEmpty)
         .toList();
 
+    final hasName = nameController.text.trim().isNotEmpty;
+    final hasDescription = descriptionController.text.trim().isNotEmpty;
+    final hasPhoto = photoController.photos.isNotEmpty;
+    final hasCookingTime = _toInt(cookingTimeController) > 0;
+    final hasCategories = validCategories.isNotEmpty;
+    final hasIngredients = validIngredients.isNotEmpty;
+    final hasSteps = validSteps.isNotEmpty;
+
     final isValid =
-        nameController.text.trim().isNotEmpty &&
-        descriptionController.text.trim().isNotEmpty &&
-        photoController.photos.isNotEmpty &&
-        validCategories.isNotEmpty &&
-        validIngredients.isNotEmpty &&
-        validSteps.isNotEmpty &&
-        _toInt(cookingTimeController) > 0;
+        hasName &&
+        hasDescription &&
+        hasPhoto &&
+        hasCategories &&
+        hasIngredients &&
+        hasSteps &&
+        hasCookingTime;
+
+    setState(() {
+      _showValidationErrors = !isValid;
+    });
 
     if (!isValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Заполните обязательные поля: фото, название, описание, категории, ингредиенты и шаги.',
-          ),
-        ),
+        SnackBar(content: Text(MyLocale.of(context).recipeFormFillRequired)),
       );
     }
 
@@ -522,14 +543,21 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
           await GetIt.I<DraftRecipeRepository>().remove(draftId);
         }
         if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Рецепт опубликован')));
+        await UserStatisticLocalStore(
+          storage: GetIt.I<FlutterSecureStorage>(),
+        ).incrementCreatedRecipesCount();
+        await UserStatisticLocalStore(
+          storage: GetIt.I<FlutterSecureStorage>(),
+        ).incrementPublishedRecipesCount();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(MyLocale.of(context).recipeFormPublished)),
+        );
         context.go('/');
         break;
       case Failure():
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Не удалось опубликовать рецепт')),
+          SnackBar(content: Text(MyLocale.of(context).recipeFormPublishFailed)),
         );
         break;
     }
@@ -537,378 +565,456 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Icon(Icons.arrow_back, color: Color(0xFFE5C9A8)),
-          ),
-          title: const Text(
-            'Создание рецепта',
-            style: TextStyle(
-              color: Color(0xFFE5C9A8),
-              fontSize: 20.0,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: const Color(0xFF1A0F0A),
-          surfaceTintColor: const Color(0xFF1A0F0A),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back, color: Color(0xFFE5C9A8)),
         ),
+        title: Text(
+          MyLocale.of(context).recipeFormTitle,
+          style: TextStyle(
+            color: Color(0xFFE5C9A8),
+            fontSize: 20.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
         backgroundColor: const Color(0xFF1A0F0A),
-        body: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 50.0),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: BlocBuilder<RecipeFormCubit, RecipeFormState>(
-                  builder: (context, state) {
-                    return ListView(
-                      padding: const EdgeInsets.only(bottom: 24.0),
+        surfaceTintColor: const Color(0xFF1A0F0A),
+      ),
+      backgroundColor: const Color(0xFF1A0F0A),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: BlocBuilder<RecipeFormCubit, RecipeFormState>(
+          builder: (context, state) {
+            return ListView(
+              children: [
+                RecipeFormPhotoField(controller: photoController),
+                if (_showValidationErrors &&
+                    photoController.photos.isEmpty) ...[
+                  const SizedBox(height: 8.0),
+                  _FieldErrorText(
+                    message: MyLocale.of(context).recipeFormErrorPhoto,
+                  ),
+                ],
+                const SizedBox(height: 16.0),
+                CookifyTextField(
+                  controller: nameController,
+                  label: MyLocale.of(context).recipeFormNameLabel,
+                  hint: MyLocale.of(context).recipeFormNameHint,
+                  maxLength: 80,
+                  failureMessage:
+                      _showValidationErrors &&
+                          nameController.text.trim().isEmpty
+                      ? MyLocale.of(context).recipeFormErrorName
+                      : null,
+                ),
+                const SizedBox(height: 12.0),
+                CookifyTextField(
+                  controller: descriptionController,
+                  label: MyLocale.of(
+                    context,
+                  ).recipeFormDescriptionLabel,
+                  hint: MyLocale.of(context).recipeFormDescriptionHint,
+                  maxLines: 3,
+                  maxLength: 300,
+                  failureMessage:
+                      _showValidationErrors &&
+                          descriptionController.text.trim().isEmpty
+                      ? MyLocale.of(context).recipeFormErrorDescription
+                      : null,
+                ),
+                const SizedBox(height: 16.0),
+                _SectionLabel(MyLocale.of(context).recipeFormNutrition),
+                const SizedBox(height: 8.0),
+                Row(
+                  children: [
+                    _MetricField(
+                      label: MyLocale.of(context).recipeFormProtein,
+                      controller: proteinsController,
+                    ),
+                    const SizedBox(width: 8.0),
+                    _MetricField(
+                      label: MyLocale.of(context).recipeFormFat,
+                      controller: fatsController,
+                    ),
+                    const SizedBox(width: 8.0),
+                    _MetricField(
+                      label: MyLocale.of(context).recipeFormCarbs,
+                      controller: carbsController,
+                    ),
+                    const SizedBox(width: 8.0),
+                    _MetricField(
+                      label: MyLocale.of(context).recipeFormCalories,
+                      controller: caloriesController,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                _SectionLabel(
+                  MyLocale.of(context).recipeFormDifficulty,
+                ),
+                const SizedBox(height: 8.0),
+                Row(
+                  children: [
+                    _DifficultyChip(
+                      label: MyLocale.of(
+                        context,
+                      ).recipeFormDifficultyEasy,
+                      isSelected: difficulty == RecipeDifficulty.easy,
+                      onTap: () => setState(
+                        () => difficulty = RecipeDifficulty.easy,
+                      ),
+                      difficulty: RecipeDifficulty.easy,
+                    ),
+                    const SizedBox(width: 8.0),
+                    _DifficultyChip(
+                      label: MyLocale.of(
+                        context,
+                      ).recipeFormDifficultyMedium,
+                      isSelected: difficulty == RecipeDifficulty.medium,
+                      onTap: () => setState(
+                        () => difficulty = RecipeDifficulty.medium,
+                      ),
+                      difficulty: RecipeDifficulty.medium,
+                    ),
+                    const SizedBox(width: 8.0),
+                    _DifficultyChip(
+                      label: MyLocale.of(
+                        context,
+                      ).recipeFormDifficultyHard,
+                      isSelected: difficulty == RecipeDifficulty.hard,
+                      onTap: () => setState(
+                        () => difficulty = RecipeDifficulty.hard,
+                      ),
+                      difficulty: RecipeDifficulty.hard,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                CookifyTextField(
+                  controller: cookingTimeController,
+                  label: MyLocale.of(
+                    context,
+                  ).recipeFormCookingTimeLabel,
+                  hint: MyLocale.of(context).recipeFormCookingTimeHint,
+                  inputType: TextInputType.number,
+                  inputFormatter:
+                      FilteringTextInputFormatter.digitsOnly,
+                  maxLength: 3,
+                  failureMessage:
+                      _showValidationErrors &&
+                          _toInt(cookingTimeController) <= 0
+                      ? MyLocale.of(context).recipeFormErrorCookingTime
+                      : null,
+                ),
+                const SizedBox(height: 20.0),
+                _SectionLabel(
+                  MyLocale.of(context).recipeFormCategories,
+                ),
+                const SizedBox(height: 8.0),
+                ...List.generate(
+                  categoryControllers.length,
+                  (i) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: CategoryTextField(
+                      key: ObjectKey(categoryControllers[i]),
+                      controller: categoryControllers[i],
+                      categories: state.searchedCategories,
+                      onChanged: context
+                          .read<RecipeFormCubit>()
+                          .searchCategoryList,
+                      onDelete: () {
+                        setState(() {
+                          categoryControllers
+                              .removeAt(i)
+                              .controller
+                              .dispose();
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      categoryControllers.add(CategoryController());
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.add_circle_outline,
+                    color: Color(0xFFE5C9A8),
+                  ),
+                  label: Text(
+                    MyLocale.of(context).recipeFormAddCategory,
+                    style: const TextStyle(color: Color(0xFFE5C9A8)),
+                  ),
+                ),
+                if (_showValidationErrors &&
+                    categoryControllers
+                        .map((controller) => controller.category)
+                        .whereType<CategoryEntity>()
+                        .isEmpty) ...[
+                  const SizedBox(height: 4.0),
+                  _FieldErrorText(
+                    message: MyLocale.of(
+                      context,
+                    ).recipeFormErrorCategories,
+                  ),
+                ],
+                const SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _SectionLabel(
+                      MyLocale.of(context).recipeFormIngredients,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8.0),
+                ...ingredientDrafts.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final draft = entry.value;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Row(
                       children: [
-                        RecipeFormPhotoField(controller: photoController),
-                        const SizedBox(height: 16.0),
-                        CookifyTextField(
-                          controller: nameController,
-                          label: 'НАЗВАНИЕ РЕЦЕПТА',
-                          hint: 'Название вашего шедевра',
-                          maxLength: 80,
-                        ),
-                        const SizedBox(height: 12.0),
-                        CookifyTextField(
-                          controller: descriptionController,
-                          label: 'ОПИСАНИЕ',
-                          hint: 'Расскажите нам почему это вкусно...',
-                          maxLines: 3,
-                          maxLength: 300,
-                        ),
-                        const SizedBox(height: 16.0),
-                        const _SectionLabel('КБЖУ'),
-                        const SizedBox(height: 8.0),
-                        Row(
-                          children: [
-                            _MetricField(
-                              label: 'БЕЛ',
-                              controller: proteinsController,
-                            ),
-                            const SizedBox(width: 8.0),
-                            _MetricField(
-                              label: 'ЖИР',
-                              controller: fatsController,
-                            ),
-                            const SizedBox(width: 8.0),
-                            _MetricField(
-                              label: 'УГЛ',
-                              controller: carbsController,
-                            ),
-                            const SizedBox(width: 8.0),
-                            _MetricField(
-                              label: 'КАЛОРИИ',
-                              controller: caloriesController,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16.0),
-                        const _SectionLabel('СЛОЖНОСТЬ'),
-                        const SizedBox(height: 8.0),
-                        Row(
-                          children: [
-                            _DifficultyChip(
-                              label: 'ЛЕГКО',
-                              isSelected: difficulty == RecipeDifficulty.easy,
-                              onTap: () => setState(
-                                () => difficulty = RecipeDifficulty.easy,
-                              ),
-                              difficulty: RecipeDifficulty.easy,
-                            ),
-                            const SizedBox(width: 8.0),
-                            _DifficultyChip(
-                              label: 'СРЕДНЕ',
-                              isSelected: difficulty == RecipeDifficulty.medium,
-                              onTap: () => setState(
-                                () => difficulty = RecipeDifficulty.medium,
-                              ),
-                              difficulty: RecipeDifficulty.medium,
-                            ),
-                            const SizedBox(width: 8.0),
-                            _DifficultyChip(
-                              label: 'СЛОЖНО',
-                              isSelected: difficulty == RecipeDifficulty.hard,
-                              onTap: () => setState(
-                                () => difficulty = RecipeDifficulty.hard,
-                              ),
-                              difficulty: RecipeDifficulty.hard,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16.0),
-                        CookifyTextField(
-                          controller: cookingTimeController,
-                          label: 'ВРЕМЯ ПРИГОТОВЛЕНИЯ',
-                          hint: '45 минут',
-                          inputType: TextInputType.number,
-                          inputFormatter:
-                              FilteringTextInputFormatter.digitsOnly,
-                          maxLength: 3,
-                        ),
-                        const SizedBox(height: 20.0),
-                        const _SectionLabel('КАТЕГОРИИ'),
-                        const SizedBox(height: 8.0),
-                        ...List.generate(
-                          categoryControllers.length,
-                          (i) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: CategoryTextField(
-                              key: ObjectKey(categoryControllers[i]),
-                              controller: categoryControllers[i],
-                              categories: state.searchedCategories,
-                              onChanged: context
-                                  .read<RecipeFormCubit>()
-                                  .searchCategoryList,
-                              onDelete: () {
-                                setState(() {
-                                  categoryControllers
-                                      .removeAt(i)
-                                      .controller
-                                      .dispose();
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        TextButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              categoryControllers.add(CategoryController());
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.add_circle_outline,
-                            color: Color(0xFFE5C9A8),
-                          ),
-                          label: const Text(
-                            'Добавить категорию',
-                            style: TextStyle(color: Color(0xFFE5C9A8)),
-                          ),
-                        ),
-                        const SizedBox(height: 20.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [const _SectionLabel('ИНГРЕДИЕНТЫ')],
-                        ),
-                        const SizedBox(height: 8.0),
-                        ...ingredientDrafts.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final draft = entry.value;
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: IngredientTextField(
-                                    controller: draft.controller,
-                                    ingredients: state.searchedIngredients,
-                                    onChanged: context
-                                        .read<RecipeFormCubit>()
-                                        .searchIngredientList,
-                                    onDelete: () {
-                                      setState(() {
-                                        ingredientDrafts
-                                            .removeAt(index)
-                                            .dispose();
-                                      });
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 8.0),
-                                SizedBox(
-                                  width: 84.0,
-                                  child: _MiniTextField(
-                                    controller: draft.amountController,
-                                    hint: '100',
-                                    inputType: TextInputType.number,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                        RegExp(r'^\d*\.?\d{0,2}$'),
-                                      ),
-                                      LengthLimitingTextInputFormatter(6),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 8.0),
-                                SizedBox(
-                                  width: 74.0,
-                                  child: _MiniTextField(
-                                    controller: draft.unitController,
-                                    hint: 'g',
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                        RegExp(r'[a-zA-Zа-яА-Я]'),
-                                      ),
-                                      LengthLimitingTextInputFormatter(10),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                        TextButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              ingredientDrafts.add(
-                                _IngredientDraft(
-                                  controller: IngredientController(),
-                                ),
-                              );
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.add_circle_outline,
-                            color: Color(0xFFE5C9A8),
-                          ),
-                          label: const Text(
-                            'Добавить ингридиент',
-                            style: TextStyle(color: Color(0xFFE5C9A8)),
-                          ),
-                        ),
-                        const SizedBox(height: 20.0),
-                        const _SectionLabel('ШАГИ ПРИГОТОВЛЕНИЯ'),
-                        const SizedBox(height: 8.0),
-                        ...stepDrafts.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final step = entry.value;
-                          return _StepCard(
-                            index: index + 1,
-                            draft: step,
-                            canDelete: stepDrafts.length > 1,
-                            onPhotoTap: () async {
-                              await step.pickPhoto();
-                              if (context.mounted) {
-                                setState(() {});
-                              }
-                            },
+                        Expanded(
+                          child: IngredientTextField(
+                            controller: draft.controller,
+                            ingredients: state.searchedIngredients,
+                            onChanged: context
+                                .read<RecipeFormCubit>()
+                                .searchIngredientList,
                             onDelete: () {
                               setState(() {
-                                stepDrafts.removeAt(index).dispose();
+                                ingredientDrafts
+                                    .removeAt(index)
+                                    .dispose();
                               });
                             },
-                          );
-                        }),
-                        const SizedBox(height: 8.0),
-                        OutlinedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              stepDrafts.add(_StepDraft());
-                            });
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: const Color(0xFFE5C9A8),
-                            side: const BorderSide(color: Color(0x1AE5C9A8)),
-                            minimumSize: const Size.fromHeight(52.0),
-                          ),
-                          icon: const Icon(Icons.add),
-                          label: const Text('ДОБАВИТЬ ШАГ'),
-                        ),
-                        const SizedBox(height: 18.0),
-                        SizedBox(
-                          height: 52.0,
-                          child: OutlinedButton(
-                            onPressed:
-                                _isSavingDraft ||
-                                    _isSavingToSaved ||
-                                    state.isPublishing
-                                ? null
-                                : _saveDraft,
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: const Color(0xFFE5C9A8),
-                              side: const BorderSide(color: Color(0x1AE5C9A8)),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                            ),
-                            child: Text(
-                              _isSavingDraft
-                                  ? 'Сохранение...'
-                                  : 'Сохранить черновик',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
                           ),
                         ),
-                        const SizedBox(height: 10.0),
+                        const SizedBox(width: 8.0),
                         SizedBox(
-                          height: 52.0,
-                          child: OutlinedButton(
-                            onPressed:
-                                _isSavingDraft ||
-                                    _isSavingToSaved ||
-                                    state.isPublishing
-                                ? null
-                                : _saveToMyRecipes,
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: const Color(0xFFE5C9A8),
-                              side: const BorderSide(color: Color(0x1AE5C9A8)),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0),
+                          width: 84.0,
+                          child: _MiniTextField(
+                            controller: draft.amountController,
+                            hint: '100',
+                            inputType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d*\.?\d{0,2}$'),
                               ),
-                            ),
-                            child: Text(
-                              _isSavingToSaved
-                                  ? 'Сохранение...'
-                                  : 'В сохранённые',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                              LengthLimitingTextInputFormatter(6),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 10.0),
+                        const SizedBox(width: 8.0),
                         SizedBox(
-                          height: 56.0,
-                          child: ElevatedButton(
-                            onPressed:
-                                state.isPublishing ||
-                                    _isSavingDraft ||
-                                    _isSavingToSaved
-                                ? null
-                                : _publish,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE5C9A8),
-                              foregroundColor: const Color(0xFF1A0F0A),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0),
+                          width: 74.0,
+                          child: _MiniTextField(
+                            controller: draft.unitController,
+                            hint: 'g',
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'[a-zA-Zа-яА-Я]'),
                               ),
-                            ),
-                            child: Text(
-                              state.isPublishing
-                                  ? 'Публикация...'
-                                  : 'Опубликовать рецепт',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                              LengthLimitingTextInputFormatter(10),
+                            ],
                           ),
                         ),
                       ],
-                    );
+                    ),
+                  );
+                }),
+                TextButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      ingredientDrafts.add(
+                        _IngredientDraft(
+                          controller: IngredientController(),
+                        ),
+                      );
+                    });
                   },
+                  icon: const Icon(
+                    Icons.add_circle_outline,
+                    color: Color(0xFFE5C9A8),
+                  ),
+                  label: Text(
+                    MyLocale.of(context).recipeFormAddIngredient,
+                    style: const TextStyle(color: Color(0xFFE5C9A8)),
+                  ),
                 ),
-              ),
-            ),
-
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: CookifyNavigationBar(index: 2),
-            ),
-          ],
+                if (_showValidationErrors &&
+                    ingredientDrafts
+                        .where(
+                          (draft) =>
+                              draft.controller.ingredient != null,
+                        )
+                        .where(
+                          (draft) => draft.amountController.text
+                              .trim()
+                              .isNotEmpty,
+                        )
+                        .where(
+                          (draft) => draft.unitController.text
+                              .trim()
+                              .isNotEmpty,
+                        )
+                        .isEmpty) ...[
+                  const SizedBox(height: 4.0),
+                  _FieldErrorText(
+                    message: MyLocale.of(
+                      context,
+                    ).recipeFormErrorIngredients,
+                  ),
+                ],
+                const SizedBox(height: 20.0),
+                _SectionLabel(MyLocale.of(context).recipeFormSteps),
+                const SizedBox(height: 8.0),
+                ...stepDrafts.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final step = entry.value;
+                  return _StepCard(
+                    index: index + 1,
+                    draft: step,
+                    canDelete: stepDrafts.length > 1,
+                    onPhotoTap: () async {
+                      await step.pickPhoto(context);
+                      if (context.mounted) {
+                        setState(() {});
+                      }
+                    },
+                    onDelete: () {
+                      setState(() {
+                        stepDrafts.removeAt(index).dispose();
+                      });
+                    },
+                  );
+                }),
+                const SizedBox(height: 8.0),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      stepDrafts.add(_StepDraft());
+                    });
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFFE5C9A8),
+                    side: const BorderSide(color: Color(0x1AE5C9A8)),
+                    minimumSize: const Size.fromHeight(52.0),
+                  ),
+                  icon: const Icon(Icons.add),
+                  label: Text(MyLocale.of(context).recipeFormAddStep),
+                ),
+                if (_showValidationErrors &&
+                    stepDrafts
+                        .where(
+                          (step) => step.titleController.text
+                              .trim()
+                              .isNotEmpty,
+                        )
+                        .where(
+                          (step) => step.descriptionController.text
+                              .trim()
+                              .isNotEmpty,
+                        )
+                        .isEmpty) ...[
+                  const SizedBox(height: 4.0),
+                  _FieldErrorText(
+                    message: MyLocale.of(context).recipeFormErrorSteps,
+                  ),
+                ],
+                const SizedBox(height: 18.0),
+                SizedBox(
+                  height: 52.0,
+                  child: OutlinedButton(
+                    onPressed:
+                        _isSavingDraft ||
+                            _isSavingToSaved ||
+                            state.isPublishing
+                        ? null
+                        : _saveDraft,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFFE5C9A8),
+                      side: const BorderSide(color: Color(0x1AE5C9A8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                    ),
+                    child: Text(
+                      _isSavingDraft
+                          ? MyLocale.of(context).recipeFormSaving
+                          : MyLocale.of(context).recipeFormSaveDraft,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                SizedBox(
+                  height: 52.0,
+                  child: OutlinedButton(
+                    onPressed:
+                        _isSavingDraft ||
+                            _isSavingToSaved ||
+                            state.isPublishing
+                        ? null
+                        : _saveToMyRecipes,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFFE5C9A8),
+                      side: const BorderSide(color: Color(0x1AE5C9A8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                    ),
+                    child: Text(
+                      _isSavingToSaved
+                          ? MyLocale.of(context).recipeFormSaving
+                          : MyLocale.of(context).recipeFormSaveToSaved,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                SizedBox(
+                  height: 56.0,
+                  child: ElevatedButton(
+                    onPressed:
+                        state.isPublishing ||
+                            _isSavingDraft ||
+                            _isSavingToSaved
+                        ? null
+                        : _publish,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE5C9A8),
+                      foregroundColor: const Color(0xFF1A0F0A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                    ),
+                    child: Text(
+                      state.isPublishing
+                          ? MyLocale.of(context).recipeFormPublishing
+                          : MyLocale.of(context).recipeFormPublish,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -930,6 +1036,34 @@ class _SectionLabel extends StatelessWidget {
         fontWeight: FontWeight.w700,
         letterSpacing: 1.0,
       ),
+    );
+  }
+}
+
+class _FieldErrorText extends StatelessWidget {
+  const _FieldErrorText({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 8.35,
+      children: [
+        const Icon(Icons.error, color: Color(0xFF83260E), size: 11.67),
+        Expanded(
+          child: Text(
+            message,
+            style: const TextStyle(
+              color: Color(0xFF83260E),
+              fontSize: 11.0,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.0,
+              height: 16.5 / 11.0,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -1122,7 +1256,7 @@ class _StepCard extends StatelessWidget {
           const SizedBox(height: 8.0),
           _MiniTextField(
             controller: draft.titleController,
-            hint: 'Заголовок шага',
+            hint: MyLocale.of(context).recipeFormStepTitleHint,
             inputFormatters: [LengthLimitingTextInputFormatter(80)],
           ),
           const SizedBox(height: 8.0),
@@ -1132,7 +1266,7 @@ class _StepCard extends StatelessWidget {
             maxLength: 260,
             style: const TextStyle(color: Color(0xFFFFE6C9), fontSize: 13.0),
             decoration: InputDecoration(
-              hintText: 'Описание шага',
+              hintText: MyLocale.of(context).recipeFormStepDescriptionHint,
               hintStyle: const TextStyle(
                 color: Color(0x4DE5C9A8),
                 fontSize: 13.0,
@@ -1161,18 +1295,30 @@ class _StepCard extends StatelessWidget {
           GestureDetector(
             onTap: onPhotoTap,
             child: Container(
+              width: double.infinity,
               height: 120.0,
               decoration: BoxDecoration(
                 color: const Color(0x1AE5C9A8),
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: draft.photo == null
-                  ? const Center(
-                      child: Text(
-                        'Добавить фото',
-                        style: TextStyle(color: Color(0x99E5C9A8)),
+                  ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.add_a_photo_outlined,
+                        color: Color(0x99E5C9A8),
                       ),
-                    )
+                      const SizedBox(height: 8.0),
+                      Text(
+                        MyLocale.of(context).recipeFormAddPhoto,
+                        style: const TextStyle(
+                          color: Color(0xB3E5C9A8),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  )
                   : ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: Image.file(
@@ -1214,8 +1360,8 @@ class _StepDraft {
   final ImagePicker picker = ImagePicker();
   XFile? photo;
 
-  Future<void> pickPhoto() async {
-    final picked = await picker.pickImage(source: ImageSource.gallery);
+  Future<void> pickPhoto(BuildContext context) async {
+    final picked = await ImagePickerSheet.show(context);
     if (picked != null) {
       photo = picked;
     }

@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:flutter/material.dart';
 
 class AuthDivider extends StatelessWidget {
@@ -5,15 +6,15 @@ class AuthDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       spacing: 16.0,
       children: [
         Expanded(child: _Line()),
 
         Text(
-          'ИЛИ ЧЕРЕЗ',
-          style: TextStyle(
+          MyLocale.of(context).authDividerOr,
+          style: const TextStyle(
             color: Color(0x4DE5C9A8),
             fontSize: 10.0,
             fontWeight: FontWeight.w700,

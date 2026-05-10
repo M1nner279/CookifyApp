@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cookify/features/profile/data/local/user_statistic_local_store.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/repositories/user_saved_recipe_detail_repository.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/enums/recipe_difficulty.dart';
@@ -9,10 +10,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
 class SavedRecipeRepositoryImpl implements SavedRecipeRepository {
-  SavedRecipeRepositoryImpl({required FlutterSecureStorage storage})
-    : _storage = storage;
+  SavedRecipeRepositoryImpl({
+    required FlutterSecureStorage storage,
+    required UserStatisticLocalStore userStatisticLocalStore,
+  }) : _storage = storage,
+       _userStatisticLocalStore = userStatisticLocalStore;
 
   final FlutterSecureStorage _storage;
+  final UserStatisticLocalStore _userStatisticLocalStore;
 
   static const _savedRecipesKey = 'saved_recipes_v1';
 
@@ -51,6 +56,7 @@ class SavedRecipeRepositoryImpl implements SavedRecipeRepository {
   Future<void> saveRecipe(RecipePreviewEntity recipe) async {
     final recipes = _savedRecipesNotifier.value.toList();
     final existingIndex = recipes.indexWhere((item) => item.id == recipe.id);
+    final isNewSavedRecipe = existingIndex == -1;
     if (existingIndex == -1) {
       recipes.add(recipe);
     } else {
@@ -58,15 +64,22 @@ class SavedRecipeRepositoryImpl implements SavedRecipeRepository {
     }
     _savedRecipesNotifier.value = recipes;
     await _persist();
+    if (isNewSavedRecipe) {
+      await _userStatisticLocalStore.incrementFavoriteRecipesCount();
+    }
   }
 
   @override
   Future<void> removeRecipe(String recipeId) async {
+    final isSavedBeforeRemove = isSaved(recipeId);
     final recipes = _savedRecipesNotifier.value
         .where((recipe) => recipe.id != recipeId)
         .toList();
     _savedRecipesNotifier.value = recipes;
     await _persist();
+    if (isSavedBeforeRemove) {
+      await _userStatisticLocalStore.decrementFavoriteRecipesCount();
+    }
     if (GetIt.I.isRegistered<UserSavedRecipeDetailRepository>()) {
       await GetIt.I<UserSavedRecipeDetailRepository>().remove(recipeId);
     }

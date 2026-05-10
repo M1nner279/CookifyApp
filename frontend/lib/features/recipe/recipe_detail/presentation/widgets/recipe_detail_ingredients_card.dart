@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'dart:math';
 
 import 'package:cookify/features/recipe/recipe_common/domain/entities/recipe_ingredient_entity.dart';
@@ -41,7 +42,7 @@ class _RecipeDetailIngredientsCardState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Ингридиенты',
+                MyLocale.of(context).recipeDetailIngredients,
                 style: const TextStyle(
                   color: Color(0xFFE5C9A8),
                   fontSize: 18.0,
@@ -137,7 +138,7 @@ class _ServingCount extends StatelessWidget {
           ),
 
           Text(
-            '$servingCount порций',
+            MyLocale.of(context).commonServingsDouble(servingCount),
             style: const TextStyle(
               color: Color(0xFFE5C9A8),
               fontSize: 12.0,

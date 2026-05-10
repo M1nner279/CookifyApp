@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/ingredient_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/controllers/ingredient_controller.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/widgets/ingredient_text_field.dart';
@@ -26,7 +27,7 @@ class _RecipeSearchIngredientSectionState
   @override
   Widget build(BuildContext context) {
     return RecipeSearchSectionCard(
-      title: 'Ингредиенты',
+      title: MyLocale.of(context).searchIngredientsTitle,
       child: Column(
         spacing: 8.0,
         children: [
@@ -37,7 +38,9 @@ class _RecipeSearchIngredientSectionState
               controller: widget.controllers[i],
               ingredients: widget.ingredients,
               onChanged: (name) {
-                context.read<RecipeSearchFormCubit>().searchIngredientList(name);
+                context.read<RecipeSearchFormCubit>().searchIngredientList(
+                  name,
+                );
               },
               onDelete: () => setState(() {
                 widget.controllers.removeAt(i);
@@ -53,8 +56,8 @@ class _RecipeSearchIngredientSectionState
               children: [
                 Icon(Icons.add, color: const Color(0xFFE5C9A8), size: 24.0),
 
-                const Text(
-                  'Добавить ингредиент',
+                Text(
+                  MyLocale.of(context).searchAddIngredient,
                   style: TextStyle(color: Color(0xFFE5C9A8)),
                 ),
               ],

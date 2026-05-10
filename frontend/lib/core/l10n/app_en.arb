@@ -10,5 +10,192 @@
     "profileSettings": "Settings",
     "profileSettingsLocale": "Change language",
     "profileSettingsChangePassword": "Change password",
-    "profileSettingsSignout": "Sign out"
+    "profileSettingsSignout": "Sign out",
+
+    "recipeFormTitle": "Create recipe",
+    "recipeFormAddPhoto": "Add photo",
+    "recipeFormNameLabel": "RECIPE NAME",
+    "recipeFormNameHint": "Name of your masterpiece",
+    "recipeFormDescriptionLabel": "DESCRIPTION",
+    "recipeFormDescriptionHint": "Tell us why it is delicious...",
+    "recipeFormNutrition": "NUTRITION",
+    "recipeFormProtein": "PROTEIN",
+    "recipeFormFat": "FAT",
+    "recipeFormCarbs": "CARBS",
+    "recipeFormCalories": "CALORIES",
+    "recipeFormDifficulty": "DIFFICULTY",
+    "recipeFormDifficultyEasy": "EASY",
+    "recipeFormDifficultyMedium": "MEDIUM",
+    "recipeFormDifficultyHard": "HARD",
+    "recipeFormCookingTimeLabel": "COOKING TIME",
+    "recipeFormCookingTimeHint": "45 minutes",
+    "recipeFormCategories": "CATEGORIES",
+    "recipeFormAddCategory": "Add category",
+    "recipeFormIngredients": "INGREDIENTS",
+    "recipeFormAddIngredient": "Add ingredient",
+    "recipeFormSteps": "COOKING STEPS",
+    "recipeFormAddStep": "ADD STEP",
+    "recipeFormSaveDraft": "Save draft",
+    "recipeFormSaveToSaved": "Save to favorites",
+    "recipeFormPublish": "Publish recipe",
+    "recipeFormSaving": "Saving...",
+    "recipeFormPublishing": "Publishing...",
+    "recipeFormDraftSaved": "Draft saved",
+    "recipeFormSavedRecipeAdded": "Recipe added to saved",
+    "recipeFormPublished": "Recipe published",
+    "recipeFormPublishFailed": "Failed to publish recipe",
+    "recipeFormFillRequired": "Please fill in required fields",
+    "recipeFormErrorPhoto": "Add a recipe photo",
+    "recipeFormErrorName": "Enter recipe name",
+    "recipeFormErrorDescription": "Enter description",
+    "recipeFormErrorCookingTime": "Enter cooking time greater than 0",
+    "recipeFormErrorCategories": "Add at least one category",
+    "recipeFormErrorIngredients": "Add at least one ingredient with amount and unit",
+    "recipeFormErrorSteps": "Add at least one step with title and description",
+    "recipeFormStepTitleHint": "Step title",
+    "recipeFormStepDescriptionHint": "Step description",
+
+    "commonOfflineMessage": "No internet connection. Connect to the network and refresh the page.",
+    "commonRefresh": "Refresh",
+    "commonBack": "Back",
+    "commonCancel": "Cancel",
+    "commonDelete": "Delete",
+    "commonGramShort": "g",
+    "commonKcalShort": "kcal",
+    "commonMinutes": "{value} min",
+    "@commonMinutes": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+    "commonServings": "{value} servings",
+    "@commonServings": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+    "commonServingsDouble": "{value} servings",
+    "@commonServingsDouble": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+
+    "authBarSignIn": "Sign in",
+    "authBarSignUp": "Sign up",
+    "authBarRestore": "Restore",
+    "authTopSubtitle": "THE ART OF HOME COOKING",
+    "authDividerOr": "OR WITH",
+    "authLoginLabel": "LOGIN",
+    "authLoginHint": "Enter login",
+    "authEmailHint": "Enter email",
+    "authPasswordLabel": "PASSWORD",
+    "authPasswordHint": "Enter password",
+    "authConfirmPasswordLabel": "CONFIRM PASSWORD",
+    "authConfirmPasswordHint": "Enter password again",
+    "authSignInButton": "Sign in",
+    "authSignInWrongLogin": "Invalid login",
+    "authSignInWrongPassword": "Invalid password",
+    "authSignUpButton": "Sign up",
+    "authSignUpLoginTaken": "Login already taken",
+    "authSignUpEmailTaken": "Email already taken",
+    "authRestoreLoginOrEmailLabel": "LOGIN OR EMAIL",
+    "authRestoreLoginOrEmailHint": "Enter login or email",
+    "authRestoreWrongLoginOrEmail": "Invalid login or email",
+    "authRestoreButton": "Restore",
+
+    "changePasswordTitle": "Change password",
+    "changePasswordNewPasswordLabel": "NEW PASSWORD",
+    "changePasswordNewPasswordHint": "Enter new password",
+    "changePasswordSubmit": "Change",
+
+    "otpTitle": "Confirmation code",
+    "otpInvalidCode": "Invalid code",
+    "otpResend": "Resend{suffix}",
+    "@otpResend": {
+      "placeholders": {
+        "suffix": {}
+      }
+    },
+    "otpResendAfter": " in {seconds} seconds",
+    "@otpResendAfter": {
+      "placeholders": {
+        "seconds": {}
+      }
+    },
+    "otpChangeAccount": "Change account",
+
+    "recipeSavedTitle": "My kitchen",
+    "recipeSavedEmptyMessage": "Nothing here yet. Save recipes you like from the feed so you do not lose them",
+    "recipeSavedFind": "Find",
+
+    "recipeDraftsTitle": "Drafts",
+    "recipeDraftsEmptyMessage": "Nothing here yet. Create your own culinary masterpieces",
+    "recipeDraftsCreate": "Create",
+    "recipeDraftsUntitled": "Untitled",
+    "recipeDraftsDeleteTitle": "Delete draft?",
+    "recipeDraftsUpdated": "Updated: {value}",
+    "@recipeDraftsUpdated": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+
+    "recipeDetailIngredients": "Ingredients",
+    "recipeDetailSteps": "Steps",
+    "recipeDetailTime": "Time",
+    "recipeDetailProteinSign": "P",
+    "recipeDetailFatSign": "F",
+    "recipeDetailCarbsSign": "C",
+    "recipeDifficultyEasy": "EASY",
+    "recipeDifficultyMedium": "MEDIUM",
+    "recipeDifficultyHard": "HARD",
+
+    "commonLanguageRu": "Russian",
+    "commonLanguageEn": "English",
+    "commonError": "Error",
+
+    "searchTitle": "Search",
+    "searchButton": "SEARCH",
+    "searchNothingFound": "Nothing found",
+    "searchRecipeNameHint": "Recipe name",
+    "searchCookingTimeTitle": "Cooking time",
+    "searchCookingTimeUpTo": "up to {value} min",
+    "@searchCookingTimeUpTo": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+    "searchNutritionGoals": "Nutrition goals",
+    "searchCaloriesLabel": "CALORIES",
+    "searchProteinsLabel": "PROTEINS",
+    "searchFatsLabel": "FATS",
+    "searchCarbsLabel": "CARBS",
+    "searchCategoriesTitle": "Categories",
+    "searchIngredientsTitle": "Ingredients",
+    "searchAddCategoryHint": "Add category...",
+    "searchAddIngredientHint": "Add ingredient...",
+    "searchAddCategory": "Add category",
+    "searchAddIngredient": "Add ingredient",
+    "searchCategoryNotFound": "No categories found",
+    "searchIngredientNotFound": "No ingredients found",
+    "searchCategoryHint": "Healthy eating",
+    "searchIngredientHint": "Chicken",
+    "searchGeneralTitle": "General",
+    "searchMaxCookingTimeHint": "Maximum cooking time",
+    "searchCaloriesTitle": "Calories",
+    "searchProteinsTitle": "Proteins",
+    "searchFatsTitle": "Fats",
+    "searchCarbsTitle": "Carbohydrates",
+    "searchMinHint": "Min",
+    "searchMaxHint": "Max",
+
+    "validationFieldRequired": "Field cannot be empty",
+    "validationLoginTooShort": "Login is too short",
+    "validationLoginTooLong": "Login is too long",
+    "validationEmailInvalid": "Invalid email",
+    "validationPasswordTooShort": "Password is too short",
+    "validationPasswordTooLong": "Password is too long",
+    "validationPasswordInvalid": "Password must contain lowercase and uppercase Latin letters, digits, and special symbols (@$!%*?&_)",
+    "validationConfirmPasswordNotMatch": "Passwords do not match"
 }

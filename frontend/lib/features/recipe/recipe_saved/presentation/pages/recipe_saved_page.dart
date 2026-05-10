@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
 import 'package:cookify/features/recipe/recipe_feed/domain/entities/recipe_preview_entity.dart';
@@ -30,8 +31,8 @@ class _RecipeSavedPageState extends State<RecipeSavedPage> {
         children: [
           Scaffold(
             appBar: AppBar(
-              title: const Text(
-                'Моя кухня',
+              title: Text(
+                MyLocale.of(context).recipeSavedTitle,
                 style: const TextStyle(
                   color: Color(0xFFE5C9A8),
                   fontSize: 18.0,
@@ -99,7 +100,7 @@ class _RecipeSavedPageState extends State<RecipeSavedPage> {
                               ),
 
                               Text(
-                                'Здесь пока пусто. Сохраняйте понравившиеся рецепты из ленты, чтобы не потерять их',
+                                MyLocale.of(context).recipeSavedEmptyMessage,
                                 style: TextStyle(
                                   color: Color(0xFFE5C9A8),
                                   fontSize: 16.0,
@@ -127,7 +128,7 @@ class _RecipeSavedPageState extends State<RecipeSavedPage> {
                               borderRadius: BorderRadius.circular(48.0),
                             ),
                             child: Text(
-                              'Найти',
+                              MyLocale.of(context).recipeSavedFind,
                               style: TextStyle(
                                 color: Color(0xFF2C1C16),
                                 fontSize: 16.0,

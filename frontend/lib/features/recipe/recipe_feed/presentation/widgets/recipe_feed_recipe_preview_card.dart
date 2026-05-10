@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
 import 'package:cookify/core/presentation/widgets/cookify_cached_network_image.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/enums/recipe_difficulty.dart';
@@ -94,12 +95,16 @@ class RecipeFeedRecipePreviewCard extends StatelessWidget {
                     children: [
                       _Info(
                         iconData: Icons.access_time,
-                        text: '${recipe.cookingTime} мин',
+                        text: MyLocale.of(
+                          context,
+                        ).commonMinutes(recipe.cookingTime),
                       ),
 
                       _Info(
                         iconData: Icons.restaurant,
-                        text: '${recipe.servingCount} порций',
+                        text: MyLocale.of(
+                          context,
+                        ).commonServings(recipe.servingCount),
                       ),
                     ],
                   ),
