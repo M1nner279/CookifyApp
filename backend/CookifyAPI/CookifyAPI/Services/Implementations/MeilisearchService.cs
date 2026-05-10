@@ -18,9 +18,13 @@ public class MeilisearchService(MeilisearchClient client) : ISearchService
         return result.Hits;
     }
 
-    public Task<IReadOnlyCollection<IngredientSearchDocument>> SearchIngredientsAsync(string query, int limit = 20)
+    public async Task<IReadOnlyCollection<IngredientSearchDocument>> SearchIngredientsAsync(string query, int limit = 20)
     {
-        throw new NotImplementedException();
+        var index = client.Index(IngredientsIndex);
+        var searchQuery = new SearchQuery { Limit = limit };
+        
+        var result = await index.SearchAsync<IngredientSearchDocument>(query, searchQuery);
+        return result.Hits;
     }
 
     public async Task IndexTagsAsync(IEnumerable<TagSearchDocument> tags)
@@ -31,11 +35,13 @@ public class MeilisearchService(MeilisearchClient client) : ISearchService
 
     public Task IndexIngredientsAsync(IEnumerable<IngredientSearchDocument> ingredients)
     {
-        throw new NotImplementedException();
+        var index = client.Index(IngredientsIndex);
+        return index.AddDocumentsAsync(ingredients);
     }
 
     public async Task SetupIndicesAsync()
     {
         await client.Index(TagsIndex).UpdateSearchableAttributesAsync(new[] { "name" });
+        await client.Index(IngredientsIndex).UpdateSearchableAttributesAsync(new[] { "name" });
     }
 }

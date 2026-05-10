@@ -17,4 +17,13 @@ public class SearchController(ISearchService searchService) : ControllerBase
         var results = await searchService.SearchTagsAsync(name, limit);
         return Ok(results);
     }
+
+    [HttpGet("ingredients")]
+    public async Task<IActionResult> SearchIngredients([FromQuery] string? name, [FromQuery] int limit = 20)
+    {
+        if  (string.IsNullOrWhiteSpace(name))
+            return Ok(Array.Empty<TagSearchDocument>());
+        var results = await searchService.SearchIngredientsAsync(name, limit);
+        return Ok(results);
+    }
 }

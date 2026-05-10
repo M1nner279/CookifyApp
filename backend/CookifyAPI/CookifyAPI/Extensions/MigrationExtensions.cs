@@ -46,15 +46,14 @@ public static class MigrationExtensions
                 Console.WriteLine("Starting Meilisearch index synchronization...");
                 await searchService.SetupIndicesAsync();
 
-                // Синхронизируем Ингредиенты (AsNoTracking для скорости)
+                // Синхронизируем Ингредиенты
+                var ingredients = await db.Ingredients
+                    .AsNoTracking()
+                    .Select(i => new IngredientSearchDocument(i.Id, i.Name, i.Calories100g,  i.Protein100g, i.Fat100g, i.Carb100g))
+                    .ToListAsync();
                 
-                // var ingredients = await db.Ingredients
-                //     .AsNoTracking()
-                //     .Select(i => new IngredientSearchDocument(i.Id, i.Name))
-                //     .ToListAsync();
-                //
-                // if (ingredients.Count != 0)
-                //     await searchService.IndexIngredientsAsync(ingredients);
+                if (ingredients.Count != 0)
+                    await searchService.IndexIngredientsAsync(ingredients);
 
                 // Синхронизируем Теги
                 var tags = await db.Tags
