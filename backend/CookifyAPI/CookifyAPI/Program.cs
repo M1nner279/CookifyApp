@@ -6,7 +6,7 @@ builder.Services.AddPersistanceSeervices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 
-builder.Services.AddApplicationServices();
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddWebServices();
 
 var app = builder.Build();
@@ -22,7 +22,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.ApplyMigrations();
+await app.ApplyMigrations();
 
 app.UseCors("AllowAll");
 app.UseAuthentication(); 

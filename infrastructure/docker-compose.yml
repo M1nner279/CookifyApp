@@ -18,7 +18,23 @@ services:
       interval: 10s
       timeout: 5s
       retries: 15
-    
+      
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: meilisearch
+    environment:
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      - MEILI_ENV=development # Включает красивый UI для отладки
+      - MEILI_NO_ANALYTICS=true # Отключаем сбор телеметрии
+    ports:
+      - "7700:7700"
+    volumes:
+      - meili_data:/meili_data
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:7700/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   cookifyapi:
     build:
@@ -27,6 +43,8 @@ services:
     container_name: cookify_api
     depends_on:
       db:
+        condition: service_healthy
+      meilisearch:
         condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -45,6 +63,10 @@ services:
       - Cloudinary__CloudName=${CLOUDINARY_CLOUD_NAME}
       - Cloudinary__ApiKey=${CLOUDINARY_API_KEY}
       - Cloudinary__ApiSecret=${CLOUDINARY_API_SECRET} 
+      
+      # Передаем ключи Meilisearch в ваше API
+      - MeilisearchSettings__Url=http://meilisearch:7700
+      - MeilisearchSettings__MasterKey=${MEILI_MASTER_KEY}
     ports:
       - "5022:443"
     volumes:
@@ -52,3 +74,4 @@ services:
 
 volumes:
   mssql_data:
+  meili_data:
