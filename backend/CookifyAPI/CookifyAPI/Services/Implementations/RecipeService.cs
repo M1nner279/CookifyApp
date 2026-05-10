@@ -196,7 +196,7 @@ public class RecipeService(
         }
         
         if (request.MaxCookingTime.HasValue) query = query.Where(r => r.CookingTimeMin <= request.MaxCookingTime);
-        if (request.Difficulty.HasValue) query = query.Where(r => r.Difficulty == request.Difficulty);
+        //if (request.Difficulty.HasValue) query = query.Where(r => r.Difficulty == request.Difficulty);
 
         // Фильтры по БЖУ и Калориям
         if (request.MinCalories.HasValue) query = query.Where(r => r.Calories100g >= request.MinCalories);
@@ -219,6 +219,11 @@ public class RecipeService(
         if (request.IngredientIds is { Length: > 0 })
         {
             query = query.Where(r => r.Ingredients.Any(i => request.IngredientIds.Contains(i.IngredientId)));
+        }
+
+        if (request.Difficulty is { Length: > 0 })
+        {
+            query = query.Where(r => request.Difficulty.Contains(r.Difficulty));
         }
 
         var recipes = await query
@@ -287,7 +292,7 @@ public class RecipeService(
         }
         
         if (request.MaxCookingTime.HasValue) query = query.Where(r => r.CookingTimeMin <= request.MaxCookingTime);
-        if (request.Difficulty.HasValue) query = query.Where(r => r.Difficulty == request.Difficulty);
+        //if (request.Difficulty.HasValue) query = query.Where(r => r.Difficulty == request.Difficulty);
 
         // Фильтры по БЖУ и Калориям
         if (request.MinCalories.HasValue) query = query.Where(r => r.Calories100g >= request.MinCalories);
@@ -301,6 +306,11 @@ public class RecipeService(
         
         if (request.MinCarb.HasValue) query = query.Where(r => r.Carb100g >= request.MinCarb);
         if (request.MaxCarb.HasValue) query = query.Where(r => r.Carb100g <= request.MaxCarb);
+        
+        if (request.Difficulty is { Length: > 0 })
+        {
+            query = query.Where(r => request.Difficulty.Contains(r.Difficulty));
+        }
         
         if (request.TagIds is { Length: > 0 })
         {
