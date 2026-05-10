@@ -70,7 +70,8 @@ final navigator = GoRouter(
 
     ShellRoute(
       pageBuilder: (context, state, child) {
-        return MaterialPage(
+        return NoTransitionPage(
+            key: state.pageKey,
           child: SafeArea(
             child: Scaffold(
               body: Column(

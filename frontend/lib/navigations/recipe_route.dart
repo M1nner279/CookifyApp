@@ -1,3 +1,4 @@
+import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page_args.dart';
 import 'package:cookify/features/recipe/recipe_feed/presentation/pages/recipe_feed_page.dart';
@@ -15,7 +16,7 @@ final recipeRoute = [
   GoRoute(
     path: '/',
     pageBuilder: (context, state) =>
-        MaterialPage(child: const RecipeFeedPage()),
+        NoTransitionPage(key: state.pageKey, child: const RecipeFeedPage()),
   ),
 
   GoRoute(
@@ -30,22 +31,41 @@ final recipeRoute = [
     },
   ),
 
-  GoRoute(
-    path: '/search-form',
-    pageBuilder: (context, state) =>
-        MaterialPage(child: const RecipeSearchFormPage()),
-  ),
-
-  GoRoute(
-    path: '/search',
-    pageBuilder: (context, state) {
-      final args = state.extra as RecipeSearchPageArgs;
-
+  ShellRoute(
+    pageBuilder: (context, state, child) {
       return NoTransitionPage(
-        key: state.pageKey,
-        child: RecipeSearchPage(args: args),
+            key: state.pageKey,
+        child: SafeArea(
+          child: Scaffold(
+            body: Column(
+              children: [
+                Expanded(child: child),
+
+                CookifyNavigationBar(index: 1),
+              ],
+            ),
+          ),
+        ),
       );
     },
+    routes: [
+      GoRoute(
+        path: '/search-form',
+        builder: (context, state) => RecipeSearchFormPage(),
+      ),
+
+      GoRoute(
+        path: '/search',
+        pageBuilder: (context, state) {
+          final args = state.extra as RecipeSearchPageArgs;
+
+          return NoTransitionPage(
+            key: state.pageKey,
+            child: RecipeSearchPage(args: args),
+          );
+        },
+      ),
+    ],
   ),
 
   GoRoute(
@@ -64,12 +84,14 @@ final recipeRoute = [
   GoRoute(
     path: '/drafts',
     pageBuilder: (context, state) =>
-        MaterialPage(child: const RecipeDraftsPage()),
+        NoTransitionPage(
+            key: state.pageKey,child: const RecipeDraftsPage()),
   ),
 
   GoRoute(
     path: '/saved',
     pageBuilder: (context, state) =>
-        MaterialPage(child: const RecipeSavedPage()),
+        NoTransitionPage(
+            key: state.pageKey,child: const RecipeSavedPage()),
   ),
 ];

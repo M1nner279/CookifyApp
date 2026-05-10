@@ -28,15 +28,15 @@ class _RecipeFeedPageContentState extends State<RecipeFeedPageContent> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Cookify',
-            style: const TextStyle(
-              color: Color(0xFFE5C9A8),
-              fontSize: 30.0,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.0,
-              height: 30.0 / 30.0,
-            ),
-          ),
+                'Cookify',
+                style: const TextStyle(
+                  color: Color(0xFFE5C9A8),
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.72,
+                  height: 28.0 / 18.0,
+                ),
+              ),
           centerTitle: true,
           backgroundColor: Color(0xFF1A0F0A),
           surfaceTintColor: Color(0xFF1A0F0A),

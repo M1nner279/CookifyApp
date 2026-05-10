@@ -64,15 +64,6 @@ class RecipeFeedRecipePreviewCard extends StatelessWidget {
 
                       const SizedBox(width: 8.0),
 
-                      IconButton(
-                        iconSize: 24.0,
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: const Color(0xFFE5C9A8),
-                        ),
-                      ),
-
                       ValueListenableBuilder<List<RecipePreviewEntity>>(
                         valueListenable: GetIt.I<SavedRecipeRepository>()
                             .savedRecipesListenable,

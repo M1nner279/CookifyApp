@@ -1,4 +1,5 @@
 import 'package:cookify/core/domain/my_either/my_either.dart';
+import 'package:cookify/features/token/domain/entities/token.dart';
 import 'package:cookify/features/token/domain/failures/token_failures.dart';
 import 'package:cookify/features/token/domain/payloads/refresh_token_payload.dart';
 import 'package:cookify/features/token/domain/payloads/set_token_payload.dart';
@@ -10,7 +11,7 @@ class RefreshTokenUseCase {
 
   final TokenRepository _repository;
 
-  Future<MyEither<void>> call() async {
+  Future<MyEither<Token>> call() async {
     final tokenResult = await _repository.getToken();
 
     return tokenResult.fold((failure) => Left(failure), (token) async {
@@ -29,8 +30,10 @@ class RefreshTokenUseCase {
 
           return Left(failure);
         },
-        (newToken) {
-          return _repository.setToken(SetTokenPayload(token: newToken));
+        (newToken) async {
+          final result = await _repository.setToken(SetTokenPayload(token: newToken));
+
+          return result.fold((failure) => Left(failure), (_) => Right(newToken));
         },
       );
     });

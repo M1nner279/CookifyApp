@@ -48,10 +48,6 @@ class RecipeDetailPageContent extends StatelessWidget {
             ),
           ),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.favorite_border, color: Color(0xFFE5C9A8)),
-              onPressed: () {},
-            ),
             BlocBuilder<RecipeDetailCubit, RecipeDetailState>(
               builder: (context, state) {
                 if (state is! RecipeDetailLoaded) {

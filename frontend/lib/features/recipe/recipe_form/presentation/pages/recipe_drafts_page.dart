@@ -18,13 +18,16 @@ class RecipeDraftsPage extends StatelessWidget {
         children: [
           Scaffold(
             appBar: AppBar(
-              title: const Text(
+              title: Text(
                 'Черновики',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFFE5C9A8),
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.72,
+                  height: 28.0 / 18.0,
                 ),
+              
               ),
               actions: [
                 IconButton(
