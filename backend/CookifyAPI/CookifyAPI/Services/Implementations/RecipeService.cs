@@ -267,4 +267,73 @@ public class RecipeService(
 
         return recipes;
     }
+
+    public async Task<List<RecipeListDto>> SearchRecipesAsync(RecipeSearchRequest request)
+    {
+        var query = context.Recipes.AsNoTracking();
+        
+        if (!string.IsNullOrWhiteSpace(request.Title))
+        {
+            var recipeIds = await searchService.SearchRecipeIdsAsync(request.Title);
+            
+            // Если Meili ничего не нашел, возвращаем пустой список, чтобы не делать запрос к БД
+            if (recipeIds.Length == 0)
+            {
+                Console.WriteLine($"No recipes found for {request.Title}");
+                return new List<RecipeListDto>();
+            }
+            
+            query = query.Where(r => recipeIds.Contains(r.Id));
+        }
+        
+        if (request.MaxCookingTime.HasValue) query = query.Where(r => r.CookingTimeMin <= request.MaxCookingTime);
+        if (request.Difficulty.HasValue) query = query.Where(r => r.Difficulty == request.Difficulty);
+
+        // Фильтры по БЖУ и Калориям
+        if (request.MinCalories.HasValue) query = query.Where(r => r.Calories100g >= request.MinCalories);
+        if (request.MaxCalories.HasValue) query = query.Where(r => r.Calories100g <= request.MaxCalories);
+        
+        if (request.MinProtein.HasValue) query = query.Where(r => r.Protein100g >= request.MinProtein);
+        if (request.MaxProtein.HasValue) query = query.Where(r => r.Protein100g <= request.MaxProtein);
+        
+        if (request.MinFat.HasValue) query = query.Where(r => r.Fat100g >= request.MinFat);
+        if (request.MaxFat.HasValue) query = query.Where(r => r.Fat100g <= request.MaxFat);
+        
+        if (request.MinCarb.HasValue) query = query.Where(r => r.Carb100g >= request.MinCarb);
+        if (request.MaxCarb.HasValue) query = query.Where(r => r.Carb100g <= request.MaxCarb);
+        
+        if (request.TagIds is { Length: > 0 })
+        {
+            var targetIds = request.TagIds.Distinct().ToList();
+            int targetCount = targetIds.Count;
+            query = query.Where(r => r.Tags.Count(i => targetIds.Contains(i.TagId)) == targetCount);
+        }
+
+        if (request.IngredientIds is { Length: > 0 })
+        {
+            var targetIds = request.IngredientIds.Distinct().ToList();
+            int targetCount = targetIds.Count;
+            
+            query = query.Where(r => r.Ingredients.Count(i => targetIds.Contains(i.IngredientId)) == targetCount);
+        }
+
+        var recipes = await query
+            .AsSplitQuery()
+            .Select(r => new RecipeListDto()
+            {
+                Id = r.Id,
+                Title = r.Title,
+                CookingTimeMin = r.CookingTimeMin,
+                Servings = r.Servings,
+                Difficulty = r.Difficulty,
+                PreviewImageUrl = r.Images
+                    .OrderBy(i => i.Order)
+                    .Select(i => i.Url)
+                    .FirstOrDefault(),
+                Tags = r.Tags.Select(m2m => m2m.Tag.Name).ToList(),
+            })
+            .ToListAsync();
+
+        return recipes;
+    }
 }
