@@ -63,6 +63,15 @@ public static class MigrationExtensions
 
                 if (tags.Count != 0)
                     await searchService.IndexTagsAsync(tags);
+                
+                // Синхронизируем Рецепты
+                var recipes = await db.Recipes
+                    .AsNoTracking()
+                    .Select(r => new RecipeSearchDocument(r.Id, r.Title))
+                    .ToListAsync();
+                
+                if (recipes.Count != 0)
+                    await searchService.IndexRecipesAsync(recipes);
 
                 Console.WriteLine("Meilisearch synchronization completed successfully.");
                 
