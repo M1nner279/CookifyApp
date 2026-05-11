@@ -161,6 +161,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
   Future<void> signInWithGoogle() async {
     try {
+      await _googleSignIn.signOut();
+
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
       if (account != null) {
         final GoogleSignInAuthentication auth = await account.authentication;

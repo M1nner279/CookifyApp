@@ -104,13 +104,18 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   Future<void> signInWithGoogle() async {
     try {
+      await _googleSignIn.signOut();
+
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
       if (account != null) {
         final GoogleSignInAuthentication auth = await account.authentication;
 
         final String? idToken = auth.idToken;
 
-        final response = await Di.dio.post('/api/google', data: {'id_token': idToken});
+        final response = await Di.dio.post(
+          '/api/google',
+          data: {'id_token': idToken},
+        );
         final token = TokenMapper.toEntity(TokenModel.fromJson(response.data));
 
         await _signInDependency.setToken(token);

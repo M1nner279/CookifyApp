@@ -25,7 +25,7 @@ final navigator = GoRouter(
       pageBuilder: (context, state) => MaterialPage(child: const Placeholder()),
     ),
 
-    GoRoute(path: NavigatorPaths.auth, builder: (context, state) => AuthPage()),
+    GoRoute(path: NavigatorPaths.auth, pageBuilder: (context, state) => NoTransitionPage(child: AuthPage())),
 
     GoRoute(
       path: NavigatorPaths.otp,
