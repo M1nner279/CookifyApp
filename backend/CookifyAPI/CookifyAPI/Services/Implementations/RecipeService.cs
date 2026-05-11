@@ -86,7 +86,7 @@ public class RecipeService(
             .AsSplitQuery()
             .OrderByDescending(r => r.Id);
 
-        if (lastId.HasValue) query = query.Where(r => r.Id > lastId.Value);
+        if (lastId.HasValue) query = query.Where(r => r.Id < lastId.Value);
 
         var items = await query
             .Take(_pageSize)
