@@ -8,4 +8,6 @@ public record AuthSettings
     public int AccessTokenExpirationMinutes { get; init; }
     public int RefreshTokenExpirationDays { get; init; }
     public bool SkipVerification { get; init; }
+    
+    public string GoogleClientId { get; init; } = string.Empty; 
 }

@@ -84,7 +84,7 @@ public class RecipeService(
         IQueryable<Recipe> query = context.Recipes
             .AsNoTracking()
             .AsSplitQuery()
-            .OrderBy(r => r.Id);
+            .OrderByDescending(r => r.Id);
 
         if (lastId.HasValue) query = query.Where(r => r.Id > lastId.Value);
 

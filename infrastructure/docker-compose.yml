@@ -59,6 +59,8 @@ services:
       
       - EmailSettings__Password=${SMTP_PASSWORD}
       - EmailSettings__SenderEmail=${SENDER_EMAIL}
+
+      - AuthSettings__GoogleClientId=${GOOGLE_CLIENT_ID}
       
       - Cloudinary__CloudName=${CLOUDINARY_CLOUD_NAME}
       - Cloudinary__ApiKey=${CLOUDINARY_API_KEY}

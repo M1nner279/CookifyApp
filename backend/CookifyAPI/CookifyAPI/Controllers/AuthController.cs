@@ -77,4 +77,17 @@ public class AuthController(IAuthService authService) : ControllerBase
         return Ok(response);
     }
     
+    [HttpPost("google")]
+    public async Task<IActionResult> GoogleAuth([FromBody] GoogleAuthRequest request)
+    {
+        var response = await authService.GoogleAuthAsync(request);
+
+        if (response == null)
+        {
+            return BadRequest(new { message = "Invalid Google token" });
+        }
+
+        return Ok(response); 
+    }
+    
 }
