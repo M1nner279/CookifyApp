@@ -30,10 +30,17 @@ public class SearchController(
         return Ok(results);
     }
     
+    // [HttpGet("recipes-Detailed")]
+    // public async Task<IActionResult> SearchDetailedRecipes([FromQuery] RecipeSearchRequest request)
+    // {
+    //     var results = await recipeService.SearchRecipesDetailedAsync(request);
+    //     return Ok(results);
+    // }
+
     [HttpGet("recipes")]
     public async Task<IActionResult> SearchRecipes([FromQuery] RecipeSearchRequest request)
     {
-        var results = await recipeService.SearchRecipesDetailedAsync(request);
+        var results = await recipeService.SearchRecipesAsync(request);
         return Ok(results);
     }
 }

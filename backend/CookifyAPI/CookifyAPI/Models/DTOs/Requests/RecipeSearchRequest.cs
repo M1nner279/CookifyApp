@@ -9,7 +9,7 @@ public record RecipeSearchRequest(
     float? MinProtein, float? MaxProtein,
     float? MinFat, float? MaxFat,
     float? MinCalories, float? MaxCalories,
-    int? Difficulty,
+    [FromQuery] int[]? Difficulty,
     [FromQuery] int[]? TagIds,
     [FromQuery] int[]? IngredientIds
 );

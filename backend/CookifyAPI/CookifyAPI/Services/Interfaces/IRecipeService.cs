@@ -6,9 +6,10 @@ namespace CookifyAPI.Services;
 
 public interface IRecipeService
 {
-    Task<IEnumerable<RecipeListDto>> GetRecipesListAsync();
+    //Task<IEnumerable<RecipeListDto>> GetRecipesListAsync();
     Task<RecipeDetailDto?> GetRecipeByIdAsync(int id);
-    Task<OffsetPagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page);
+    //Task<OffsetPagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page);
     Task<KeysetPagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId);
-    Task<List<RecipeDetailDto>> SearchRecipesDetailedAsync(RecipeSearchRequest request);
+    //Task<List<RecipeDetailDto>> SearchRecipesDetailedAsync(RecipeSearchRequest request);
+    Task<List<RecipeListDto>> SearchRecipesAsync(RecipeSearchRequest request);
 }
