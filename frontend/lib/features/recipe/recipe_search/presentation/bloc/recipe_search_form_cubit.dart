@@ -72,7 +72,7 @@ class RecipeSearchFormCubit extends Cubit<RecipeSearchFormState> {
       );
 
       if (result is Success && (result as Success<List<IngredientEntity>>).data.isNotEmpty) {
-        ingredients.add((result as Success<List<IngredientEntity>>).data.first);
+        ingredients.add((result).data.first);
       }
     }
 

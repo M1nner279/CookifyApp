@@ -19,7 +19,7 @@ void showToast(bool isSuccess, String text) {
             ? Icon(Icons.check, color: Color(0xFF7FB069))
             : Icon(Icons.close, color: Color(0xFFE76F51)),
         SizedBox(width: 12.0),
-        Text(text, style: const TextStyle(color: Color(0xFFE5C9A8))),
+        Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE5C9A8)))),
       ],
     ),
   );

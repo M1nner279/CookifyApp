@@ -30,6 +30,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     on<ValidateEmail>(_onValidateEmail);
     on<ValidatePassword>(_onValidatePassword);
     on<ValidateConfirmPassword>(_onValidateConfirmPassword);
+    on<SignUpWithGoogle>(_onSignUpWithGoogle);
     on<SignUp>(_onSignUp);
   }
 
@@ -176,7 +177,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         _signUpNavigator?.goRecipeFeed();
       }
     } catch (error) {
-      print('Ошибка входа: $error');
+      //print('Ошибка входа: $error');
     }
   }
 
