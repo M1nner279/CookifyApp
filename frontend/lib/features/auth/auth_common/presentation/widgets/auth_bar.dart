@@ -33,13 +33,13 @@ class AuthBar extends StatelessWidget {
             isSelected: type == AuthPageContentType.signUp,
             title: MyLocale.of(context).authBarSignUp,
           ),
-          AuthBarItem(
-            onTap: () {
-              onTypeChanged(AuthPageContentType.restore);
-            },
-            isSelected: type == AuthPageContentType.restore,
-            title: MyLocale.of(context).authBarRestore,
-          ),
+          // AuthBarItem(
+          //   onTap: () {
+          //     onTypeChanged(AuthPageContentType.restore);
+          //   },
+          //   isSelected: type == AuthPageContentType.restore,
+          //   title: MyLocale.of(context).authBarRestore,
+          // ),
         ],
       ),
     );
