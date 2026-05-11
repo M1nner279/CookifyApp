@@ -10,4 +10,6 @@ public interface IImageService
     /// <param name="maxFileSizeMb">Максимальный размер файла в МБ</param>
     /// <returns>Публичный URL картинки</returns>
     Task<string> UploadAsync(IFormFile file, string folder, int maxFileSizeMb = 10);
+    
+    Task<string?> UploadImageBase64Async(string base64String, string folder);
 }

@@ -12,4 +12,5 @@ public interface IRecipeService
     Task<KeysetPagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId);
     //Task<List<RecipeDetailDto>> SearchRecipesDetailedAsync(RecipeSearchRequest request);
     Task<List<RecipeListDto>> SearchRecipesAsync(RecipeSearchRequest request);
+    Task<int> CreateRecipeAsync(int authorId, RecipePublishRequest publishRequest);
 }

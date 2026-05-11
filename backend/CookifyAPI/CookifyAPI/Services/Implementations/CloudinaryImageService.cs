@@ -53,6 +53,26 @@ public class CloudinaryImageService : IImageService
 
         return result.SecureUrl.ToString();
     }
+
+    public async Task<string?> UploadImageBase64Async(string base64String, string folder)
+    {
+        if (string.IsNullOrWhiteSpace(base64String)) return null;
+
+        // Cloudinary умеет принимать Data URI (data:image/png;base64,...)
+        // Если клиент присылает чистый Base64, добавим префикс
+        var prefix = "data:image/png;base64,";
+        var imageData = base64String.StartsWith("data:image") ? base64String : prefix + base64String;
+
+        var uploadParams = new ImageUploadParams
+        {
+            File = new FileDescription(imageData),
+            Folder = folder,
+            Transformation = new Transformation().Quality("auto").FetchFormat("auto") // Оптимизация
+        };
+
+        var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+        return uploadResult.SecureUrl?.ToString();
+    }
 }
 
 public class PayloadTooLargeException : Exception

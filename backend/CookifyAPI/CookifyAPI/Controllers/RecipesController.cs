@@ -1,12 +1,16 @@
-﻿using CookifyAPI.Models.DTOs.Recipes;
+﻿using System.Security.Claims;
+using CookifyAPI.Models.DTOs.Recipes;
+using CookifyAPI.Models.DTOs.Requests;
+using CookifyAPI.Models.Entities;
 using CookifyAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CookifyAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RecipesController(IRecipeService service) : ControllerBase
+public class RecipesController(IRecipeService service) : AuthBaseController
 {
     // GET: api/recipes
     /// <summary>
@@ -30,6 +34,21 @@ public class RecipesController(IRecipeService service) : ControllerBase
             return NotFound();
 
         return Ok(recipe);
+    }
+    
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> CreateRecipe([FromBody] RecipePublishRequest request)
+    {
+        try
+        {
+            var id = await service.CreateRecipeAsync(CurrentUserId, request);
+            return Ok(new { id });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
 
