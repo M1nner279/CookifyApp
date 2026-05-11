@@ -11,4 +11,5 @@ public interface IAuthService {
     Task<AuthResponse?> VerifyCodeAsync(ConfirmOtpRequest request);
     Task<bool> SendOtpCodeAsync(string login);
     Task<AuthResponse?> ResetPasswordAsync(ResetPasswordRequest request);
+    Task<AuthResponse?> GoogleAuthAsync(GoogleAuthRequest request);
 }
