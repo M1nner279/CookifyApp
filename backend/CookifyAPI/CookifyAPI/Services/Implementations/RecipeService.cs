@@ -3,37 +3,19 @@ using CookifyAPI.Models.DTOs;
 using CookifyAPI.Models.DTOs.Pagination;
 using CookifyAPI.Models.DTOs.Recipes;
 using CookifyAPI.Models.DTOs.Requests;
+using CookifyAPI.Models.DTOs.Search;
 using CookifyAPI.Models.Entities;
-using CookifyAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CookifyAPI.Services;
 
 public class RecipeService(
     AppDbContext context,
-    ISearchService searchService) : IRecipeService
+    ISearchService searchService,
+    IImageService imageService) : IRecipeService
 {
-    public async Task<IEnumerable<RecipeListDto>> GetRecipesListAsync()
-    {
-        return await context.Recipes
-            .Select(r => new RecipeListDto
-            {
-                Id = r.Id,
-                Title = r.Title,
-                CookingTimeMin = r.CookingTimeMin,
-                Servings = r.Servings,
-                Difficulty = r.Difficulty,
-                Tags = r.Tags
-                    .Select(rt => rt.Tag.Name)
-                    .ToList(),
-                PreviewImageUrl = r.Images
-                    .OrderBy(i => i.Order)
-                    .Select(i => i.Url)
-                    .FirstOrDefault()
-            })
-            .ToListAsync();
-    }
-    
+    private readonly int _pageSize = 15;
+
     public async Task<RecipeDetailDto?> GetRecipeByIdAsync(int id)
     {
         return await context.Recipes
@@ -94,49 +76,7 @@ public class RecipeService(
             })
             .FirstOrDefaultAsync();
     }
-    
-    public async Task<OffsetPagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page)
-    {
-        //page = Math.Max(page, 1);
-        //pageSize = Math.Clamp(pageSize, 1, 50);
-        var query = context.Recipes
-            .AsNoTracking()
-            .AsSplitQuery();
 
-        var total = await query.CountAsync();
-        
-        var result = new OffsetPagedResult<RecipeListDto>
-        {
-            TotalCount = total,
-            Page = page
-        };
-
-        int pageSize = result.PageSize;
-        
-        var items = await query
-            .OrderBy(r => r.Id) // обязательно
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(r => new RecipeListDto
-            {
-                Id = r.Id,
-                Title = r.Title,
-                CookingTimeMin = r.CookingTimeMin,
-                Servings = r.Servings,
-                Difficulty = r.Difficulty,
-                Tags = r.Tags.Select(t => t.Tag.Name).ToList(),
-                PreviewImageUrl = r.Images
-                    .OrderBy(i => i.Order)
-                    .Select(i => i.Url)
-                    .FirstOrDefault()
-            })
-            .ToListAsync();
-
-        result.Items = items;
-        return result;
-    }
-
-    private int _pageSize = 15; 
     public async Task<KeysetPagedResult<RecipeListDto>> GetRecipesKeysetAsync(int? lastId)
     {
         //_pageSize = Math.Clamp(_pageSize, 1, 50);
@@ -146,10 +86,7 @@ public class RecipeService(
             .AsSplitQuery()
             .OrderBy(r => r.Id);
 
-        if (lastId.HasValue)
-        {
-            query = query.Where(r => r.Id > lastId.Value);
-        }
+        if (lastId.HasValue) query = query.Where(r => r.Id > lastId.Value);
 
         var items = await query
             .Take(_pageSize)
@@ -177,54 +114,240 @@ public class RecipeService(
         };
     }
 
-    public async Task<List<RecipeDetailDto>> SearchRecipesDetailedAsync(RecipeSearchRequest request)
+    public async Task<List<RecipeListDto>> SearchRecipesAsync(RecipeSearchRequest request)
     {
         var query = context.Recipes.AsNoTracking();
-        
+
         if (!string.IsNullOrWhiteSpace(request.Title))
         {
             var recipeIds = await searchService.SearchRecipeIdsAsync(request.Title);
-            
+
             // Если Meili ничего не нашел, возвращаем пустой список, чтобы не делать запрос к БД
             if (recipeIds.Length == 0)
             {
                 Console.WriteLine($"No recipes found for {request.Title}");
-                return new List<RecipeDetailDto>();
+                return new List<RecipeListDto>();
             }
-            
+
             query = query.Where(r => recipeIds.Contains(r.Id));
         }
-        
+
         if (request.MaxCookingTime.HasValue) query = query.Where(r => r.CookingTimeMin <= request.MaxCookingTime);
         //if (request.Difficulty.HasValue) query = query.Where(r => r.Difficulty == request.Difficulty);
 
         // Фильтры по БЖУ и Калориям
         if (request.MinCalories.HasValue) query = query.Where(r => r.Calories100g >= request.MinCalories);
         if (request.MaxCalories.HasValue) query = query.Where(r => r.Calories100g <= request.MaxCalories);
-        
+
         if (request.MinProtein.HasValue) query = query.Where(r => r.Protein100g >= request.MinProtein);
         if (request.MaxProtein.HasValue) query = query.Where(r => r.Protein100g <= request.MaxProtein);
-        
+
         if (request.MinFat.HasValue) query = query.Where(r => r.Fat100g >= request.MinFat);
         if (request.MaxFat.HasValue) query = query.Where(r => r.Fat100g <= request.MaxFat);
-        
+
         if (request.MinCarb.HasValue) query = query.Where(r => r.Carb100g >= request.MinCarb);
         if (request.MaxCarb.HasValue) query = query.Where(r => r.Carb100g <= request.MaxCarb);
-        
+
+        if (request.Difficulty is { Length: > 0 }) query = query.Where(r => request.Difficulty.Contains(r.Difficulty));
+
         if (request.TagIds is { Length: > 0 })
         {
-            query = query.Where(r => r.Tags.Any(t => request.TagIds.Contains(t.TagId)));
+            var targetIds = request.TagIds.Distinct().ToList();
+            var targetCount = targetIds.Count;
+            query = query.Where(r => r.Tags.Count(i => targetIds.Contains(i.TagId)) == targetCount);
         }
 
         if (request.IngredientIds is { Length: > 0 })
         {
-            query = query.Where(r => r.Ingredients.Any(i => request.IngredientIds.Contains(i.IngredientId)));
+            var targetIds = request.IngredientIds.Distinct().ToList();
+            var targetCount = targetIds.Count;
+
+            query = query.Where(r => r.Ingredients.Count(i => targetIds.Contains(i.IngredientId)) == targetCount);
         }
 
-        if (request.Difficulty is { Length: > 0 })
+        var recipes = await query
+            .AsSplitQuery()
+            .Select(r => new RecipeListDto
+            {
+                Id = r.Id,
+                Title = r.Title,
+                CookingTimeMin = r.CookingTimeMin,
+                Servings = r.Servings,
+                Difficulty = r.Difficulty,
+                PreviewImageUrl = r.Images
+                    .OrderBy(i => i.Order)
+                    .Select(i => i.Url)
+                    .FirstOrDefault(),
+                Tags = r.Tags.Select(m2m => m2m.Tag.Name).ToList()
+            })
+            .ToListAsync();
+
+        return recipes;
+    }
+
+    public async Task<int> CreateRecipeAsync(int authorId, RecipePublishRequest req)
+    {
+        // 1. Главное фото
+        string? mainImageUrl = null;
+        if (!string.IsNullOrEmpty(req.MainImageBase64))
         {
-            query = query.Where(r => request.Difficulty.Contains(r.Difficulty));
+            mainImageUrl = await imageService.UploadImageBase64Async(req.MainImageBase64, "CookifyApp/recipes");
         }
+
+        var recipe = new Recipe
+        {
+            AuthorId = authorId,
+            Title = req.Title,
+            Description = req.Description,
+            CookingTimeMin = req.CookingTimeMinutes,
+            Servings = req.Servings,
+            Difficulty = req.Difficulty,
+            Calories100g = req.Calories100g,
+            Protein100g = req.Protein100g,
+            Fat100g = req.Fat100g,
+            Carb100g = req.Carb100g,
+            CreatedAt = DateTime.UtcNow,
+            Images = mainImageUrl != null ? [new RecipeImage { Url = mainImageUrl }] : []
+        };
+
+        // 2. Шаги
+        foreach (var s in req.Steps)
+        {
+            string? stepImgUrl = null;
+            if (!string.IsNullOrEmpty(s.ImageBase64))
+            {
+                stepImgUrl = await imageService.UploadImageBase64Async(s.ImageBase64, "");
+            }
+
+            recipe.Steps.Add(new RecipeStep
+            {
+                StepNumber = s.StepNumber,
+                Title = s.Title,
+                Description = s.Description,
+                ImageUrl = stepImgUrl
+            });
+        }
+
+        // 3. Теги и Ингредиенты
+        recipe.Tags = req.Tags.Select(id => new M2MRecipeTag { TagId = id }).ToList();
+        recipe.Ingredients = req.Ingredients.Select(i => new M2MRecipeIngredient
+        {
+            IngredientId = i.Id,
+            Amount = i.Amount,
+            Unit = i.Unit
+        }).ToList();
+
+        await context.Recipes.AddAsync(recipe);
+        await context.SaveChangesAsync();
+
+        await searchService.IndexRecipesAsync([new RecipeSearchDocument(recipe.Id, recipe.Title)]);
+
+        return recipe.Id;
+    }
+
+    public async Task<IEnumerable<RecipeListDto>> GetRecipesListAsync()
+    {
+        return await context.Recipes
+            .Select(r => new RecipeListDto
+            {
+                Id = r.Id,
+                Title = r.Title,
+                CookingTimeMin = r.CookingTimeMin,
+                Servings = r.Servings,
+                Difficulty = r.Difficulty,
+                Tags = r.Tags
+                    .Select(rt => rt.Tag.Name)
+                    .ToList(),
+                PreviewImageUrl = r.Images
+                    .OrderBy(i => i.Order)
+                    .Select(i => i.Url)
+                    .FirstOrDefault()
+            })
+            .ToListAsync();
+    }
+
+    public async Task<OffsetPagedResult<RecipeListDto>> GetRecipesOffsetAsync(int page)
+    {
+        //page = Math.Max(page, 1);
+        //pageSize = Math.Clamp(pageSize, 1, 50);
+        var query = context.Recipes
+            .AsNoTracking()
+            .AsSplitQuery();
+
+        var total = await query.CountAsync();
+
+        var result = new OffsetPagedResult<RecipeListDto>
+        {
+            TotalCount = total,
+            Page = page
+        };
+
+        var pageSize = result.PageSize;
+
+        var items = await query
+            .OrderBy(r => r.Id) // обязательно
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(r => new RecipeListDto
+            {
+                Id = r.Id,
+                Title = r.Title,
+                CookingTimeMin = r.CookingTimeMin,
+                Servings = r.Servings,
+                Difficulty = r.Difficulty,
+                Tags = r.Tags.Select(t => t.Tag.Name).ToList(),
+                PreviewImageUrl = r.Images
+                    .OrderBy(i => i.Order)
+                    .Select(i => i.Url)
+                    .FirstOrDefault()
+            })
+            .ToListAsync();
+
+        result.Items = items;
+        return result;
+    }
+
+    public async Task<List<RecipeDetailDto>> SearchRecipesDetailedAsync(RecipeSearchRequest request)
+    {
+        var query = context.Recipes.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(request.Title))
+        {
+            var recipeIds = await searchService.SearchRecipeIdsAsync(request.Title);
+
+            // Если Meili ничего не нашел, возвращаем пустой список, чтобы не делать запрос к БД
+            if (recipeIds.Length == 0)
+            {
+                Console.WriteLine($"No recipes found for {request.Title}");
+                return new List<RecipeDetailDto>();
+            }
+
+            query = query.Where(r => recipeIds.Contains(r.Id));
+        }
+
+        if (request.MaxCookingTime.HasValue) query = query.Where(r => r.CookingTimeMin <= request.MaxCookingTime);
+        //if (request.Difficulty.HasValue) query = query.Where(r => r.Difficulty == request.Difficulty);
+
+        // Фильтры по БЖУ и Калориям
+        if (request.MinCalories.HasValue) query = query.Where(r => r.Calories100g >= request.MinCalories);
+        if (request.MaxCalories.HasValue) query = query.Where(r => r.Calories100g <= request.MaxCalories);
+
+        if (request.MinProtein.HasValue) query = query.Where(r => r.Protein100g >= request.MinProtein);
+        if (request.MaxProtein.HasValue) query = query.Where(r => r.Protein100g <= request.MaxProtein);
+
+        if (request.MinFat.HasValue) query = query.Where(r => r.Fat100g >= request.MinFat);
+        if (request.MaxFat.HasValue) query = query.Where(r => r.Fat100g <= request.MaxFat);
+
+        if (request.MinCarb.HasValue) query = query.Where(r => r.Carb100g >= request.MinCarb);
+        if (request.MaxCarb.HasValue) query = query.Where(r => r.Carb100g <= request.MaxCarb);
+
+        if (request.TagIds is { Length: > 0 })
+            query = query.Where(r => r.Tags.Any(t => request.TagIds.Contains(t.TagId)));
+
+        if (request.IngredientIds is { Length: > 0 })
+            query = query.Where(r => r.Ingredients.Any(i => request.IngredientIds.Contains(i.IngredientId)));
+
+        if (request.Difficulty is { Length: > 0 }) query = query.Where(r => request.Difficulty.Contains(r.Difficulty));
 
         var recipes = await query
             .AsSplitQuery()
@@ -244,7 +367,7 @@ public class RecipeService(
                 Difficulty = r.Difficulty,
 
                 // Маппим связанные списки (Коллекции)
-                Images = r.Images.Select(img => new RecipeImageDto 
+                Images = r.Images.Select(img => new RecipeImageDto
                 {
                     Id = img.Id,
                     Url = img.Url // Подставьте свои поля
@@ -267,80 +390,6 @@ public class RecipeService(
                     Name = m2m.Ingredient.Name,
                     Amount = m2m.Amount // Предположим, количество хранится в M2M таблице
                 }).ToList()
-            })
-            .ToListAsync();
-
-        return recipes;
-    }
-
-    public async Task<List<RecipeListDto>> SearchRecipesAsync(RecipeSearchRequest request)
-    {
-        var query = context.Recipes.AsNoTracking();
-        
-        if (!string.IsNullOrWhiteSpace(request.Title))
-        {
-            var recipeIds = await searchService.SearchRecipeIdsAsync(request.Title);
-            
-            // Если Meili ничего не нашел, возвращаем пустой список, чтобы не делать запрос к БД
-            if (recipeIds.Length == 0)
-            {
-                Console.WriteLine($"No recipes found for {request.Title}");
-                return new List<RecipeListDto>();
-            }
-            
-            query = query.Where(r => recipeIds.Contains(r.Id));
-        }
-        
-        if (request.MaxCookingTime.HasValue) query = query.Where(r => r.CookingTimeMin <= request.MaxCookingTime);
-        //if (request.Difficulty.HasValue) query = query.Where(r => r.Difficulty == request.Difficulty);
-
-        // Фильтры по БЖУ и Калориям
-        if (request.MinCalories.HasValue) query = query.Where(r => r.Calories100g >= request.MinCalories);
-        if (request.MaxCalories.HasValue) query = query.Where(r => r.Calories100g <= request.MaxCalories);
-        
-        if (request.MinProtein.HasValue) query = query.Where(r => r.Protein100g >= request.MinProtein);
-        if (request.MaxProtein.HasValue) query = query.Where(r => r.Protein100g <= request.MaxProtein);
-        
-        if (request.MinFat.HasValue) query = query.Where(r => r.Fat100g >= request.MinFat);
-        if (request.MaxFat.HasValue) query = query.Where(r => r.Fat100g <= request.MaxFat);
-        
-        if (request.MinCarb.HasValue) query = query.Where(r => r.Carb100g >= request.MinCarb);
-        if (request.MaxCarb.HasValue) query = query.Where(r => r.Carb100g <= request.MaxCarb);
-        
-        if (request.Difficulty is { Length: > 0 })
-        {
-            query = query.Where(r => request.Difficulty.Contains(r.Difficulty));
-        }
-        
-        if (request.TagIds is { Length: > 0 })
-        {
-            var targetIds = request.TagIds.Distinct().ToList();
-            int targetCount = targetIds.Count;
-            query = query.Where(r => r.Tags.Count(i => targetIds.Contains(i.TagId)) == targetCount);
-        }
-
-        if (request.IngredientIds is { Length: > 0 })
-        {
-            var targetIds = request.IngredientIds.Distinct().ToList();
-            int targetCount = targetIds.Count;
-            
-            query = query.Where(r => r.Ingredients.Count(i => targetIds.Contains(i.IngredientId)) == targetCount);
-        }
-
-        var recipes = await query
-            .AsSplitQuery()
-            .Select(r => new RecipeListDto()
-            {
-                Id = r.Id,
-                Title = r.Title,
-                CookingTimeMin = r.CookingTimeMin,
-                Servings = r.Servings,
-                Difficulty = r.Difficulty,
-                PreviewImageUrl = r.Images
-                    .OrderBy(i => i.Order)
-                    .Select(i => i.Url)
-                    .FirstOrDefault(),
-                Tags = r.Tags.Select(m2m => m2m.Tag.Name).ToList(),
             })
             .ToListAsync();
 
