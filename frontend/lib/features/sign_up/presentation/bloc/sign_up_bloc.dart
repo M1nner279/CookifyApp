@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:cookify/core/domain/failures/failures.dart';
 import 'package:cookify/core/presentation/localize/localized_error_value.dart';
+import 'package:cookify/core/presentation/widgets/app_toast.dart';
 import 'package:cookify/di/di.dart';
 import 'package:cookify/features/sign_up/dependencies/sign_up_dependency.dart';
 import 'package:cookify/features/sign_up/domain/payloads/sign_up_payload.dart';
@@ -137,7 +139,14 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     if (isClosed) return;
 
     result.fold(
-      (failure) => emit(state.copyWith(isLoading: false, failure: failure)),
+      (failure) {
+        emit(state.copyWith(isLoading: false, failure: failure));
+        if (failure is NetworkFailure) {
+          showToast(false, 'Нет подключения к интернету');
+        } else if (failure is UnknownFailure) {
+          showToast(false, 'Повторите попытку');
+        }
+      },
       (_) {
         _signUpNavigator?.goOtp(state.email.value);
       },
@@ -157,7 +166,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
         final String? idToken = auth.idToken;
 
-        final response = await Di.dio.post('/api/google', data: {'id_token': idToken});
+        final response = await Di.dio.post(
+          '/api/google',
+          data: {'id_token': idToken},
+        );
         final token = TokenMapper.toEntity(TokenModel.fromJson(response.data));
 
         await TokenDi.setTokenUseCase(SetTokenPayload(token: token));

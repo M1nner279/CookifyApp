@@ -1,1 +1,1 @@
-const refreshTokenEndPoint = '/api/auth/refresh';
+const refreshTokenEndPoint = '/api/refresh';

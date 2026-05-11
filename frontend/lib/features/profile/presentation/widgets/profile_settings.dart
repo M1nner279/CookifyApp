@@ -15,9 +15,9 @@ class ProfileSettings extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Настройки',
-          style: TextStyle(
+        Text(
+          MyLocale.of(context).profileSettings,
+          style: const TextStyle(
             color: Color(0xFFFADCD2),
             fontSize: 14.0,
             fontWeight: FontWeight.bold,

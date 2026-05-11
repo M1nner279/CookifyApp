@@ -13,7 +13,7 @@ abstract class RecipeIngredientModel with _$RecipeIngredientModel {
     @JsonKey(name: 'protein100g') required int proteins,
     @JsonKey(name: 'fat100g') required int fats,
     required double amount,
-    required String unit,
+    required String? unit,
   }) = _RecipeIngredientModel;
 
   factory RecipeIngredientModel.fromJson(Map<String, dynamic> json) =>

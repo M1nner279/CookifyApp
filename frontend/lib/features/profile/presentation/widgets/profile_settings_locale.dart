@@ -162,8 +162,8 @@ class _Locale extends StatelessWidget {
             Expanded(
               child: Text(
                 switch (locale.languageCode) {
-                  'ru' => 'Русский',
-                  'en' => 'English',
+                  'ru' => MyLocale.of(context).commonLanguageRu,
+                  'en' => MyLocale.of(context).commonLanguageEn,
                   _ => throw UnimplementedError(),
                 },
                 style: TextStyle(

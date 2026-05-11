@@ -21,7 +21,7 @@ abstract class TokenDi {
   static TokenLocalDataSource get _tokenLocalDataSource =>
       TokenLocalDataSourceImpl(storage: Di.secureStorage);
 
-  static TokenStreamDataSource get _tokenStreamDataSource =>
+  static final TokenStreamDataSource _tokenStreamDataSource =
       TokenStreamDataSourceImpl();
 
   static TokenRepository get _tokenRepository => TokenRepositoryImpl(

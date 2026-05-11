@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/profile/domain/entities/user_entity.dart';
+import 'package:cookify/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:cookify/features/profile/presentation/bloc/profile_event.dart';
+import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_form_page_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class ProfileUserInfo extends StatelessWidget {
@@ -20,7 +27,6 @@ class ProfileUserInfo extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
       ),
       width: double.infinity,
-      //height: 56.0,
       child: Column(
         spacing: 16.0,
         children: [
@@ -49,19 +55,63 @@ class _Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      width: 96.0,
-      height: 96.0,
-      decoration: BoxDecoration(
-        color: Color(0xFFE5C9A8),
-        border: Border.all(color: Color(0xFF1E100A), width: 4.0),
-        shape: BoxShape.circle,
-      ),
-      child: CachedNetworkImage(
-        imageUrl: avatarUrl ?? '',
-        placeholder: (context, url) => _AvatarPlaceholder(login: login),
-        errorWidget: (context, url, error) => _AvatarPlaceholder(login: login),
+    return GestureDetector(
+      onTap: () async {
+        final image = await ImagePickerSheet.show(context);
+
+        if (context.mounted && image != null) {
+          context.read<ProfileBloc>().add(
+            UpdateAvatar(avatarFile: File(image.path)),
+          );
+        }
+      },
+      child: Stack(
+        children: [
+          Container(
+            width: 96.0,
+            height: 96.0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFF1E100A), width: 4.0),
+              color: const Color(0xFFE5C9A8),
+            ),
+            child: CachedNetworkImage(
+              imageUrl: avatarUrl ?? '',
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              placeholder: (context, url) => _AvatarPlaceholder(login: login),
+              errorWidget: (context, url, error) =>
+                  _AvatarPlaceholder(login: login),
+            ),
+          ),
+
+          Positioned(
+            right: 0.0,
+            bottom: 0.0,
+            child: Container(
+              alignment: Alignment.center,
+              width: 28.0,
+              height: 28.0,
+              decoration: BoxDecoration(
+                color: Color(0xFFE5C9A8),
+                border: Border.all(color: Color(0xFF1E100A), width: 1.0),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.camera_alt,
+                color: Color(0xFF3E2D16),
+                size: 16.0,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -74,14 +124,16 @@ class _AvatarPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      login.substring(0, 1).toUpperCase(),
-      style: const TextStyle(
-        color: Color(0xFF1E100A),
-        fontSize: 36.0,
-        fontWeight: FontWeight.normal,
-        letterSpacing: 0.0,
-        height: 40.0 / 36.0,
+    return Center(
+      child: Text(
+        login.substring(0, 1).toUpperCase(),
+        style: const TextStyle(
+          color: Color(0xFF1E100A),
+          fontSize: 36.0,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 0.0,
+          height: 40.0 / 36.0,
+        ),
       ),
     );
   }

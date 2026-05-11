@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:flutter/material.dart';
 
 class AuthTop extends StatelessWidget {
@@ -5,10 +6,10 @@ class AuthTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       spacing: 8.0,
       children: [
-        Text(
+        const Text(
           'Cookify',
           style: TextStyle(
             color: Color(0xFFE5C9A8),
@@ -20,8 +21,8 @@ class AuthTop extends StatelessWidget {
         ),
 
         Text(
-          'ИСКУССТВО ДОМАШНЕЙ КУХНИ',
-          style: TextStyle(
+          MyLocale.of(context).authTopSubtitle,
+          style: const TextStyle(
             color: Color(0xFFE5C9A8),
             fontSize: 14.0,
             fontWeight: FontWeight.normal,

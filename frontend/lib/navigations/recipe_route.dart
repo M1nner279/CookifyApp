@@ -1,3 +1,4 @@
+import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page.dart';
 import 'package:cookify/features/recipe/recipe_detail/presentation/pages/recipe_detail_page_args.dart';
 import 'package:cookify/features/recipe/recipe_feed/presentation/pages/recipe_feed_page.dart';
@@ -15,7 +16,7 @@ final recipeRoute = [
   GoRoute(
     path: '/',
     pageBuilder: (context, state) =>
-        MaterialPage(child: const RecipeFeedPage()),
+        NoTransitionPage(key: state.pageKey, child: const RecipeFeedPage()),
   ),
 
   GoRoute(
@@ -23,44 +24,92 @@ final recipeRoute = [
     pageBuilder: (context, state) {
       final args = state.extra as RecipeDetailPageArgs;
 
-      return NoTransitionPage(child: RecipeDetailPage(args: args));
+      return NoTransitionPage(
+        key: state.pageKey,
+        child: RecipeDetailPage(args: args),
+      );
     },
   ),
 
-  GoRoute(
-    path: '/search-form',
-    pageBuilder: (context, state) =>
-        MaterialPage(child: const RecipeSearchFormPage()),
+  ShellRoute(
+    pageBuilder: (context, state, child) {
+      return NoTransitionPage(
+        key: state.pageKey,
+        child: SafeArea(
+          child: Scaffold(
+            body: Column(
+              children: [
+                Expanded(child: child),
+
+                CookifyNavigationBar(index: 1),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+    routes: [
+      GoRoute(
+        path: '/search-form',
+        builder: (context, state) => RecipeSearchFormPage(),
+      ),
+
+      GoRoute(
+        path: '/search',
+        pageBuilder: (context, state) {
+          final args = state.extra as RecipeSearchPageArgs;
+
+          return NoTransitionPage(
+            key: state.pageKey,
+            child: RecipeSearchPage(args: args),
+          );
+        },
+      ),
+    ],
   ),
 
-  GoRoute(
-    path: '/search',
-    pageBuilder: (context, state) {
-      final args = state.extra as RecipeSearchPageArgs;
+  ShellRoute(
+    pageBuilder: (context, state, child) {
+      return NoTransitionPage(
+        key: state.pageKey,
+        child: SafeArea(
+          child: Scaffold(
+            body: Column(
+              children: [
+                Expanded(child: child),
 
-      return NoTransitionPage(child: RecipeSearchPage(args: args));
+                CookifyNavigationBar(index: 2),
+              ],
+            ),
+          ),
+        ),
+      );
     },
-  ),
-
-  GoRoute(
-    path: '/create',
-    pageBuilder: (context, state) {
-      final args = state.extra is RecipeFormPageArgs
-          ? state.extra as RecipeFormPageArgs
-          : const RecipeFormPageArgs();
-      return MaterialPage(child: RecipeFormPage(args: args));
-    },
+    routes: [
+      GoRoute(
+        path: '/create',
+        pageBuilder: (context, state) {
+          final args = state.extra is RecipeFormPageArgs
+              ? state.extra as RecipeFormPageArgs
+              : const RecipeFormPageArgs();
+          return NoTransitionPage(
+            key: state.pageKey,
+            child: RecipeFormPage(args: args),
+          );
+        },
+      ),
+    ],
   ),
 
   GoRoute(
     path: '/drafts',
     pageBuilder: (context, state) =>
-        MaterialPage(child: const RecipeDraftsPage()),
+        NoTransitionPage(key: state.pageKey, child: const RecipeDraftsPage()),
   ),
 
   GoRoute(
     path: '/saved',
     pageBuilder: (context, state) =>
-        MaterialPage(child: const RecipeSavedPage()),
+        NoTransitionPage(key: state.pageKey, child: const RecipeSavedPage()),
   ),
 ];

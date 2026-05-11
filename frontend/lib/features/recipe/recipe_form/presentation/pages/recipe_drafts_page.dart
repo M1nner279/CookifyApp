@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/features/recipe/recipe_form/domain/entities/draft_recipe_entity.dart';
 import 'package:cookify/features/recipe/recipe_form/domain/repositories/draft_recipe_repository.dart';
@@ -18,12 +19,14 @@ class RecipeDraftsPage extends StatelessWidget {
         children: [
           Scaffold(
             appBar: AppBar(
-              title: const Text(
-                'Черновики',
-                style: TextStyle(
+              title: Text(
+                MyLocale.of(context).recipeDraftsTitle,
+                style: const TextStyle(
                   color: Color(0xFFE5C9A8),
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.72,
+                  height: 28.0 / 18.0,
                 ),
               ),
               actions: [
@@ -50,11 +53,91 @@ class RecipeDraftsPage extends StatelessWidget {
                 valueListenable: repo.draftsListenable,
                 builder: (context, drafts, _) {
                   if (drafts.isEmpty) {
-                    return const Center(
-                      child: Text(
-                        'Пока нет черновиков',
-                        style: TextStyle(color: Color(0xFFE5C9A8)),
-                      ),
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 16,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 50,
+                            horizontal: 32,
+                          ),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF2C1C16),
+                            border: Border.all(
+                              color: Color(
+                                0xFFE5C9A8,
+                              ).withAlpha((0.1 * 255).toInt()),
+                            ),
+                            borderRadius: BorderRadius.circular(48.0),
+                          ),
+                          child: Column(
+                            spacing: 16,
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: 96,
+                                height: 96,
+                                decoration: BoxDecoration(
+                                  color: Color(
+                                    0xFFE5C9A8,
+                                  ).withAlpha((0.05 * 255).toInt()),
+                                  border: Border.all(
+                                    color: Color(
+                                      0xFFE5C9A8,
+                                    ).withAlpha((0.1 * 255).toInt()),
+                                  ),
+                                  borderRadius: BorderRadius.circular(48.0),
+                                ),
+                                child: Icon(
+                                  Icons.bookmark_border,
+                                  size: 48.0,
+                                  color: Color(0xFFE5C9A8),
+                                ),
+                              ),
+
+                              Text(
+                                MyLocale.of(context).recipeDraftsEmptyMessage,
+                                style: TextStyle(
+                                  color: Color(0xFFE5C9A8),
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w300,
+                                  letterSpacing: 0.0,
+                                  height: 20.0 / 16.0,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: () {
+                            context.push('/create');
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 26.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color(0xFFE5C9A8),
+                              borderRadius: BorderRadius.circular(48.0),
+                            ),
+                            child: Text(
+                              MyLocale.of(context).recipeDraftsCreate,
+                              style: TextStyle(
+                                color: Color(0xFF2C1C16),
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.0,
+                                height: 20.0 / 16.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   }
 
@@ -108,7 +191,7 @@ class _DraftTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = draft.name.trim().isEmpty
-        ? 'Без названия'
+        ? MyLocale.of(context).recipeDraftsUntitled
         : draft.name.trim();
 
     return Material(
@@ -141,7 +224,9 @@ class _DraftTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 6.0),
                     Text(
-                      'Обновлено: ${_formatDateTime(draft.updatedAt)}',
+                      MyLocale.of(
+                        context,
+                      ).recipeDraftsUpdated(_formatDateTime(draft.updatedAt)),
                       style: const TextStyle(
                         color: Color(0x99E5C9A8),
                         fontSize: 12.0,
@@ -158,9 +243,9 @@ class _DraftTile extends StatelessWidget {
                     builder: (context) {
                       return AlertDialog(
                         backgroundColor: const Color(0xFF2C1C16),
-                        title: const Text(
-                          'Удалить черновик?',
-                          style: TextStyle(color: Color(0xFFE5C9A8)),
+                        title: Text(
+                          MyLocale.of(context).recipeDraftsDeleteTitle,
+                          style: const TextStyle(color: Color(0xFFE5C9A8)),
                         ),
                         content: Text(
                           title,
@@ -169,15 +254,15 @@ class _DraftTile extends StatelessWidget {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text(
-                              'Отмена',
-                              style: TextStyle(color: Color(0xFFE5C9A8)),
+                            child: Text(
+                              MyLocale.of(context).commonCancel,
+                              style: const TextStyle(color: Color(0xFFE5C9A8)),
                             ),
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text(
-                              'Удалить',
+                            child: Text(
+                              MyLocale.of(context).commonDelete,
                               style: TextStyle(color: Color(0xFFE5C9A8)),
                             ),
                           ),

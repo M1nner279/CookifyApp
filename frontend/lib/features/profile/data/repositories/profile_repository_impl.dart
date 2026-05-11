@@ -1,5 +1,6 @@
 import 'package:cookify/core/data/mappers/failure_mapper.dart';
 import 'package:cookify/core/domain/my_either/my_either.dart';
+import 'package:cookify/features/profile/data/local/user_statistic_local_store.dart';
 import 'package:cookify/features/profile/data/data_sources/profile_remote_data_source.dart';
 import 'package:cookify/features/profile/data/mappers/update_avatar_mapper.dart';
 import 'package:cookify/features/profile/data/mappers/user_mapper.dart';
@@ -9,19 +10,36 @@ import 'package:cookify/features/profile/domain/repositories/profile_repository.
 import 'package:fpdart/fpdart.dart';
 
 final class ProfileRepositoryImpl implements ProfileRepository {
-  ProfileRepositoryImpl({required ProfileRemoteDataSource remoteDataSource})
-    : _remoteDataSource = remoteDataSource;
+  ProfileRepositoryImpl({
+    required ProfileRemoteDataSource remoteDataSource,
+    required UserStatisticLocalStore userStatisticLocalStore,
+  }) : _remoteDataSource = remoteDataSource,
+       _userStatisticLocalStore = userStatisticLocalStore;
 
   final ProfileRemoteDataSource _remoteDataSource;
+  final UserStatisticLocalStore _userStatisticLocalStore;
 
   @override
   Future<MyEither<UserEntity>> getUser() async {
     try {
       final userModel = await _remoteDataSource.getUser();
-
       final userEntity = UserMapper.toEntity(userModel);
+      final statisticDelta = await _userStatisticLocalStore.getDelta();
+      final actualUserEntity = userEntity.copyWith(
+        statistic: userEntity.statistic.copyWith(
+          favoriteRecipesCount:
+              userEntity.statistic.favoriteRecipesCount +
+              statisticDelta.favoriteRecipesCount,
+          createdRecipesCount:
+              userEntity.statistic.createdRecipesCount +
+              statisticDelta.createdRecipesCount,
+          publishedRecipesCount:
+              userEntity.statistic.publishedRecipesCount +
+              statisticDelta.publishedRecipesCount,
+        ),
+      );
 
-      return Right(userEntity);
+      return Right(actualUserEntity);
     } on Exception catch (e) {
       return Left(FailureMapper.toFailure(e));
     }

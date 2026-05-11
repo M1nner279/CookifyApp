@@ -1,3 +1,4 @@
+import 'package:cookify/core/data/exceptions/exceptions.dart';
 import 'package:cookify/features/sign_up/data/consts/sign_up_end_points.dart';
 import 'package:cookify/features/sign_up/data/data_sources/sign_up_remote_data_source.dart';
 import 'package:cookify/features/sign_up/data/exceptions/sign_in_exceptions.dart';
@@ -14,6 +15,9 @@ final class SignUpRemoteDataSourceImpl implements SignUpRemoteDataSource {
     try {
       await _dio.post(signUpEndPoint, data: request.toJson());
     } on DioException catch (e) {
+      if (e.error is NetworkException) {
+      throw e.error as NetworkException;
+    }
       if (e.response?.statusCode == 400) {
         final a = e.response!.data.first['code'] as String;
         if (a == 'DuplicateUserName') {

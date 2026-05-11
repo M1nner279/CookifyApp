@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_bottom.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_button.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_text_field.dart';
@@ -65,7 +66,9 @@ class _ChangePasswordPageContentState extends State<ChangePasswordPageContent> {
                                     spacing: 24.0,
                                     children: [
                                       Text(
-                                        'Смена пароля',
+                                        MyLocale.of(
+                                          context,
+                                        ).changePasswordTitle,
                                         style: const TextStyle(
                                           color: Color(0x80FFE6C9),
                                           fontSize: 20.0,
@@ -98,8 +101,12 @@ class _ChangePasswordPageContentState extends State<ChangePasswordPageContent> {
                                         },
                                         inputType:
                                             TextInputType.visiblePassword,
-                                        label: 'НОВЫЙ ПАРОЛЬ',
-                                        hint: 'Введите новый пароль',
+                                        label: MyLocale.of(
+                                          context,
+                                        ).changePasswordNewPasswordLabel,
+                                        hint: MyLocale.of(
+                                          context,
+                                        ).changePasswordNewPasswordHint,
                                         isPassword: true,
                                         failureMessage: state
                                             .password
@@ -118,8 +125,12 @@ class _ChangePasswordPageContentState extends State<ChangePasswordPageContent> {
                                             ),
                                         inputType:
                                             TextInputType.visiblePassword,
-                                        label: 'ПОВТОРИТЕ ПАРОЛЬ',
-                                        hint: 'Введите пароль повторно',
+                                        label: MyLocale.of(
+                                          context,
+                                        ).authConfirmPasswordLabel,
+                                        hint: MyLocale.of(
+                                          context,
+                                        ).authConfirmPasswordHint,
                                         isPassword: true,
                                         failureMessage: state
                                             .confirmPassword
@@ -133,15 +144,17 @@ class _ChangePasswordPageContentState extends State<ChangePasswordPageContent> {
                                               .read<ChangePasswordBloc>()
                                               .add(ChangePassword());
                                         },
-                                        title: 'Сменить',
+                                        title: MyLocale.of(
+                                          context,
+                                        ).changePasswordSubmit,
                                         isLoading: state.isLoading,
                                       ),
 
                                       GestureDetector(
-                                        onTap: () => context.go('/auth'),
+                                        onTap: () => context.pop(),
                                         behavior: HitTestBehavior.opaque,
                                         child: Text(
-                                          'Назад',
+                                          MyLocale.of(context).commonBack,
                                           style: const TextStyle(
                                             color: Color(0x80FFE6C9),
                                             fontSize: 14.0,

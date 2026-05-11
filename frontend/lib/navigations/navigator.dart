@@ -29,46 +29,59 @@ final navigator = GoRouter(
 
     GoRoute(
       path: NavigatorPaths.otp,
-      builder: (context, state) {
+      pageBuilder: (context, state) {
         if (state.extra is! OtpPageArgs) {
           context.go(NavigatorPaths.auth);
-          return const SizedBox();
+          return NoTransitionPage(child: const SizedBox());
         }
         final args = state.extra as OtpPageArgs;
 
-        return OtpPage(args: args);
+        return NoTransitionPage(child: OtpPage(args: args));
       },
     ),
 
     GoRoute(
       path: NavigatorPaths.changePassword,
-      builder: (context, state) {
+      pageBuilder: (context, state) {
         if (state.extra is! ChangePasswordPageArgs) {
-          return ChangePasswordPage(
-          changePasswordNavigator: ChangePasswordNavigatorImpl(context),
-          args: ChangePasswordPageArgs(goNext: () {
-            context.go(NavigatorPaths.recipeFeed);
-          },),
-        );
+          return NoTransitionPage(
+            key: state.pageKey,
+            child: ChangePasswordPage(
+              changePasswordNavigator: ChangePasswordNavigatorImpl(context),
+              args: ChangePasswordPageArgs(
+                goNext: () {
+                  context.go(NavigatorPaths.recipeFeed);
+                },
+              ),
+            ),
+          );
         }
         final args = state.extra as ChangePasswordPageArgs;
 
-        return ChangePasswordPage(
-          changePasswordNavigator: ChangePasswordNavigatorImpl(context),
-          args: args,
+        return NoTransitionPage(
+          key: state.pageKey,
+          child: ChangePasswordPage(
+            changePasswordNavigator: ChangePasswordNavigatorImpl(context),
+            args: args,
+          ),
         );
       },
     ),
 
     ShellRoute(
-      builder: (context, state, child) {
-        return Scaffold(
-          body: Column(
-            children: [
-              Expanded(child: child),
-              
-              CookifyNavigationBar(index: 4),
-            ],
+      pageBuilder: (context, state, child) {
+        return NoTransitionPage(
+            key: state.pageKey,
+          child: SafeArea(
+            child: Scaffold(
+              body: Column(
+                children: [
+                  Expanded(child: child),
+
+                  CookifyNavigationBar(index: 4),
+                ],
+              ),
+            ),
           ),
         );
       },

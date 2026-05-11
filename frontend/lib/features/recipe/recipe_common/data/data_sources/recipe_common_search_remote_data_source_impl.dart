@@ -19,7 +19,7 @@ class RecipeCommonSearchRemoteDataSourceImpl
       '/api/search/tags?${request.lastId != null ? 'lastId=${request.lastId}' : ''}&name=${request.name}',
     );
 
-    return (response.data['items'] as List)
+    return (response.data as List)
         .map((json) => CategoryModel.fromJson(json))
         .toList();
   }
@@ -32,7 +32,7 @@ class RecipeCommonSearchRemoteDataSourceImpl
       '/api/search/ingredients?${request.lastId != null ? 'lastId=${request.lastId}' : ''}&name=${request.name}',
     );
 
-    return (response.data['items'] as List)
+    return (response.data as List)
         .map((json) => IngredientModel.fromJson(json))
         .toList();
   }

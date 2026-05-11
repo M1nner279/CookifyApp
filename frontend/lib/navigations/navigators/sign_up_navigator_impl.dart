@@ -11,7 +11,7 @@ final class SignUpNavigatorImpl implements SignUpNavigator {
 
   @override
   void goOtp(String login) {
-    context.go(
+    context.replace(
       NavigatorPaths.otp,
       extra: OtpPageArgs(login: login, nextPage: NavigatorPaths.recipeFeed),
     );

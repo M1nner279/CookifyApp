@@ -1,3 +1,5 @@
+import 'package:cookify/core/l10n/my_locale.dart';
+import 'package:cookify/core/presentation/widgets/app.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_button.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_divider.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_service_button.dart';
@@ -8,6 +10,7 @@ import 'package:cookify/features/sign_up/presentation/bloc/sign_up_event.dart';
 import 'package:cookify/features/sign_up/presentation/bloc/sign_up_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpWidgetContent extends StatefulWidget {
   const SignUpWidgetContent({super.key});
@@ -23,7 +26,15 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
   final confirmPasswordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast!.init(context);
+  }
+
+  @override
   void dispose() {
+    fToast = null;
     loginController.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -46,14 +57,14 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                   onChanged: (value) => context.read<SignUpBloc>().add(
                     ValidateLogin(login: value),
                   ),
-                  label: 'ЛОГИН',
-                  hint: 'Введите логин',
+                  label: MyLocale.of(context).authLoginLabel,
+                  hint: MyLocale.of(context).authLoginHint,
                   isPassword: false,
                   failureMessage:
                       state.login.localizeError?.call(context) ??
                       (state.failure != null &&
                               state.failure is LoginAlreadyExistsFailure
-                          ? 'Логин занят'
+                          ? MyLocale.of(context).authSignUpLoginTaken
                           : null),
                 ),
 
@@ -64,12 +75,13 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                   ),
                   inputType: TextInputType.emailAddress,
                   label: 'EMAIL',
-                  hint: 'Введите email',
+                  hint: MyLocale.of(context).authEmailHint,
                   isPassword: false,
-                  failureMessage: state.email.localizeError?.call(context) ??
+                  failureMessage:
+                      state.email.localizeError?.call(context) ??
                       (state.failure != null &&
                               state.failure is EmailAlreadyExistsFailure
-                          ? 'Почта занята'
+                          ? MyLocale.of(context).authSignUpEmailTaken
                           : null),
                 ),
 
@@ -86,8 +98,8 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                     );
                   },
                   inputType: TextInputType.visiblePassword,
-                  label: 'ПАРОЛЬ',
-                  hint: 'Введите пароль',
+                  label: MyLocale.of(context).authPasswordLabel,
+                  hint: MyLocale.of(context).authPasswordHint,
                   isPassword: true,
                   failureMessage: state.password.localizeError?.call(context),
                 ),
@@ -98,8 +110,8 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                     ValidateConfirmPassword(confirmPassword: value),
                   ),
                   inputType: TextInputType.visiblePassword,
-                  label: 'ПОВТОРИТЕ ПАРОЛЬ',
-                  hint: 'Введите пароль повторно',
+                  label: MyLocale.of(context).authConfirmPasswordLabel,
+                  hint: MyLocale.of(context).authConfirmPasswordHint,
                   isPassword: true,
                   failureMessage: state.confirmPassword.localizeError?.call(
                     context,
@@ -110,7 +122,7 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
                   onPressed: () {
                     context.read<SignUpBloc>().add(SignUp());
                   },
-                  title: 'Зарегистрироваться',
+                  title: MyLocale.of(context).authSignUpButton,
                   isLoading: state.isLoading,
                 ),
               ],
@@ -123,15 +135,10 @@ class _SignUpWidgetContentState extends State<SignUpWidgetContent> {
               children: [
                 Expanded(
                   child: AuthServiceButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.read<SignUpBloc>().add(SignUpWithGoogle());
+                    },
                     imagePath: 'google',
-                  ),
-                ),
-
-                Expanded(
-                  child: AuthServiceButton(
-                    onPressed: () {},
-                    imagePath: 'apple',
                   ),
                 ),
               ],

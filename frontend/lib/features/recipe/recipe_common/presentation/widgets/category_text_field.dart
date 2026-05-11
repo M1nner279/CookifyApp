@@ -1,7 +1,9 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/presentation/widgets/cookify_text_field.dart';
+import 'package:cookify/core/presentation/widgets/key_board_listener.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/category_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/controllers/category_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide KeyboardListener;
 
 class CategoryTextField extends StatefulWidget {
   const CategoryTextField({
@@ -22,6 +24,7 @@ class CategoryTextField extends StatefulWidget {
 }
 
 class _CategoryTextFieldState extends State<CategoryTextField> {
+  bool _isShowKeyboard = false;
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _textController = TextEditingController();
   final LayerLink _layerLink = LayerLink();
@@ -29,10 +32,20 @@ class _CategoryTextFieldState extends State<CategoryTextField> {
 
   static const double _menuHeight = 80.0;
 
+     final KeyboardListener _keyboardListener = KeyboardListener();
+
   @override
   void initState() {
     super.initState();
     _focusNode.addListener(_onFocusChange);
+        _keyboardListener.addListener(onChange: (bool isVisible) {
+     setState(() {
+       if (_isShowKeyboard && !isVisible) {
+        _hideOverlay();
+       }
+       _isShowKeyboard = isVisible;
+     });
+   });
   }
 
   @override
@@ -51,6 +64,7 @@ class _CategoryTextFieldState extends State<CategoryTextField> {
 
   @override
   void dispose() {
+        _keyboardListener.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     _textController.dispose();
@@ -115,12 +129,12 @@ class _CategoryTextFieldState extends State<CategoryTextField> {
     final filteredCategories = widget.categories;
 
     if (filteredCategories.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Text(
-            'Категории не найдены',
-            style: TextStyle(color: Color(0xFFE5C9A8)),
+            MyLocale.of(context).searchCategoryNotFound,
+            style: const TextStyle(color: Color(0xFFE5C9A8)),
           ),
         ),
       );
@@ -163,7 +177,7 @@ class _CategoryTextFieldState extends State<CategoryTextField> {
               controller: _textController,
               focusNode: _focusNode,
               onChanged: widget.onChanged,
-              hint: 'Здоровое питание',
+              hint: MyLocale.of(context).searchCategoryHint,
             ),
           ),
           GestureDetector(

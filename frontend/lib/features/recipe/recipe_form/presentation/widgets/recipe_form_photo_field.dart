@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/controllers/photo_controller.dart';
+import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_form_page_content.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -25,9 +27,7 @@ class _RecipeFormPhotoFieldState extends State<RecipeFormPhotoField> {
 
         return GestureDetector(
           onTap: () async {
-            final selected = await picker.pickImage(
-              source: ImageSource.gallery,
-            );
+            final selected = await ImagePickerSheet.show(context);
             if (selected != null) {
               widget.controller.add(selected);
             }
@@ -40,17 +40,17 @@ class _RecipeFormPhotoFieldState extends State<RecipeFormPhotoField> {
               border: Border.all(color: const Color(0x1AE5C9A8)),
             ),
             child: photos.isEmpty
-                ? const Column(
+                ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.add_a_photo_outlined,
                         color: Color(0x99E5C9A8),
                       ),
-                      SizedBox(height: 8.0),
+                      const SizedBox(height: 8.0),
                       Text(
-                        'Добавить фото',
-                        style: TextStyle(
+                        MyLocale.of(context).recipeFormAddPhoto,
+                        style: const TextStyle(
                           color: Color(0xB3E5C9A8),
                           fontWeight: FontWeight.w600,
                         ),

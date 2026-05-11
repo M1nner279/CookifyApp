@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'dart:math';
 
 import 'package:cookify/features/recipe/recipe_common/domain/entities/recipe_ingredient_entity.dart';
@@ -41,10 +42,10 @@ class _RecipeDetailIngredientsCardState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Ингридиенты',
+                MyLocale.of(context).recipeDetailIngredients,
                 style: const TextStyle(
                   color: Color(0xFFE5C9A8),
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.5,
                   height: 28.0 / 20.0,
@@ -114,7 +115,7 @@ class _ServingCount extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
-        spacing: 4.0,
+        spacing: 2.0,
         children: [
           IconButton(
             onPressed: () {
@@ -131,19 +132,19 @@ class _ServingCount extends StatelessWidget {
             },
             icon: const Icon(
               Icons.remove,
-              size: 20.0,
+              size: 18.0,
               color: Color(0xFFE5C9A8),
             ),
           ),
 
           Text(
-            '$servingCount порций',
+            MyLocale.of(context).commonServingsDouble(servingCount),
             style: const TextStyle(
               color: Color(0xFFE5C9A8),
-              fontSize: 14.0,
+              fontSize: 12.0,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.0,
-              height: 20.0 / 14.0,
+              height: 20.0 / 12.0,
             ),
             overflow: TextOverflow.ellipsis,
           ),
@@ -161,7 +162,7 @@ class _ServingCount extends StatelessWidget {
                   .toList();
               onServingCountChanged(newServingCount, newIngredients);
             },
-            icon: const Icon(Icons.add, size: 20.0, color: Color(0xFFE5C9A8)),
+            icon: const Icon(Icons.add, size: 18.0, color: Color(0xFFE5C9A8)),
           ),
         ],
       ),
@@ -184,14 +185,17 @@ class _Ingredient extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       spacing: 8.0,
       children: [
-        Text(
-          ingredient.name,
-          style: const TextStyle(
-            color: Color(0xFFE5C9A8),
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.0,
-            height: 24.0 / 16.0,
+        Expanded(
+          child: Text(
+            ingredient.name,
+            style: const TextStyle(
+              color: Color(0xFFE5C9A8),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.0,
+              height: 24.0 / 16.0,
+            ),
+            //overflow: TextOverflow.ellipsis,
           ),
         ),
 

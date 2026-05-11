@@ -10,5 +10,193 @@
     "profileSettings": "Настройки",
     "profileSettingsLocale": "Сменить язык",
     "profileSettingsChangePassword": "Смена пароля",
-    "profileSettingsSignout": "Выйти из аккаунта"
+    "profileSettingsSignout": "Выйти из аккаунта",
+
+    "recipeFormTitle": "Создание рецепта",
+    "recipeFormAddPhoto": "Добавить фото",
+    "recipeFormNameLabel": "НАЗВАНИЕ РЕЦЕПТА",
+    "recipeFormNameHint": "Название вашего шедевра",
+    "recipeFormDescriptionLabel": "ОПИСАНИЕ",
+    "recipeFormDescriptionHint": "Расскажите нам почему это вкусно...",
+    "recipeFormNutrition": "КБЖУ",
+    "recipeFormProtein": "БЕЛ",
+    "recipeFormFat": "ЖИР",
+    "recipeFormCarbs": "УГЛ",
+    "recipeFormCalories": "КАЛОРИИ",
+    "recipeFormDifficulty": "СЛОЖНОСТЬ",
+    "recipeFormDifficultyEasy": "ЛЕГКО",
+    "recipeFormDifficultyMedium": "СРЕДНЕ",
+    "recipeFormDifficultyHard": "СЛОЖНО",
+    "recipeFormCookingTimeLabel": "ВРЕМЯ ПРИГОТОВЛЕНИЯ",
+    "recipeFormCookingTimeHint": "45 минут",
+    "recipeFormCategories": "КАТЕГОРИИ",
+    "recipeFormAddCategory": "Добавить категорию",
+    "recipeFormIngredients": "ИНГРЕДИЕНТЫ",
+    "recipeFormAddIngredient": "Добавить ингредиент",
+    "recipeFormSteps": "ШАГИ ПРИГОТОВЛЕНИЯ",
+    "recipeFormAddStep": "ДОБАВИТЬ ШАГ",
+    "recipeFormSaveDraft": "Сохранить черновик",
+    "recipeFormSaveToSaved": "В сохранённые",
+    "recipeFormPublish": "Опубликовать рецепт",
+    "recipeFormSaving": "Сохранение...",
+    "recipeFormPublishing": "Публикация...",
+    "recipeFormDraftSaved": "Черновик сохранён",
+    "recipeFormSavedRecipeAdded": "Рецепт добавлен в сохранённые",
+    "recipeFormPublished": "Рецепт опубликован",
+    "recipeFormPublishFailed": "Не удалось опубликовать рецепт",
+    "recipeFormFillRequired": "Заполните обязательные поля",
+    "recipeFormErrorPhoto": "Добавьте фото рецепта",
+    "recipeFormErrorName": "Введите название рецепта",
+    "recipeFormErrorDescription": "Введите описание",
+    "recipeFormErrorCookingTime": "Введите время приготовления больше 0",
+    "recipeFormErrorCategories": "Добавьте хотя бы одну категорию",
+    "recipeFormErrorIngredients": "Добавьте хотя бы один ингредиент с количеством и единицей",
+    "recipeFormErrorSteps": "Добавьте хотя бы один шаг с заголовком и описанием",
+    "recipeFormStepTitleHint": "Заголовок шага",
+    "recipeFormStepDescriptionHint": "Описание шага",
+
+    "commonOfflineMessage": "Нет подключения к интернету. Подключитесь к сети и обновите страницу.",
+    "commonRefresh": "Обновить",
+    "commonBack": "Назад",
+    "commonCancel": "Отмена",
+    "commonDelete": "Удалить",
+    "commonGramShort": "г",
+    "commonKcalShort": "ккал",
+    "commonMinutes": "{value} мин",
+    "@commonMinutes": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+    "commonServings": "{value} порций",
+    "@commonServings": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+    "commonServingsDouble": "{value} порций",
+    "@commonServingsDouble": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+
+    "authBarSignIn": "Вход",
+    "authBarSignUp": "Регистрация",
+    "authBarRestore": "Восстановление",
+    "authTopSubtitle": "ИСКУССТВО ДОМАШНЕЙ КУХНИ",
+    "authDividerOr": "ИЛИ ЧЕРЕЗ",
+    "authLoginLabel": "ЛОГИН",
+    "authLoginHint": "Введите логин",
+    "authEmailHint": "Введите email",
+    "authPasswordLabel": "ПАРОЛЬ",
+    "authPasswordHint": "Введите пароль",
+    "authConfirmPasswordLabel": "ПОВТОРИТЕ ПАРОЛЬ",
+    "authConfirmPasswordHint": "Введите пароль повторно",
+    "authSignInButton": "Войти",
+    "authSignInWrongLogin": "Неправильный логин",
+    "authSignInWrongPassword": "Неправильный пароль",
+    "authSignUpButton": "Зарегистрироваться",
+    "authSignUpLoginTaken": "Логин занят",
+    "authSignUpEmailTaken": "Почта занята",
+    "authRestoreLoginOrEmailLabel": "ЛОГИН ИЛИ EMAIL",
+    "authRestoreLoginOrEmailHint": "Введите логин или email",
+    "authRestoreWrongLoginOrEmail": "Неверный логин или email",
+    "authRestoreButton": "Восстановить",
+
+    "changePasswordTitle": "Смена пароля",
+    "changePasswordNewPasswordLabel": "НОВЫЙ ПАРОЛЬ",
+    "changePasswordNewPasswordHint": "Введите новый пароль",
+    "changePasswordSubmit": "Сменить",
+
+    "otpTitle": "Код подтверждения",
+    "otpInvalidCode": "Неверный код",
+    "otpResend": "Отправить повторно{suffix}",
+    "@otpResend": {
+      "placeholders": {
+        "suffix": {}
+      }
+    },
+    "otpResendAfter": " через {seconds} секунд",
+    "@otpResendAfter": {
+      "placeholders": {
+        "seconds": {}
+      }
+    },
+    "otpChangeAccount": "Сменить аккаунт",
+
+    "recipeSavedTitle": "Моя кухня",
+    "recipeSavedEmptyMessage": "Здесь пока пусто. Сохраняйте понравившиеся рецепты из ленты, чтобы не потерять их",
+    "recipeSavedFind": "Найти",
+
+    "recipeDraftsTitle": "Черновики",
+    "recipeDraftsEmptyMessage": "Здесь пока пусто. Создавайте свои собственные кулинарные шедевры",
+    "recipeDraftsCreate": "Создать",
+    "recipeDraftsUntitled": "Без названия",
+    "recipeDraftsDeleteTitle": "Удалить черновик?",
+    "recipeDraftsUpdated": "Обновлено: {value}",
+    "@recipeDraftsUpdated": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+
+    "recipeDetailIngredients": "Ингредиенты",
+    "recipeDetailSteps": "Шаги",
+    "recipeDetailTime": "Время",
+    "recipeDetailProteinSign": "Б",
+    "recipeDetailFatSign": "Ж",
+    "recipeDetailCarbsSign": "У",
+    "recipeDifficultyEasy": "ЛЕГКО",
+    "recipeDifficultyMedium": "СРЕДНЕ",
+    "recipeDifficultyHard": "СЛОЖНО",
+
+    "commonLanguageRu": "Русский",
+    "commonLanguageEn": "English",
+    "commonError": "Ошибка",
+
+    "searchTitle": "Поиск",
+    "searchButton": "ПОИСК",
+    "searchNothingFound": "Ничего не найдено",
+    "searchRecipeNameHint": "Название рецепта",
+    "searchCookingTimeTitle": "Время приготовления",
+    "searchCookingTimeUpTo": "до {value} мин",
+    "@searchCookingTimeUpTo": {
+      "placeholders": {
+        "value": {}
+      }
+    },
+    "recipeSearchText": "По заданным фильтрам не найдено рецептов",
+    "searchNutritionGoals": "Цели в питании",
+    "searchCaloriesLabel": "КАЛОРИИ",
+    "searchProteinsLabel": "БЕЛКИ",
+    "searchFatsLabel": "ЖИРЫ",
+    "searchCarbsLabel": "УГЛЕВОДЫ",
+    "searchCategoriesTitle": "Категории",
+    "searchIngredientsTitle": "Ингредиенты",
+    "searchAddCategoryHint": "Добавить категорию...",
+    "searchAddIngredientHint": "Добавить ингредиент...",
+    "searchAddCategory": "Добавить категорию",
+    "searchAddIngredient": "Добавить ингредиент",
+    "searchCategoryNotFound": "Категории не найдены",
+    "searchIngredientNotFound": "Ингредиенты не найдены",
+    "searchCategoryHint": "Здоровое питание",
+    "searchIngredientHint": "Курица",
+    "searchGeneralTitle": "Общее",
+    "searchMaxCookingTimeHint": "Максимальное время приготовления",
+    "searchCaloriesTitle": "Калории",
+    "searchProteinsTitle": "Белки",
+    "searchFatsTitle": "Жиры",
+    "searchCarbsTitle": "Углеводы",
+    "searchMinHint": "Мин",
+    "searchMaxHint": "Макс",
+
+    "validationFieldRequired": "Поле не может быть пустым",
+    "validationLoginTooShort": "Логин слишком короткий",
+    "validationLoginTooLong": "Логин слишком длинный",
+    "validationEmailInvalid": "Некорректный email",
+    "validationPasswordTooShort": "Пароль слишком короткий",
+    "validationPasswordTooLong": "Пароль слишком длинный",
+    "validationPasswordInvalid": "Пароль должен содержать строчные и заглавные латинские буквы, цифры и спец символы (@$!%*?&_)",
+    "validationConfirmPasswordNotMatch": "Пароли не совпадают"
 }

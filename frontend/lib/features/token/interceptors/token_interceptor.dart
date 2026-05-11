@@ -27,10 +27,36 @@ class TokenInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
-      await _refreshTokenUseCase();
-    }
-    handler.next(err);
+void onError(DioException err, ErrorInterceptorHandler handler) async {
+  // 1. Проверяем, что ошибка — 401 и у нас есть данные запроса
+  if (err.response?.statusCode == 401) {
+    // 2. Пытаемся обновить токен
+    final refreshResult = await _refreshTokenUseCase();
+    
+    return refreshResult.fold(
+      (failure) => handler.next(err), // Если рефреш не удался — пробрасываем ошибку дальше
+      (newToken) async {
+        try {
+          // 3. Создаем дубликат запроса с новым токеном
+          final options = err.requestOptions;
+          options.headers['Authorization'] = 'Bearer ${newToken.accessToken}';
+
+          // 4. Повторяем запрос через новый инстанс или тот же dio
+          // Важно: создайте новый запрос через новый экземпляр Dio, 
+          // чтобы избежать зацикливания или используйте текущий
+          final dio = Dio(); 
+          final response = await dio.fetch(options);
+
+          // 5. Возвращаем успешный ответ в основной поток
+          return handler.resolve(response);
+        } on DioException catch (e) {
+          return handler.next(e);
+        }
+      },
+    );
   }
+  
+  handler.next(err);
+}
+
 }

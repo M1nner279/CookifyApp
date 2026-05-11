@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_bottom.dart';
 import 'package:cookify/features/auth/auth_common/presentation/widgets/auth_top.dart';
 import 'package:cookify/features/otp/presentation/bloc/otp_bloc.dart';
@@ -59,7 +60,7 @@ class _OtpPageContentState extends State<OtpPageContent> {
                                 spacing: 24.0,
                                 children: [
                                   Text(
-                                    'Код подтверждения',
+                                    MyLocale.of(context).otpTitle,
                                     style: const TextStyle(
                                       color: Color(0x80FFE6C9),
                                       fontSize: 20.0,
@@ -76,7 +77,7 @@ class _OtpPageContentState extends State<OtpPageContent> {
                                       OtpTextField(
                                         showCursor: false,
                                         numberOfFields: 6,
-                                        fieldWidth: 52.0,
+                                        fieldWidth: 40.0,
                                         fieldHeight: 52.0,
                                         textStyle: const TextStyle(
                                           color: Color(0xFFFFE6C9),
@@ -112,12 +113,14 @@ class _OtpPageContentState extends State<OtpPageContent> {
                                             RegExp(r'[0-9]'),
                                           ),
                                         ],
-                                        contentPadding: const EdgeInsets.all(0.0),
+                                        contentPadding: const EdgeInsets.all(
+                                          0.0,
+                                        ),
                                       ),
 
                                       if (state is OtpError)
                                         Text(
-                                          'Неверный код',
+                                          MyLocale.of(context).otpInvalidCode,
                                           style: const TextStyle(
                                             color: Color(0xFF83260E),
                                             fontSize: 14.0,
@@ -143,7 +146,17 @@ class _OtpPageContentState extends State<OtpPageContent> {
                                         : null,
                                     behavior: HitTestBehavior.opaque,
                                     child: Text(
-                                      'Отправить повторно${context.read<OtpBloc>().canResendCode ? '' : ' через ${context.read<OtpBloc>().remainingSeconds} секунд'}',
+                                      MyLocale.of(context).otpResend(
+                                        context.read<OtpBloc>().canResendCode
+                                            ? ''
+                                            : MyLocale.of(
+                                                context,
+                                              ).otpResendAfter(
+                                                context
+                                                    .read<OtpBloc>()
+                                                    .remainingSeconds,
+                                              ),
+                                      ),
                                       style: const TextStyle(
                                         color: Color(0x80FFE6C9),
                                         fontSize: 14.0,
@@ -158,7 +171,7 @@ class _OtpPageContentState extends State<OtpPageContent> {
                                     onTap: () => context.go('/auth'),
                                     behavior: HitTestBehavior.opaque,
                                     child: Text(
-                                      'Сменить аккаунт',
+                                      MyLocale.of(context).otpChangeAccount,
                                       style: const TextStyle(
                                         color: Color(0x80FFE6C9),
                                         fontSize: 14.0,

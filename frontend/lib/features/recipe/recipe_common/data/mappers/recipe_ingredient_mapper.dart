@@ -13,7 +13,7 @@ abstract class RecipeIngredientMapper {
         calories: model.calories,
       ),
       amount: model.amount,
-      unit: model.unit,
+      unit: model.unit!,
     );
   }
 }

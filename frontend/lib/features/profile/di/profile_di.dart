@@ -1,4 +1,5 @@
 import 'package:cookify/di/di.dart';
+import 'package:cookify/features/profile/data/local/user_statistic_local_store.dart';
 import 'package:cookify/features/profile/data/data_sources/profile_remote_data_source.dart';
 import 'package:cookify/features/profile/data/data_sources/profile_remote_data_source_impl.dart';
 import 'package:cookify/features/profile/data/repositories/profile_repository_impl.dart';
@@ -10,8 +11,10 @@ abstract class ProfileDi {
   static ProfileRemoteDataSource get _profileRemoteDataSource =>
       ProfileRemoteDataSourceImpl(dio: Di.dio);
 
-  static ProfileRepository get _profileRepository =>
-      ProfileRepositoryImpl(remoteDataSource: _profileRemoteDataSource);
+  static ProfileRepository get _profileRepository => ProfileRepositoryImpl(
+    remoteDataSource: _profileRemoteDataSource,
+    userStatisticLocalStore: UserStatisticLocalStore(storage: Di.secureStorage),
+  );
 
   static GetUserUseCase get getUserUseCase =>
       GetUserUseCase(_profileRepository);

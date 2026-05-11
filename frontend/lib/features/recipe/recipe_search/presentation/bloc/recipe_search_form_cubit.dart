@@ -1,4 +1,6 @@
+import 'dart:async'; // Добавляем для работы с Timer
 import 'package:cookify/core/domain/use_cases/results/result.dart';
+import 'package:cookify/features/recipe/recipe_common/domain/entities/ingredient_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/payloads/search_category_list_payload.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/payloads/search_ingredient_list_payload.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/use_cases/search_category_list_use_case.dart';
@@ -17,33 +19,70 @@ class RecipeSearchFormCubit extends Cubit<RecipeSearchFormState> {
   final SearchCategoryListUseCase _searchCategoryListUseCase;
   final SearchIngredientListUseCase _searchIngredientListUseCase;
 
-  Future<void> searchCategoryList(String name) async {
-    final result = await _searchCategoryListUseCase(
-      SearchCategoryListPayload(categories: state.categories, name: name),
-    );
-    if (isClosed) return;
+  // Таймеры для debounce
+  Timer? _categoryDebounce;
+  Timer? _ingredientDebounce;
 
-    switch (result) {
-      case Success(data: final categories):
-        emit(state.copyWith(categories: categories));
-        break;
-      case Failure():
-        break;
-    }
+  // Категории
+  void searchCategoryList(String name) {
+    // Отменяем предыдущий таймер, если пользователь продолжает печатать
+    _categoryDebounce?.cancel();
+
+    _categoryDebounce = Timer(const Duration(milliseconds: 500), () async {
+      final result = await _searchCategoryListUseCase(
+        SearchCategoryListPayload(categories: state.categories, name: name),
+      );
+
+      if (isClosed) return;
+
+      if (result is Success) {
+        emit(state.copyWith(categories: (result as Success).data));
+      }
+    });
   }
 
-  Future<void> searchIngredientList(String name) async {
-    final result = await _searchIngredientListUseCase(
-      SearchIngredientListPayload(ingredients: state.ingredients, name: name),
-    );
-    if (isClosed) return;
+  // Ингредиенты
+  void searchIngredientList(String name) {
+    _ingredientDebounce?.cancel();
 
-    switch (result) {
-      case Success(data: final ingredients):
-        emit(state.copyWith(ingredients: ingredients));
-        break;
-      case Failure():
-        break;
+    _ingredientDebounce = Timer(const Duration(milliseconds: 500), () async {
+      final result = await _searchIngredientListUseCase(
+        SearchIngredientListPayload(ingredients: state.ingredients, name: name),
+      );
+
+      if (isClosed) return;
+
+      if (result is Success) {
+        emit(state.copyWith(ingredients: (result as Success).data));
+      }
+    });
+  }
+
+  Future<List<IngredientEntity>> searchIngredientListFromAI(
+    List<String> names,
+  ) async {
+    final ingredients = <IngredientEntity>[];
+
+    for (int i = 0; i < names.length; i++) {
+      final result = await _searchIngredientListUseCase(
+        SearchIngredientListPayload(
+          ingredients: state.ingredients,
+          name: names[i],
+        ),
+      );
+
+      if (result is Success && (result as Success<List<IngredientEntity>>).data.isNotEmpty) {
+        ingredients.add((result as Success<List<IngredientEntity>>).data.first);
+      }
     }
+
+    return ingredients;
+  }
+
+  @override
+  Future<void> close() {
+    _categoryDebounce?.cancel();
+    _ingredientDebounce?.cancel();
+    return super.close();
   }
 }

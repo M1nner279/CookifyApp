@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:cookify/core/domain/failures/failures.dart';
 import 'package:cookify/core/presentation/localize/localized_error_value.dart';
+import 'package:cookify/core/presentation/widgets/app_toast.dart';
 import 'package:cookify/di/di.dart';
 import 'package:cookify/features/sign_in/dependecies/sign_in_dependency.dart';
 import 'package:cookify/features/sign_in/domain/payloads/sign_in_payload.dart';
@@ -80,7 +82,14 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     if (isClosed) return;
 
     result.fold(
-      (failure) => emit(state.copyWith(isLoading: false, hasError: true)),
+      (failure) {
+        if (failure is NetworkFailure) {
+          showToast(false, 'Нет подключения к интернету');
+        } else if (failure is UnknownFailure) {
+          showToast(false, 'Повторите попытку');
+        }
+        emit(state.copyWith(isLoading: false, hasError: true));
+      },
       (token) async {
         await _signInDependency.setToken(token);
         _signInNavigator?.goRecipeFeed();

@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/repositories/saved_recipe_repository.dart';
 import 'package:cookify/core/presentation/widgets/cookify_cached_network_image.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/enums/recipe_difficulty.dart';
@@ -64,15 +65,6 @@ class RecipeFeedRecipePreviewCard extends StatelessWidget {
 
                       const SizedBox(width: 8.0),
 
-                      IconButton(
-                        iconSize: 24.0,
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: const Color(0xFFE5C9A8),
-                        ),
-                      ),
-
                       ValueListenableBuilder<List<RecipePreviewEntity>>(
                         valueListenable: GetIt.I<SavedRecipeRepository>()
                             .savedRecipesListenable,
@@ -103,12 +95,16 @@ class RecipeFeedRecipePreviewCard extends StatelessWidget {
                     children: [
                       _Info(
                         iconData: Icons.access_time,
-                        text: '${recipe.cookingTime} мин',
+                        text: MyLocale.of(
+                          context,
+                        ).commonMinutes(recipe.cookingTime),
                       ),
 
                       _Info(
                         iconData: Icons.restaurant,
-                        text: '${recipe.servingCount} порций',
+                        text: MyLocale.of(
+                          context,
+                        ).commonServings(recipe.servingCount),
                       ),
                     ],
                   ),

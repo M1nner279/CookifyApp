@@ -12,22 +12,7 @@ class RecipeSearchFormPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<RecipeSearchFormCubit>(
       create: (_) => RecipeSearchDi.getIt(),
-      child: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 50.0),
-              child: const RecipeSearchFormPageContent(),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: CookifyNavigationBar(index: 1),
-            ),
-          ],
-        ),
-      ),
+      child: const RecipeSearchFormPageContent(),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/category_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/controllers/category_controller.dart';
 import 'package:cookify/features/recipe/recipe_common/presentation/widgets/category_text_field.dart';
@@ -26,7 +27,7 @@ class _RecipeSearchCategorySectionState
   @override
   Widget build(BuildContext context) {
     return RecipeSearchSectionCard(
-      title: 'Категории',
+      title: MyLocale.of(context).searchCategoriesTitle,
       child: Column(
         spacing: 8.0,
         children: [
@@ -53,8 +54,8 @@ class _RecipeSearchCategorySectionState
               children: [
                 Icon(Icons.add, color: const Color(0xFFE5C9A8), size: 24.0),
 
-                const Text(
-                  'Добавить категорию',
+                Text(
+                  MyLocale.of(context).searchAddCategory,
                   style: TextStyle(color: Color(0xFFE5C9A8)),
                 ),
               ],

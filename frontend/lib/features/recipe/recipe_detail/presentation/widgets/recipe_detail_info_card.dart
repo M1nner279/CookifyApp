@@ -1,3 +1,4 @@
+import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/category_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/cpfc_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/enums/recipe_difficulty.dart';
@@ -147,7 +148,7 @@ class _CookingTime extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Время',
+              MyLocale.of(context).recipeDetailTime,
               style: const TextStyle(
                 color: Color(0x99E5C9A8),
                 fontSize: 15.0,
@@ -158,7 +159,7 @@ class _CookingTime extends StatelessWidget {
             ),
 
             Text(
-              '$cookingTime мин',
+              MyLocale.of(context).commonMinutes(cookingTime),
               style: const TextStyle(
                 color: Color(0xFFE5C9A8),
                 fontSize: 16.0,
@@ -185,17 +186,14 @@ class _Cpfc extends StatelessWidget {
       spacing: 8.0,
       children: [
         _Cpf(
-          sign: 'Б',
+          sign: MyLocale.of(context).recipeDetailProteinSign,
           grams: cpfc.proteins,
         ),
 
-        _Cpf(
-          sign: 'Ж',
-          grams: cpfc.fats,
-        ),
+        _Cpf(sign: MyLocale.of(context).recipeDetailFatSign, grams: cpfc.fats),
 
         _Cpf(
-          sign: 'У',
+          sign: MyLocale.of(context).recipeDetailCarbsSign,
           grams: cpfc.carbohydrates,
         ),
 
@@ -255,7 +253,7 @@ class _Cpf extends StatelessWidget {
               ),
               children: [
                 TextSpan(
-                  text: 'г',
+                  text: MyLocale.of(context).commonGramShort,
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.w500,
@@ -280,18 +278,18 @@ class _Calories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const .symmetric(horizontal: 10.0, vertical: 6.0),
+      padding: const .symmetric(horizontal: 8.0, vertical: 6.0),
       decoration: BoxDecoration(
         color: const Color(0x33E5C9A8),
         border: Border.all(color: const Color(0x4DE5C9A8)),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
-        spacing: 6.0,
+        spacing: 4.0,
         children: [
           Icon(
             Icons.local_fire_department,
-            size: 16.0,
+            size: 14.0,
             color: const Color(0xFFE5C9A8),
           ),
 
@@ -307,7 +305,7 @@ class _Calories extends StatelessWidget {
               ),
               children: [
                 TextSpan(
-                  text: 'ккал',
+                  text: MyLocale.of(context).commonKcalShort,
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.w500,

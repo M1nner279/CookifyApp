@@ -7,7 +7,7 @@ part 'recipe_step_model.g.dart';
 abstract class RecipeStepModel with _$RecipeStepModel {
   const factory RecipeStepModel({
     required int id,
-    @JsonKey(name: 'title') required String name,
+    @JsonKey(name: 'title') String? name,
     @JsonKey(name: 'image_url') String? photoUrl,
     required String description,
     @JsonKey(name: 'step_number') required int stepNumber,
