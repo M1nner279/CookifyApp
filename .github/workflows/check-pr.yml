@@ -15,6 +15,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Create .env file
+        run: |
+          # Создаем папку, если она вдруг не попала в git
+          mkdir -p frontend/assets/.env
+          
+          # Записываем секрет из настроек GitHub в реальный файл
+          echo "${{ secrets.ENV_FILE }}" > frontend/assets/.env/.env
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
