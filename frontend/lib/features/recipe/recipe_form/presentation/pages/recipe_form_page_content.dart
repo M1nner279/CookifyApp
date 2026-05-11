@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:cookify/core/l10n/my_locale.dart';
 import 'package:cookify/core/domain/use_cases/results/result.dart';
-import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
+import 'package:cookify/core/presentation/widgets/app.dart';
+import 'package:cookify/core/presentation/widgets/app_toast.dart';
 import 'package:cookify/core/presentation/widgets/cookify_text_field.dart';
 import 'package:cookify/features/profile/data/local/user_statistic_local_store.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/category_entity.dart';
@@ -32,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -82,6 +84,9 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
         (_) => _loadDraft(_draftId!),
       );
     }
+
+    fToast = FToast();
+    fToast!.init(context);
   }
 
   Future<void> _loadDraft(String id) async {
@@ -177,6 +182,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
 
   @override
   void dispose() {
+    fToast = null;
     photoController.removeListener(_syncPhotos);
     photoController.dispose();
     nameController.dispose();
@@ -281,9 +287,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
       }
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(MyLocale.of(context).recipeFormDraftSaved)),
-      );
+      showToast(true, MyLocale.of(context).recipeFormDraftSaved);
     } finally {
       if (mounted) {
         setState(() => _isSavingDraft = false);
@@ -381,11 +385,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
       );
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(MyLocale.of(context).recipeFormSavedRecipeAdded),
-        ),
-      );
+      showToast(true, MyLocale.of(context).recipeFormSavedRecipeAdded);
     } finally {
       if (mounted) {
         setState(() => _isSavingToSaved = false);
@@ -430,9 +430,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
     });
 
     if (!isValid) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(MyLocale.of(context).recipeFormFillRequired)),
-      );
+      showToast(false, MyLocale.of(context).recipeFormFillRequired);
     }
 
     return isValid;
@@ -502,9 +500,11 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
         proteins: _toInt(proteinsController),
         fats: _toInt(fatsController),
         carbohydrates: _toInt(carbsController),
-        difficulty: difficulty.name,
+        difficulty: difficulty,
         cookingTimeMinutes: _toInt(cookingTimeController),
-        categories: categoriesEntities.map((category) => category.id).toList(),
+        categories: categoriesEntities
+            .map((category) => int.parse(category.id))
+            .toList(),
         ingredients: ingredientDrafts
             .where((draft) => draft.controller.ingredient != null)
             .map(
@@ -550,15 +550,11 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
           storage: GetIt.I<FlutterSecureStorage>(),
         ).incrementPublishedRecipesCount();
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(MyLocale.of(context).recipeFormPublished)),
-        );
+        showToast(true, MyLocale.of(context).recipeFormPublished);
         context.go('/');
         break;
       case Failure():
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(MyLocale.of(context).recipeFormPublishFailed)),
-        );
+      showToast(false, MyLocale.of(context).recipeFormPublishFailed);
         break;
     }
   }
@@ -615,9 +611,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                 const SizedBox(height: 12.0),
                 CookifyTextField(
                   controller: descriptionController,
-                  label: MyLocale.of(
-                    context,
-                  ).recipeFormDescriptionLabel,
+                  label: MyLocale.of(context).recipeFormDescriptionLabel,
                   hint: MyLocale.of(context).recipeFormDescriptionHint,
                   maxLines: 3,
                   maxLength: 300,
@@ -654,42 +648,31 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                   ],
                 ),
                 const SizedBox(height: 16.0),
-                _SectionLabel(
-                  MyLocale.of(context).recipeFormDifficulty,
-                ),
+                _SectionLabel(MyLocale.of(context).recipeFormDifficulty),
                 const SizedBox(height: 8.0),
                 Row(
                   children: [
                     _DifficultyChip(
-                      label: MyLocale.of(
-                        context,
-                      ).recipeFormDifficultyEasy,
+                      label: MyLocale.of(context).recipeFormDifficultyEasy,
                       isSelected: difficulty == RecipeDifficulty.easy,
-                      onTap: () => setState(
-                        () => difficulty = RecipeDifficulty.easy,
-                      ),
+                      onTap: () =>
+                          setState(() => difficulty = RecipeDifficulty.easy),
                       difficulty: RecipeDifficulty.easy,
                     ),
                     const SizedBox(width: 8.0),
                     _DifficultyChip(
-                      label: MyLocale.of(
-                        context,
-                      ).recipeFormDifficultyMedium,
+                      label: MyLocale.of(context).recipeFormDifficultyMedium,
                       isSelected: difficulty == RecipeDifficulty.medium,
-                      onTap: () => setState(
-                        () => difficulty = RecipeDifficulty.medium,
-                      ),
+                      onTap: () =>
+                          setState(() => difficulty = RecipeDifficulty.medium),
                       difficulty: RecipeDifficulty.medium,
                     ),
                     const SizedBox(width: 8.0),
                     _DifficultyChip(
-                      label: MyLocale.of(
-                        context,
-                      ).recipeFormDifficultyHard,
+                      label: MyLocale.of(context).recipeFormDifficultyHard,
                       isSelected: difficulty == RecipeDifficulty.hard,
-                      onTap: () => setState(
-                        () => difficulty = RecipeDifficulty.hard,
-                      ),
+                      onTap: () =>
+                          setState(() => difficulty = RecipeDifficulty.hard),
                       difficulty: RecipeDifficulty.hard,
                     ),
                   ],
@@ -697,13 +680,10 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                 const SizedBox(height: 16.0),
                 CookifyTextField(
                   controller: cookingTimeController,
-                  label: MyLocale.of(
-                    context,
-                  ).recipeFormCookingTimeLabel,
+                  label: MyLocale.of(context).recipeFormCookingTimeLabel,
                   hint: MyLocale.of(context).recipeFormCookingTimeHint,
                   inputType: TextInputType.number,
-                  inputFormatter:
-                      FilteringTextInputFormatter.digitsOnly,
+                  inputFormatter: FilteringTextInputFormatter.digitsOnly,
                   maxLength: 3,
                   failureMessage:
                       _showValidationErrors &&
@@ -712,9 +692,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                       : null,
                 ),
                 const SizedBox(height: 20.0),
-                _SectionLabel(
-                  MyLocale.of(context).recipeFormCategories,
-                ),
+                _SectionLabel(MyLocale.of(context).recipeFormCategories),
                 const SizedBox(height: 8.0),
                 ...List.generate(
                   categoryControllers.length,
@@ -729,10 +707,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                           .searchCategoryList,
                       onDelete: () {
                         setState(() {
-                          categoryControllers
-                              .removeAt(i)
-                              .controller
-                              .dispose();
+                          categoryControllers.removeAt(i).controller.dispose();
                         });
                       },
                     ),
@@ -760,18 +735,14 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                         .isEmpty) ...[
                   const SizedBox(height: 4.0),
                   _FieldErrorText(
-                    message: MyLocale.of(
-                      context,
-                    ).recipeFormErrorCategories,
+                    message: MyLocale.of(context).recipeFormErrorCategories,
                   ),
                 ],
                 const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _SectionLabel(
-                      MyLocale.of(context).recipeFormIngredients,
-                    ),
+                    _SectionLabel(MyLocale.of(context).recipeFormIngredients),
                   ],
                 ),
                 const SizedBox(height: 8.0),
@@ -791,9 +762,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                                 .searchIngredientList,
                             onDelete: () {
                               setState(() {
-                                ingredientDrafts
-                                    .removeAt(index)
-                                    .dispose();
+                                ingredientDrafts.removeAt(index).dispose();
                               });
                             },
                           ),
@@ -835,9 +804,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                   onPressed: () {
                     setState(() {
                       ingredientDrafts.add(
-                        _IngredientDraft(
-                          controller: IngredientController(),
-                        ),
+                        _IngredientDraft(controller: IngredientController()),
                       );
                     });
                   },
@@ -852,26 +819,19 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                 ),
                 if (_showValidationErrors &&
                     ingredientDrafts
+                        .where((draft) => draft.controller.ingredient != null)
                         .where(
                           (draft) =>
-                              draft.controller.ingredient != null,
+                              draft.amountController.text.trim().isNotEmpty,
                         )
                         .where(
-                          (draft) => draft.amountController.text
-                              .trim()
-                              .isNotEmpty,
-                        )
-                        .where(
-                          (draft) => draft.unitController.text
-                              .trim()
-                              .isNotEmpty,
+                          (draft) =>
+                              draft.unitController.text.trim().isNotEmpty,
                         )
                         .isEmpty) ...[
                   const SizedBox(height: 4.0),
                   _FieldErrorText(
-                    message: MyLocale.of(
-                      context,
-                    ).recipeFormErrorIngredients,
+                    message: MyLocale.of(context).recipeFormErrorIngredients,
                   ),
                 ],
                 const SizedBox(height: 20.0),
@@ -915,14 +875,11 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                 if (_showValidationErrors &&
                     stepDrafts
                         .where(
-                          (step) => step.titleController.text
-                              .trim()
-                              .isNotEmpty,
+                          (step) => step.titleController.text.trim().isNotEmpty,
                         )
                         .where(
-                          (step) => step.descriptionController.text
-                              .trim()
-                              .isNotEmpty,
+                          (step) =>
+                              step.descriptionController.text.trim().isNotEmpty,
                         )
                         .isEmpty) ...[
                   const SizedBox(height: 4.0),
@@ -935,9 +892,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                   height: 52.0,
                   child: OutlinedButton(
                     onPressed:
-                        _isSavingDraft ||
-                            _isSavingToSaved ||
-                            state.isPublishing
+                        _isSavingDraft || _isSavingToSaved || state.isPublishing
                         ? null
                         : _saveDraft,
                     style: OutlinedButton.styleFrom(
@@ -951,9 +906,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                       _isSavingDraft
                           ? MyLocale.of(context).recipeFormSaving
                           : MyLocale.of(context).recipeFormSaveDraft,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),
@@ -962,9 +915,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                   height: 52.0,
                   child: OutlinedButton(
                     onPressed:
-                        _isSavingDraft ||
-                            _isSavingToSaved ||
-                            state.isPublishing
+                        _isSavingDraft || _isSavingToSaved || state.isPublishing
                         ? null
                         : _saveToMyRecipes,
                     style: OutlinedButton.styleFrom(
@@ -978,9 +929,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                       _isSavingToSaved
                           ? MyLocale.of(context).recipeFormSaving
                           : MyLocale.of(context).recipeFormSaveToSaved,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),
@@ -989,9 +938,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                   height: 56.0,
                   child: ElevatedButton(
                     onPressed:
-                        state.isPublishing ||
-                            _isSavingDraft ||
-                            _isSavingToSaved
+                        state.isPublishing || _isSavingDraft || _isSavingToSaved
                         ? null
                         : _publish,
                     style: ElevatedButton.styleFrom(
@@ -1005,9 +952,7 @@ class _RecipeFormPageContentState extends State<RecipeFormPageContent> {
                       state.isPublishing
                           ? MyLocale.of(context).recipeFormPublishing
                           : MyLocale.of(context).recipeFormPublish,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),
@@ -1303,22 +1248,22 @@ class _StepCard extends StatelessWidget {
               ),
               child: draft.photo == null
                   ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.add_a_photo_outlined,
-                        color: Color(0x99E5C9A8),
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        MyLocale.of(context).recipeFormAddPhoto,
-                        style: const TextStyle(
-                          color: Color(0xB3E5C9A8),
-                          fontWeight: FontWeight.w600,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.add_a_photo_outlined,
+                          color: Color(0x99E5C9A8),
                         ),
-                      ),
-                    ],
-                  )
+                        const SizedBox(height: 8.0),
+                        Text(
+                          MyLocale.of(context).recipeFormAddPhoto,
+                          style: const TextStyle(
+                            color: Color(0xB3E5C9A8),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    )
                   : ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: Image.file(

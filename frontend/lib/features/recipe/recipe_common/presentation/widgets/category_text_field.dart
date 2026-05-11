@@ -157,7 +157,7 @@ class _CategoryTextFieldState extends State<CategoryTextField> {
           ),
           dense: true,
           onTap: () {
-            _textController.text = category.name;
+            widget.controller.controller.text = category.name;
             widget.controller.selectCategory(category);
             _focusNode.unfocus();
           },
@@ -174,7 +174,7 @@ class _CategoryTextFieldState extends State<CategoryTextField> {
         children: [
           Expanded(
             child: CookifyTextField(
-              controller: _textController,
+              controller: widget.controller.controller,
               focusNode: _focusNode,
               onChanged: widget.onChanged,
               hint: MyLocale.of(context).searchCategoryHint,

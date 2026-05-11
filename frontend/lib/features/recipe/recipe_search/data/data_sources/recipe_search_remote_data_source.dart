@@ -1,4 +1,3 @@
-import 'package:cookify/features/recipe/recipe_detail/data/models/recipe_detail_model.dart';
 import 'package:cookify/features/recipe/recipe_feed/data/models/recipe_preview_model.dart';
 import 'package:cookify/features/recipe/recipe_search/data/requests/search_recipe_list_request.dart';
 

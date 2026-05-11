@@ -158,7 +158,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
           ),
           dense: true,
           onTap: () {
-            _textController.text = category.name;
+            widget.controller.controller.text = category.name;
             widget.controller.selectIngredient(category);
             _focusNode.unfocus();
           },
@@ -176,7 +176,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
         children: [
           Expanded(
             child: CookifyTextField(
-              controller: _textController,
+              controller: widget.controller.controller,
               focusNode: _focusNode,
               onChanged: widget.onChanged,
               hint: MyLocale.of(context).searchIngredientHint,

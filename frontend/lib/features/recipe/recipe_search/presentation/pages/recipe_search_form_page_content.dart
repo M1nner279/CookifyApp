@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cookify/core/l10n/my_locale.dart';
+import 'package:cookify/core/presentation/widgets/app.dart';
+import 'package:cookify/core/presentation/widgets/app_toast.dart';
 import 'package:cookify/core/presentation/widgets/key_board_listener.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/category_entity.dart';
 import 'package:cookify/features/recipe/recipe_common/domain/entities/ingredient_entity.dart';
@@ -13,6 +14,8 @@ import 'package:cookify/features/recipe/recipe_search/presentation/bloc/recipe_s
 import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_page_args.dart';
 import 'package:flutter/material.dart' hide KeyboardListener;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,6 +41,9 @@ class RecipeSearchFormPageContent extends StatefulWidget {
 
 class _RecipeSearchFormPageContentState
     extends State<RecipeSearchFormPageContent> {
+  final TextEditingController _categoryController = TextEditingController();
+  final TextEditingController _ingredientController = TextEditingController();
+
   bool _isShowKeyboard = false;
 
   final KeyboardListener _keyboardListener = KeyboardListener();
@@ -63,6 +69,8 @@ class _RecipeSearchFormPageContentState
   final List<CategoryEntity> selectedCategories = [];
   final List<IngredientEntity> selectedIngredients = [];
 
+  late final List<String> keys;
+
   @override
   void initState() {
     super.initState();
@@ -71,12 +79,17 @@ class _RecipeSearchFormPageContentState
       onChange: (bool isVisible) {
         setState(() {
           if (_isShowKeyboard && !isVisible) {
+            _categoryFocus.unfocus();
+            _ingredientFocus.unfocus();
             _closeOverlay();
           }
           _isShowKeyboard = isVisible;
         });
       },
     );
+    fToast = FToast();
+    fToast!.init(context);
+    keys = dotenv.get('GEMINI_API_KEY').split('|');
   }
 
   void _setupFocusListeners() {
@@ -109,6 +122,7 @@ class _RecipeSearchFormPageContentState
     _categoryFocus.dispose();
     _ingredientFocus.dispose();
     _closeOverlay();
+    fToast = null;
     super.dispose();
   }
 
@@ -241,6 +255,7 @@ class _RecipeSearchFormPageContentState
           // Категории
           SliverToBoxAdapter(
             child: _buildSearchSection(
+              controller: _categoryController,
               title: MyLocale.of(context).searchCategoriesTitle,
               hint: MyLocale.of(context).searchAddCategoryHint,
               link: _categoryLink,
@@ -250,8 +265,9 @@ class _RecipeSearchFormPageContentState
                   context.read<RecipeSearchFormCubit>().searchCategoryList(val),
               onRemove: (item) =>
                   setState(() => selectedCategories.remove(item)),
-              onTap: () =>
-                  context.read<RecipeSearchFormCubit>().searchCategoryList(''),
+              onTap: () => context
+                  .read<RecipeSearchFormCubit>()
+                  .searchCategoryList(_categoryController.text),
             ),
           ),
 
@@ -265,6 +281,7 @@ class _RecipeSearchFormPageContentState
               children: [
                 Expanded(
                   child: _buildSearchSection(
+                    controller: _ingredientController,
                     title: MyLocale.of(context).searchIngredientsTitle,
                     hint: MyLocale.of(context).searchAddIngredientHint,
                     link: _ingredientLink,
@@ -277,7 +294,7 @@ class _RecipeSearchFormPageContentState
                         setState(() => selectedIngredients.remove(item)),
                     onTap: () => context
                         .read<RecipeSearchFormCubit>()
-                        .searchIngredientList(''),
+                        .searchIngredientList(_ingredientController.text),
                   ),
                 ),
 
@@ -286,33 +303,44 @@ class _RecipeSearchFormPageContentState
                   child: GestureDetector(
                     onTap: () async {
                       final image = await ImagePickerSheet.show(context);
-                  
+
                       if (image != null) {
-                        final model = GenerativeModel(
-                          model: 'models/gemini-2.5-flash',
-                          apiKey: 'AIzaSyCGlL2vJ24CtZ-zKi6lv9PN_Jom3qM-lUA',
-                          // Настройка формата ответа JSON
-                          generationConfig: GenerationConfig(
-                            responseMimeType: 'application/json',
-                          ),
-                        );
-                  
                         final bytes = await image.readAsBytes();
-                  
+
                         final prompt = TextPart(
                           "Перечисли все продукты на фото. "
                           "Ответь строго в формате JSON: {'products': ['название', 'название']}",
                         );
-                  
+
                         final content = [
-                          Content.multi([prompt, DataPart('image/jpeg', bytes)]),
+                          Content.multi([
+                            prompt,
+                            DataPart('image/jpeg', bytes),
+                          ]),
                         ];
-                  
-                        final response = await model.generateContent(content);
-                        if (context.mounted) {
-                          final json =
-                              jsonDecode(response.text ?? '')
-                                  as Map<String, dynamic>;
+
+                        Map<String, dynamic>? json;
+                        for (int i = 0; i < keys.length; i++) {
+                          try {
+                            final model = GenerativeModel(
+                              model: 'models/gemini-2.5-flash',
+                              apiKey: keys[i],
+                              generationConfig: GenerationConfig(
+                                responseMimeType: 'application/json',
+                              ),
+                            );
+                            final response = await model.generateContent(
+                              content,
+                            );
+                            json =
+                                jsonDecode(response.text ?? '')
+                                    as Map<String, dynamic>;
+                            break;
+                          } catch (e) {
+                            //print(e);
+                          }
+                        }
+                        if (context.mounted && json != null) {
                           final ingredients = await context
                               .read<RecipeSearchFormCubit>()
                               .searchIngredientListFromAI(
@@ -320,8 +348,18 @@ class _RecipeSearchFormPageContentState
                                     .map((e) => e as String)
                                     .toList(),
                               );
-                  
-                          setState(() => selectedIngredients.addAll(ingredients));
+
+                          if (ingredients.isEmpty) {
+                            showToast(false, 'Не удалось распознать продукты');
+                            return;
+                          }
+
+                          setState(
+                            () => selectedIngredients.addAll(ingredients),
+                          );
+                          showToast(true, 'Продукты распознаны');
+                        } else {
+                          showToast(false, 'Не удалось распознать продукты');
                         }
                       }
                     },
@@ -372,6 +410,7 @@ class _RecipeSearchFormPageContentState
   }
 
   Widget _buildSearchSection({
+    required TextEditingController controller,
     required String title,
     required String hint,
     required LayerLink link,
@@ -396,6 +435,7 @@ class _RecipeSearchFormPageContentState
         CompositedTransformTarget(
           link: link,
           child: _CustomTextField(
+            controller: controller,
             focusNode: focusNode,
             hintText: hint,
             onChanged: onSearch,
@@ -423,6 +463,12 @@ class _RecipeSearchFormPageContentState
   }
 
   void _showSearchOverlay({required LayerLink link, required bool isCategory}) {
+    // Если оверлей уже открыт, просто обновляем его содержимое
+    if (_activeOverlay != null) {
+      _activeOverlay?.markNeedsBuild();
+      return;
+    }
+
     final cubit = context.read<RecipeSearchFormCubit>();
 
     _activeOverlay = OverlayEntry(
@@ -432,7 +478,6 @@ class _RecipeSearchFormPageContentState
           link: link,
           offset: const Offset(0, 52),
           child: Material(
-            // Чтобы работал GestureDetector и стили текста
             color: Colors.transparent,
             child: BlocProvider.value(
               value: cubit,
@@ -449,6 +494,7 @@ class _RecipeSearchFormPageContentState
                         color: Colors.white.withValues(alpha: 0.05),
                       ),
                     ),
+                    height: 100,
                     child: list.isEmpty
                         ? Padding(
                             padding: const EdgeInsets.all(16),
@@ -460,13 +506,16 @@ class _RecipeSearchFormPageContentState
                               ),
                             ),
                           )
-                        : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: list
-                                .map(
-                                  (item) => _buildOverlayItem(item, isCategory),
-                                )
-                                .toList(),
+                        : SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: list
+                                  .map(
+                                    (item) =>
+                                        _buildOverlayItem(item, isCategory),
+                                  )
+                                  .toList(),
+                            ),
                           ),
                   );
                 },
@@ -495,8 +544,9 @@ class _RecipeSearchFormPageContentState
               ? selectedIngredients.removeWhere((e) => e.id == item.id)
               : selectedIngredients.add(item);
         }
-        _closeOverlay();
-        _showSearchOverlay(link: _categoryLink, isCategory: isCategory);
+        // Не закрываем и не пересоздаем оверлей!
+        // Просто обновляем текущий
+        _activeOverlay?.markNeedsBuild();
       }),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

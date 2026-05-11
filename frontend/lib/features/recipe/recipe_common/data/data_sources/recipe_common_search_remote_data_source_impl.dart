@@ -16,7 +16,7 @@ class RecipeCommonSearchRemoteDataSourceImpl
     SearchCategoryListRequest request,
   ) async {
     final response = await _dio.get(
-      '/api/search/tags?${request.lastId != null ? 'lastId=${request.lastId}' : ''}&name=${request.name}',
+      '/api/search/tags?name=${request.name}',
     );
 
     return (response.data as List)
@@ -29,7 +29,7 @@ class RecipeCommonSearchRemoteDataSourceImpl
     SearchIngredientListRequest request,
   ) async {
     final response = await _dio.get(
-      '/api/search/ingredients?${request.lastId != null ? 'lastId=${request.lastId}' : ''}&name=${request.name}',
+      '/api/search/ingredients?name=${request.name}',
     );
 
     return (response.data as List)

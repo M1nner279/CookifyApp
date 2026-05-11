@@ -1,4 +1,3 @@
-import 'package:cookify/core/presentation/widgets/cookify_navigation_bar.dart';
 import 'package:cookify/features/recipe/recipe_search/di/recipe_search_di.dart';
 import 'package:cookify/features/recipe/recipe_search/presentation/bloc/recipe_search_form_cubit.dart';
 import 'package:cookify/features/recipe/recipe_search/presentation/pages/recipe_search_form_page_content.dart';

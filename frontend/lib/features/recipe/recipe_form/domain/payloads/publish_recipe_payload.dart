@@ -1,3 +1,4 @@
+import 'package:cookify/features/recipe/recipe_common/domain/enums/recipe_difficulty.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PublishRecipePayload {
@@ -22,9 +23,9 @@ class PublishRecipePayload {
   final int proteins;
   final int fats;
   final int carbohydrates;
-  final String difficulty;
+  final RecipeDifficulty difficulty;
   final int cookingTimeMinutes;
-  final List<String> categories;
+  final List<int> categories;
   final List<PublishRecipeIngredientPayload> ingredients;
   final List<PublishRecipeStepPayload> steps;
   final List<XFile> photos;

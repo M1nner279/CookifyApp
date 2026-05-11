@@ -32,6 +32,7 @@ final class TokenLocalDataSourceImpl implements TokenLocalDataSource {
 
   @override
   Future<void> deleteToken() {
+    _storage.delete(key: 'profile');
     return _storage.delete(key: tokenKey);
   }
 }

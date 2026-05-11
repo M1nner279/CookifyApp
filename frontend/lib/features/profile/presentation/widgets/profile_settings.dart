@@ -30,9 +30,9 @@ class ProfileSettings extends StatelessWidget {
 
         ProfileSettingsLocale(locale: locale),
 
-        const SizedBox(height: 12.0),
+        // const SizedBox(height: 12.0),
 
-        const _ChangePasswordButton(),
+        // const _ChangePasswordButton(),
 
         const SizedBox(height: 12.0),
 

@@ -31,7 +31,13 @@ abstract class Di {
   }
 
   static Future<void> initStorages(String address) async {
-    dio = Dio(BaseOptions(baseUrl: 'https://$address'));
+    dio = Dio(
+      BaseOptions(
+        baseUrl: 'https://$address',
+        connectTimeout: Duration(seconds: 10),
+        receiveTimeout: Duration(seconds: 10),
+      ),
+    );
     Di.dio = dio;
     dio.interceptors.add(PrettyDioLogger());
     dio.interceptors.add(FailureInterceptor());
@@ -83,15 +89,13 @@ abstract class Di {
 class FailureInterceptor extends InterceptorsWrapper {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (err.type == DioExceptionType.connectionError || 
+    if (err.type == DioExceptionType.connectionError ||
         err.type == DioExceptionType.connectionTimeout) {
-      
       // Создаем кастомную ошибку, сохраняя контекст запроса
       throw NetworkException();
     }
-    
+
     // Если это не ошибка сети, пропускаем ошибку дальше
     return handler.next(err);
   }
 }
-
