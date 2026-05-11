@@ -18,15 +18,8 @@ class RecipeSearchCubit extends Cubit<RecipeSearchState> {
 
   Future<void> searchRecipeList() async {
     List<RecipePreviewEntity>? recipes;
-    if (state is RecipeSearchLoaded) {
-      if (!(state as RecipeSearchLoaded).hasMore) return;
-
-      emit((state as RecipeSearchLoaded).copyWith(isLoading: true));
-      recipes = (state as RecipeSearchLoaded).recipes.toList();
-    } else {
-      emit(RecipeSearchLoading());
-      recipes = null;
-    }
+    emit(RecipeSearchLoading());
+    recipes = null;
 
     final result = await _searchRecipeListUseCase(_payload);
     if (isClosed) return;
@@ -38,7 +31,7 @@ class RecipeSearchCubit extends Cubit<RecipeSearchState> {
           RecipeSearchLoaded(
             recipes: recipes,
             isLoading: false,
-            hasMore: newRecipes.isNotEmpty,
+            hasMore: false,
           ),
         );
         break;

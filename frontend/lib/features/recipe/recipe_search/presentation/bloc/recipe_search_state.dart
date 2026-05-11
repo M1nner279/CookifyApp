@@ -12,7 +12,7 @@ sealed class RecipeSearchState with _$RecipeSearchState {
   const factory RecipeSearchState.loaded({
     required List<RecipePreviewEntity> recipes,
     @Default(false) bool isLoading,
-    @Default(true) bool hasMore,
+    @Default(false) bool hasMore,
   }) = RecipeSearchLoaded;
 
   const factory RecipeSearchState.error() = RecipeSearchError;

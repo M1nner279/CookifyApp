@@ -155,7 +155,7 @@ class _RecipeSearchPageContentState extends State<RecipeSearchPageContent> {
                     isLoading: state.isLoading,
                     controller: controller,
                     onAtBottom: () {
-                      context.read<RecipeSearchCubit>().searchRecipeList();
+                      //context.read<RecipeSearchCubit>().searchRecipeList();
                     },
                   );
                 case RecipeSearchError():
